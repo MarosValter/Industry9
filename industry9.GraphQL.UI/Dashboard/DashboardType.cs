@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using HotChocolate.Resolvers;
+﻿using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Widget;
@@ -16,14 +15,14 @@ namespace industry9.GraphQL.UI.Dashboard
             base.Configure(descriptor);
 
             descriptor.Name("Dashboard");
-            descriptor.Field("Widgets")
+            descriptor.Field(d => d.Widgets)
                 .Type<ListType<WidgetType>>()
                 .Resolver(async ctx =>
                 {
                     var repository = ctx.Service<IWidgetRepository>();
                     var dataLoader =
-                        ctx.BatchDataLoader<ObjectId, WidgetDocument>("DashboardWidgets", repository.GetDocuments);
-                    return await dataLoader.LoadAsync(ctx.Parent<DashboardDocument>().WidgetIds, CancellationToken.None);
+                        ctx.BatchDataLoader<ObjectId, WidgetDocument>("WidgetsById", repository.GetDocuments);
+                    return await dataLoader.LoadAsync(ctx.Parent<DashboardDocument>().WidgetIds, ctx.RequestAborted);
                 });
 
             descriptor.Field(d => d.WidgetIds).Ignore();

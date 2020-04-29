@@ -11,6 +11,7 @@ using industry9.Common.Enums;
 using industry9.Common.Structs;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Dashboard;
+using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.DataModel.UI.Serializers;
 using industry9.GraphQL.UI.Dashboard;
@@ -42,6 +43,7 @@ namespace industry9.Server
 
             services.AddScoped<IDashboardRepository, DashboardRepository>();
             services.AddScoped<IWidgetRepository, WidgetRepository>();
+            services.AddScoped<IDataSourceDefinitionRepository, DataSourceDefinitionRepository>();
 
             // this enables you to use DataLoader in your resolvers.
             services.AddDataLoaderRegistry();
@@ -86,11 +88,12 @@ namespace industry9.Server
                     .Create()
                 );
 
-            //services.AddMvc().AddJsonOptions(options =>
-            //{
-            //    options.JsonSerializerOptions.AllowTrailingCommas = true;
-            //    options.JsonSerializerOptions.IgnoreNullValues = true;
-            //});
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.AllowTrailingCommas = true;
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
 
             services.AddResponseCompression(opts =>
             {
@@ -107,23 +110,23 @@ namespace industry9.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseBlazorDebugging();
+                app.UseBlazorDebugging();
             }
 
             app.UseGraphQL();
-            app.UseGraphiQL();
+            app.UsePlayground();
 
-            //app.UseStaticFiles();
-            //app.UseClientSideBlazorFiles<Client.Program>();
+            app.UseStaticFiles();
+            app.UseClientSideBlazorFiles<Client.Program>();
 
             app.UseRouting();
             app.UseWebSockets();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute();
-            //    endpoints.MapFallbackToClientSideBlazor<Client.Program>("index.html");
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapFallbackToClientSideBlazor<Client.Program>("index.html");
+            });
         }
     }
 }

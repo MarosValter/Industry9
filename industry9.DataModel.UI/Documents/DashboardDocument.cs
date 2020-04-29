@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using industry9.Common.Structs;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace industry9.DataModel.UI.Documents
 {
@@ -16,14 +16,12 @@ namespace industry9.DataModel.UI.Documents
 
         public ObjectId AuthorId { get; set; }
 
-
-        //public NavigationSettings Navigation { get; set; }
         //public TimeSettings TimeSettings { get; set; }
 
-        //public ShareOptions ShareOptions { get; set; }
+        public IReadOnlyCollection<LabelData> Labels { get; set; }
 
-        public IReadOnlyList<LabelData> Labels { get; set; }
-
-        public IReadOnlyList<ObjectId> WidgetIds { get; set; }
+        [BsonIgnore]
+        public IReadOnlyCollection<WidgetDocument> Widgets { get; set; }
+        public IReadOnlyCollection<ObjectId> WidgetIds { get; set; }
     }
 }

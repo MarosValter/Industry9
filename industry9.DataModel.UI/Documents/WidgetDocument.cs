@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using industry9.Common.Structs;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace industry9.DataModel.UI.Documents
 {
@@ -18,11 +20,14 @@ namespace industry9.DataModel.UI.Documents
 
         public Position Position { get; set; }
         public Size Size { get; set; }
-        public TimeSettings TimeSettings { get; set; }
+        //public TimeSettings TimeSettings { get; set; }
 
         public IReadOnlyList<LabelData> Labels { get; set; }
 
-        public IReadOnlyList<DataSourceDefinitionDocument> DataSources { get; set; }
         public IReadOnlyList<ColumnMappingData> ColumnMappings { get; set; }
+
+        [BsonIgnore]
+        public IReadOnlyCollection<DataSourceDefinitionDocument> DataSources { get; set; }
+        public IReadOnlyCollection<ObjectId> DataSourceIds { get; set; }
     }
 }
