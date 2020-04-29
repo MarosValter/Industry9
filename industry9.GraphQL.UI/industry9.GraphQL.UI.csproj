@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\industry9.DataModel.UI\industry9.DataModel.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HotChocolate.Abstractions" Version="11.0.0-preview.128" />
+    <PackageReference Include="HotChocolate.Types" Version="11.0.0-preview.128" />
+  </ItemGroup>
+
+</Project>
