@@ -1,0 +1,72 @@
+﻿@implements IDisposable
+
+@inject AppState AppState
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+
+<ul class="breadcrumb">
+    <li>
+        <a href="/">@RootLinkTitle</a>
+    </li>
+    @foreach (var path in _paths.Select((value, i) => (value, i)))
+    {
+        if (path.i == _paths.Count())
+        {
+            <li><a href="@(_baseUrl + String.Join("/", _paths))">@path.value.Replace("_", " ")</a></li>
+        }
+        else
+        {
+            <li>@path.value.Replace("_", " ")</li>
+        }
+    }
+</ul>
+
+@code {
+    // This is just for demo and is VERY Hackish  for several reasons
+    // Blazor does not have page implemented for client side... as far as I know so we split page names with underscore for now.
+    // Path system is hack as well as the Url.. Maybe you have a better solution?
+
+    [Parameter]
+    public string RootLinkTitle { get; set; }
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    bool _isLoggedIn;
+    string[] _paths;
+    string _baseUrl;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //var user = (await AuthenticationStateTask).User;
+        _isLoggedIn = false;//user.Identity.IsAuthenticated;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _baseUrl = NavigationManager.BaseUri;
+        await BuildBreadcrumbsAsync();
+        NavigationManager.LocationChanged += OnLocationChanges;
+        await base.OnInitializedAsync();
+    }
+
+    void OnLocationChanges(object sender, LocationChangedEventArgs e) => BuildBreadcrumbsAsync();
+
+    private async Task BuildBreadcrumbsAsync()
+    {
+        string uri = NavigationManager.Uri.Replace(_baseUrl, "").Trim();
+
+        if (_isLoggedIn)
+        {
+            await AppState.SaveLastVisitedUri(uri);
+        }
+
+        _paths = string.IsNullOrEmpty(uri) ? new string[] { } : uri.Split('/');
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanges;
+    }
+}

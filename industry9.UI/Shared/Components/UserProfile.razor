@@ -1,0 +1,36 @@
+﻿@inject IdentityAuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <div class="drawer-profile">
+            <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
+            @if (_userInfo == null)
+            {
+                <div class="spinner-border spinner-border-sm" role="status"></div>
+            }
+            else
+            {
+                <span class="miniHover"><b><a href="/account/profile">@_userInfo.UserName</a></b></span>
+            }
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    public bool IsLoggedIn = false;
+    UserInfoData _userInfo;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //_userInfo = null;
+        //var user = (await authenticationStateTask).User;
+
+        //if (user.Identity.IsAuthenticated)
+        {
+            _userInfo = await AuthStateProvider.GetUserInfo();
+        }
+    }
+}
