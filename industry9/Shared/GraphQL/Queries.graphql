@@ -1,0 +1,5 @@
+query getDashboard($id: String!) {
+    dashboard(id: $id) {
+        name
+    }
+}

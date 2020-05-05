@@ -1,0 +1,116 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  dashboard(id: ObjectId!): Dashboard
+  dashboards: [Dashboard]
+  widget(id: ObjectId!): Widget
+}
+
+type Mutation {
+  addWidgetsToDashboard(dashboardId: ObjectId! widgetIds: [ObjectId!]): Boolean!
+  createDashboard(dashboard: DashboardInput): Dashboard
+  createWidget(widget: WidgetInput): Widget
+}
+
+input LabelDataInput {
+  color: Color
+  name: String
+}
+
+input ColumnMappingDataInput {
+  dataSourceId: ObjectId!
+  format: String
+  name: String
+  sourceColumn: String
+}
+
+enum RelativeTimeMode {
+  LIVE
+  TODAY
+  YESTERDAY
+  LASTNSECONDS
+  LASTNMINUTES
+  LASTNHOURS
+  LASTYEAR
+}
+
+scalar ObjectId
+
+scalar Color
+
+scalar Position
+
+scalar Size
+
+type Dashboard {
+  authorId: ObjectId!
+  created: DateTime!
+  id: ObjectId!
+  labels: [LabelData]
+  name: String
+  widgets: [Widget]
+}
+
+type Widget {
+  columnMappings: [ColumnMappingData]
+  created: DateTime!
+  dataSources: [Widget]
+  id: ObjectId!
+  labels: [LabelData]
+  name: String
+  position: Position!
+  size: Size!
+}
+
+type DataSourceDefinition {
+  created: DateTime!
+  id: ObjectId!
+  inputs: [ObjectId!]
+  type: DataSourceType!
+}
+
+input DashboardInput {
+  labels: [LabelDataInput] = [  ]
+  name: String!
+  widgetIds: [ObjectId!] = [  ]
+}
+
+input WidgetInput {
+  columnMappings: [ColumnMappingDataInput] = [  ]
+  dashboardId: ObjectId
+  labels: [LabelDataInput] = [  ]
+  name: String!
+  position: Position!
+  size: Size!
+}
+
+input DataSourceDefinitionInput {
+  created: DateTime!
+  id: ObjectId!
+  inputs: [ObjectId!]
+  type: DataSourceType!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type LabelData {
+  color: Color
+  name: String
+}
+
+type ColumnMappingData {
+  dataSourceId: ObjectId!
+  format: String
+  name: String
+  sourceColumn: String
+}
+
+enum DataSourceType {
+  DATAQUERY
+  PREDICTION
+  CSV
+}
