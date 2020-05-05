@@ -54,6 +54,9 @@ namespace industry9.Client
                 config.VisibleStateDuration = 3000;
             });
 
+            services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri("http://localhost:5000/graphql"));
+            services.Addindustry9Client();
+
             //services.AddFluxor(options =>
             //{
             //    options.UseDependencyInjection(typeof(Startup).Assembly);

@@ -119,23 +119,20 @@ namespace industry9.Server
                 app.UseHsts();
             }
 
-            app.UseGraphQL();
-            app.UsePlayground();
+            app.UseRouting();
+            app.UseWebSockets();
+            app.UseGraphQL("/graphql");
+            app.UsePlayground("/graphql");
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-
-            app.UseRouting();
-            app.UseWebSockets();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index_blazor.html");
-                //endpoints.MapDefaultControllerRoute();
-                //endpoints.MapFallbackToClientSideBlazor<Client.Program>("index_blazor.html");
             });
         }
     }
