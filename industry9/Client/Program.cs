@@ -10,6 +10,7 @@ using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using StrawberryShake.Transport.WebSockets;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace industry9.Client
@@ -54,7 +55,8 @@ namespace industry9.Client
                 config.VisibleStateDuration = 3000;
             });
 
-            services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri("http://localhost:5000/graphql"));
+            services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"));
+            services.AddWebSocketClient("industry9Client", (sp, c) => c.Uri = new UriBuilder(new Uri(environment.BaseAddress)) { Scheme = "wss", Path = "graphql" }.Uri);
             services.Addindustry9Client();
 
             //services.AddFluxor(options =>

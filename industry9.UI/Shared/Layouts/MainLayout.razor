@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+
 @inject NavigationManager navigationManager
 @inject AppState appState
 
@@ -6,8 +7,13 @@
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
-                <img alt="Blazor Boilerplate" class="logo-img" src="_content/industry9.UI/images/blazorboilerplate-dark.svg" title="Blazor Boilerplate">
+                <img alt="Blazor Boilerplate" class="logo-img miniHover" src="_content/industry9.UI/images/blazorboilerplate-dark.svg" title="Blazor Boilerplate">
                 <a class="miniHover" href="/">Blazor Boilerplate</a>
+                <div class="hidden-mdc-down">
+                    <MatTooltip Tooltip="Hide">
+                        <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                    </MatTooltip>
+                </div>
             </div>
             <UserProfile />
         </header>
@@ -20,45 +26,7 @@
     </MatDrawer>
     <MatDrawerContent>
         <MatAppBarContainer>
-            <MatAppBar Fixed="true">
-                <MatAppBarRow>
-                    <MatAppBarSection>
-                        <MatAppBarTitle>
-
-                        </MatAppBarTitle>
-                        <div class="hidden-mdc-down">
-                            @*<nav>
-                                <ul>
-                                    <li>*@
-                            <MatTooltip Tooltip="Toggle Navigation">
-                                <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
-                            </MatTooltip>
-                            @*</li>
-                                <li>*@
-                            <MatTooltip Tooltip="Minify Navigation">
-                                <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
-                            </MatTooltip>
-                            @*</li>
-                                <li>
-                                    <MatTooltip Tooltip="Lock Navigation" >
-                                        <MatIconButton Class="navToggle" Icon="lock" ToggleIcon="radio_button_unchecked" OnClick="@((e) => NavLock())" RefBack="@context"></MatIconButton>
-                                    </MatTooltip>
-                                    </li>*@
-                            @*</ul>
-                                </nav>*@
-                        </div>
-                    </MatAppBarSection>
-                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <MatTooltip Tooltip="Donate to Support">
-                            <MatIconButton Link="https://www.paypal.me/enkodellc" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
-                        </MatTooltip>
-                        <MatTooltip Tooltip="Github Repository">
-                            <MatIconButton Link="https://github.com/enkodellc/blazorboilerplate" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
-                        </MatTooltip>
-                        <Login></Login>
-                    </MatAppBarSection>
-                </MatAppBarRow>
-            </MatAppBar>
+            <AppBar />
             <MatAppBarContent>
                 <Breadcrumbs RootLinkTitle="Home"></Breadcrumbs>
                 <section class="container-fluid">

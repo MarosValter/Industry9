@@ -50,8 +50,69 @@ namespace industry9.Shared
 
             return new Dashboard
             (
-                DeserializeNullableString(obj, "name")
+                DeserializeNullableString(obj, "id"),
+                DeserializeNullableString(obj, "name"),
+                ParseGetDashboardDashboardLabels(obj, "labels"),
+                ParseGetDashboardDashboardWidgets(obj, "widgets")
             );
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabelData> ParseGetDashboardDashboardLabels(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::industry9.Shared.ILabelData[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new LabelData
+                (
+                    DeserializeNullableString(element, "name")
+                );
+
+            }
+
+            return list;
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidget> ParseGetDashboardDashboardWidgets(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::industry9.Shared.IWidget[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new Widget
+                (
+                    DeserializeNullableString(element, "id")
+                );
+
+            }
+
+            return list;
         }
 
         private string DeserializeNullableString(JsonElement obj, string fieldName)

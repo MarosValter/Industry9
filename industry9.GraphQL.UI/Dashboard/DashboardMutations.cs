@@ -17,7 +17,7 @@ namespace industry9.GraphQL.UI.Dashboard
             return dashboard;
         }
 
-        public async Task<bool> AddWidgetsToDashboard(ObjectId dashboardId, IReadOnlyCollection<ObjectId> widgetIds,
+        public async Task<bool> AddWidgetsToDashboard(string dashboardId, IReadOnlyCollection<string> widgetIds,
             [Service] IDashboardRepository dashboardRepository)
         {
             var result = await dashboardRepository.AddWidgetsToDashboard(dashboardId, widgetIds);

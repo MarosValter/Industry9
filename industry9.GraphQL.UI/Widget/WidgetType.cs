@@ -20,7 +20,7 @@ namespace industry9.GraphQL.UI.Widget
                 {
                     var repository = ctx.Service<IDataSourceDefinitionRepository>();
                     var dataLoader =
-                        ctx.BatchDataLoader<ObjectId, DataSourceDefinitionDocument>("DataSourcesById", repository.GetDocuments);
+                        ctx.BatchDataLoader<string, DataSourceDefinitionDocument>("DataSourcesById", repository.GetDocuments);
                     return await dataLoader.LoadAsync(ctx.Parent<WidgetDocument>().DataSourceIds, ctx.RequestAborted);
                 });
 

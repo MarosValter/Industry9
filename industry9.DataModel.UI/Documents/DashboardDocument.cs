@@ -9,12 +9,13 @@ namespace industry9.DataModel.UI.Documents
         public DashboardDocument()
         {
             Labels = new List<LabelData>();
-            WidgetIds = new List<ObjectId>();
+            WidgetIds = new List<string>();
         }
 
         public string Name { get; set; }
 
-        public ObjectId AuthorId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string AuthorId { get; set; }
 
         //public TimeSettings TimeSettings { get; set; }
 
@@ -22,6 +23,8 @@ namespace industry9.DataModel.UI.Documents
 
         [BsonIgnore]
         public IReadOnlyCollection<WidgetDocument> Widgets { get; set; }
-        public IReadOnlyCollection<ObjectId> WidgetIds { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public IReadOnlyCollection<string> WidgetIds { get; set; }
     }
 }

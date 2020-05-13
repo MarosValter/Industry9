@@ -9,6 +9,6 @@ namespace industry9.DataModel.UI.Repositories.Dashboard
 {
     public interface IDashboardRepository : IBaseDocumentRepository<DashboardDocument>
     {
-        Task<UpdateResult> AddWidgetsToDashboard(ObjectId dashboardId, IReadOnlyCollection<ObjectId> widgetIds, CancellationToken cancellationToken = default);
+        Task<UpdateResult> AddWidgetsToDashboard(string dashboardId, IReadOnlyCollection<string> widgetIds, CancellationToken cancellationToken = default);
     }
 }

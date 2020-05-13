@@ -16,17 +16,15 @@
   <ItemGroup>
     <PackageReference Include="HotChocolate.AspNetCore" Version="11.0.0-preview.129" />
     <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="11.0.0-preview.129" />
+    <PackageReference Include="HotChocolate.Subscriptions.InMemory" Version="11.0.0-preview.129" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0-preview4.20210.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\industry9.GraphQL.UI\industry9.GraphQL.UI.csproj" />
     <ProjectReference Include="..\Client\industry9.Client.csproj" />
     <ProjectReference Include="..\Shared\industry9.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="GraphQL\" />
   </ItemGroup>
 
 </Project>

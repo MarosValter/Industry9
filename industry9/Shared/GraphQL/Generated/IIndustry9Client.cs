@@ -17,5 +17,20 @@ namespace industry9.Shared
         Task<IOperationResult<global::industry9.Shared.IGetDashboard>> GetDashboardAsync(
             GetDashboardOperation operation,
             CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
+            GetDashboardsOperation operation,
+            CancellationToken cancellationToken = default);
+
+        global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
+            Optional<string> widgetId = default,
+            CancellationToken cancellationToken = default);
+
+        global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
+            OnDataReceivedOperation operation,
+            CancellationToken cancellationToken = default);
     }
 }

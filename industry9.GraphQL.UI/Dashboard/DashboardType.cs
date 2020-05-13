@@ -21,7 +21,7 @@ namespace industry9.GraphQL.UI.Dashboard
                 {
                     var repository = ctx.Service<IWidgetRepository>();
                     var dataLoader =
-                        ctx.BatchDataLoader<ObjectId, WidgetDocument>("WidgetsById", repository.GetDocuments);
+                        ctx.BatchDataLoader<string, WidgetDocument>("WidgetsById", repository.GetDocuments);
                     return await dataLoader.LoadAsync(ctx.Parent<DashboardDocument>().WidgetIds, ctx.RequestAborted);
                 });
 

@@ -11,7 +11,7 @@ namespace industry9.GraphQL.UI.Widget
     [ExtendObjectType(Name = "Query")]
     public class WidgetQueries
     {
-        public async Task<WidgetDocument> GetWidget(ObjectId id, IResolverContext ctx,
+        public async Task<WidgetDocument> GetWidget(string id, IResolverContext ctx,
             [Service] IWidgetRepository widgetRepository)
         {
             var widget = await widgetRepository.GetDocumentAsync(id);

@@ -1,5 +1,26 @@
 query getDashboard($id: String!) {
     dashboard(id: $id) {
-        name
+		id,
+        name,
+		labels {
+			name
+		},
+		widgets {
+			id
+		}
     }
+}
+
+query getDashboards() {
+	dashboards {
+		id,
+		name
+	}
+}
+
+subscription onDataReceived($widgetId: String!) {
+	onDataReceived(widgetId: $widgetId) {
+		name,
+		value
+	}
 }

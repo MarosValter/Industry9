@@ -1,18 +1,23 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Query {
-  dashboard(id: ObjectId!): Dashboard
+  dashboard(id: String): Dashboard
   dashboards: [Dashboard]
-  widget(id: ObjectId!): Widget
+  widget(id: String): Widget
 }
 
 type Mutation {
-  addWidgetsToDashboard(dashboardId: ObjectId! widgetIds: [ObjectId!]): Boolean!
+  addWidgetsToDashboard(dashboardId: String widgetIds: [String]): Boolean!
   createDashboard(dashboard: DashboardInput): Dashboard
   createWidget(widget: WidgetInput): Widget
+}
+
+type Subscription {
+  onDataReceived(widgetId: String): SensorData
 }
 
 input LabelDataInput {
@@ -21,7 +26,7 @@ input LabelDataInput {
 }
 
 input ColumnMappingDataInput {
-  dataSourceId: ObjectId!
+  dataSourceId: String
   format: String
   name: String
   sourceColumn: String
@@ -37,18 +42,19 @@ enum RelativeTimeMode {
   LASTYEAR
 }
 
-scalar ObjectId
-
 scalar Color
 
 scalar Position
 
 scalar Size
 
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
 type Dashboard {
-  authorId: ObjectId!
+  authorId: String
   created: DateTime!
-  id: ObjectId!
+  id: String
   labels: [LabelData]
   name: String
   widgets: [Widget]
@@ -58,7 +64,7 @@ type Widget {
   columnMappings: [ColumnMappingData]
   created: DateTime!
   dataSources: [Widget]
-  id: ObjectId!
+  id: String
   labels: [LabelData]
   name: String
   position: Position!
@@ -67,20 +73,25 @@ type Widget {
 
 type DataSourceDefinition {
   created: DateTime!
-  id: ObjectId!
-  inputs: [ObjectId!]
+  id: String
+  inputs: [String]
   type: DataSourceType!
+}
+
+type SensorData {
+  name: String
+  value: Float!
 }
 
 input DashboardInput {
   labels: [LabelDataInput] = [  ]
   name: String!
-  widgetIds: [ObjectId!] = [  ]
+  widgetIds: [String] = [  ]
 }
 
 input WidgetInput {
   columnMappings: [ColumnMappingDataInput] = [  ]
-  dashboardId: ObjectId
+  dashboardId: String
   labels: [LabelDataInput] = [  ]
   name: String!
   position: Position!
@@ -89,13 +100,12 @@ input WidgetInput {
 
 input DataSourceDefinitionInput {
   created: DateTime!
-  id: ObjectId!
-  inputs: [ObjectId!]
+  id: String
+  inputs: [String]
   type: DataSourceType!
 }
 
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime
+scalar Any
 
 type LabelData {
   color: Color
@@ -103,7 +113,7 @@ type LabelData {
 }
 
 type ColumnMappingData {
-  dataSourceId: ObjectId!
+  dataSourceId: String
   format: String
   name: String
   sourceColumn: String

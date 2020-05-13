@@ -1,5 +1,7 @@
 ﻿using System;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace industry9.DataModel.UI.Documents
 {
@@ -10,7 +12,9 @@ namespace industry9.DataModel.UI.Documents
             Created = DateTimeOffset.Now;
         }
 
-        public ObjectId Id { get; set; }
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public DateTimeOffset Created { get; set; }
     }
 }

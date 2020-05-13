@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,18 +8,22 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.Subscriptions;
+using HotChocolate.Types;
 using industry9.Common.Enums;
 using industry9.Common.Structs;
+using industry9.DataModel.UI.Data;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Dashboard;
 using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.DataModel.UI.Serializers;
 using industry9.GraphQL.UI.Dashboard;
+using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
 using industry9.GraphQL.UI.Scalars;
 using industry9.GraphQL.UI.Widget;
-using MongoDB.Bson;
+using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
@@ -47,34 +52,37 @@ namespace industry9.Server
 
             // this enables you to use DataLoader in your resolvers.
             services.AddDataLoaderRegistry();
+            //services.AddGraphQLSubscriptions();
+            services.AddInMemorySubscriptionProvider();
 
             services.AddGraphQL(sp =>
                 SchemaBuilder.New()
                     .AddServices(sp)
-                    .BindClrType<ObjectId, ObjectIdType>()
                     .BindClrType<Color, ColorType>()
                     .BindClrType<Position, PositionType>()
                     .BindClrType<Size, SizeType>()
+                    .BindClrType<DateTime, DateTimeType>()
+
 
                     .AddQueryType(d => d.Name("Query"))
-                    .AddMutationType(d => d.Name("Mutation"))
-                    //.AddSubscriptionType(d => d.Name("Subscription"))
-
                     .AddType<DashboardQueries>()
                     .AddType<WidgetQueries>()
-
+                    .AddMutationType(d => d.Name("Mutation"))
                     .AddType<DashboardMutations>()
                     .AddType<WidgetMutations>()
-
+                    .AddSubscriptionType(d => d.Name("Subscription"))
+                    .AddType<DataSubscriptions>()
+                    // Types
                     .AddType<DashboardType>()
                     .AddType<WidgetType>()
                     .AddType<DataSourceDefinitionType>()
                     .AddType<LabelData>()
+                    .AddType<SensorData>()
                     .AddType<ColumnMappingData>()
                     //.AddType<TimeSettings>()
                     //.AddType<RelativeTimeSettings>()
                     //.AddType<AbsoluteTimeSettings>()
-
+                    // Input types
                     .AddType<DashboardInputType>()
                     .AddType<WidgetInputType>()
                     .AddType<DataSourceDefinitionInputType>()
@@ -83,10 +91,15 @@ namespace industry9.Server
                     //.AddInputObjectType<TimeSettings>()
                     //.AddInputObjectType<RelativeTimeSettings>()
                     //.AddInputObjectType<AbsoluteTimeSettings>()
-
+                    // Enums
                     .AddEnumType<RelativeTimeMode>()
                     .Create()
                 );
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "industr9 API", Version = "v1" });
+            });
 
             services.AddMvc()
                 .AddJsonOptions(options =>
@@ -123,6 +136,12 @@ namespace industry9.Server
             app.UseWebSockets();
             app.UseGraphQL("/graphql");
             app.UsePlayground("/graphql");
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "industry9 API V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();

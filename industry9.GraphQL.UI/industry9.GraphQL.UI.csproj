@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="HotChocolate.Abstractions" Version="11.0.0-preview.129" />
+    <PackageReference Include="HotChocolate.Subscriptions" Version="11.0.0-preview.129" />
     <PackageReference Include="HotChocolate.Types" Version="11.0.0-preview.129" />
   </ItemGroup>
 

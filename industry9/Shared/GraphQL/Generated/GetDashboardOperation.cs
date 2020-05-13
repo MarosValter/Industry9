@@ -25,7 +25,7 @@ namespace industry9.Shared
 
             if (Id.HasValue)
             {
-                variables.Add(new VariableValue("id", "ObjectId", Id.Value));
+                variables.Add(new VariableValue("id", "String", Id.Value));
             }
 
             return variables;

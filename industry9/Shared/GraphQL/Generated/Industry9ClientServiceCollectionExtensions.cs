@@ -37,12 +37,27 @@ namespace industry9.Shared
                     sp.GetRequiredService<IClientOptions>().GetOperationFormatter(_clientName),
                     sp.GetRequiredService<IClientOptions>().GetResultParsers(_clientName)));
 
+            serviceCollection.AddSingleton<IOperationStreamExecutorFactory>(sp =>
+                new SocketOperationStreamExecutorFactory(
+                    _clientName,
+                    sp.GetRequiredService<ISocketConnectionPool>().RentAsync,
+                    sp.GetRequiredService<ISubscriptionManager>(),
+                    sp.GetRequiredService<IClientOptions>().GetOperationFormatter(_clientName),
+                    sp.GetRequiredService<IClientOptions>().GetResultParsers(_clientName)));
+
             IOperationClientBuilder builder = serviceCollection.AddOperationClientOptions(_clientName)
                 .AddResultParser(serializers => new GetDashboardResultParser(serializers))
+                .AddResultParser(serializers => new GetDashboardsResultParser(serializers))
+                .AddResultParser(serializers => new OnDataReceivedResultParser(serializers))
                 .AddOperationFormatter(serializers => new JsonOperationFormatter(serializers))
                 .AddHttpOperationPipeline(b => b.UseHttpDefaultPipeline());
 
+            serviceCollection.TryAddSingleton<ISubscriptionManager, SubscriptionManager>();
             serviceCollection.TryAddSingleton<IOperationExecutorPool, OperationExecutorPool>();
+            serviceCollection.TryAddEnumerable(new ServiceDescriptor(
+                typeof(ISocketConnectionInterceptor),
+                typeof(MessagePipelineHandler),
+                ServiceLifetime.Singleton));
             return builder;
         }
 

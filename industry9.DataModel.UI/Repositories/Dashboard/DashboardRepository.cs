@@ -13,7 +13,7 @@ namespace industry9.DataModel.UI.Repositories.Dashboard
         {
         }
 
-        public async Task<UpdateResult> AddWidgetsToDashboard(ObjectId dashboardId, IReadOnlyCollection<ObjectId> widgetIds, CancellationToken cancellationToken = default)
+        public async Task<UpdateResult> AddWidgetsToDashboard(string dashboardId, IReadOnlyCollection<string> widgetIds, CancellationToken cancellationToken = default)
         {
             var filter = Builders<DashboardDocument>.Filter.Eq(d => d.Id, dashboardId);
             var update = Builders<DashboardDocument>.Update.AddToSetEach(d => d.WidgetIds, widgetIds);

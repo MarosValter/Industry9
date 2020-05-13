@@ -5,7 +5,7 @@ namespace industry9.DataModel.UI.Documents
 {
     public interface IDocument
     {
-        ObjectId Id { get; set; }
+        string Id { get; set; }
         DateTimeOffset Created { get; set; }
     }
 }

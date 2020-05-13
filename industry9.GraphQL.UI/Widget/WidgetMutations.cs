@@ -17,10 +17,10 @@ namespace industry9.GraphQL.UI.Widget
             await widgetRepository.CreateDocumentAsync(widget);
 
             //var args = context.Argument<IDictionary<string, object>>("widget");
-            //if (args.TryGetValue("dashboardId", out var id) && id is ObjectId dashboardId)
-            if (widget.DashboardId.HasValue)
+            //if (args.TryGetValue("dashboardId", out var id) && id is string dashboardId)
+            if (!string.IsNullOrEmpty(widget.DashboardId))
             {
-                var addResult = await dashboardRepository.AddWidgetsToDashboard(widget.DashboardId.Value, new []{ widget.Id });
+                var addResult = await dashboardRepository.AddWidgetsToDashboard(widget.DashboardId, new []{ widget.Id });
                 if (!addResult.IsAcknowledged)
                 {
                     // TODO

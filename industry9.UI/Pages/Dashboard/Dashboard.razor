@@ -1,0 +1,31 @@
+﻿@page "/dashboard"
+@using System.Runtime.CompilerServices
+@using System.Threading
+@using StrawberryShake
+
+@layout MainLayout
+@*@attribute [Authorize]*@
+
+@inject IIndustry9Client Client
+
+<MatFAB icon="exposure_plus_1"></MatFAB>
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell"></div>
+        <div class="mat-layout-grid-cell"></div>
+        <div class="mat-layout-grid-cell"></div>
+    </div>
+</div>
+
+
+@code {
+    IOperationResult<IGetDashboard> _result;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _result = await Client.GetDashboardAsync("5ea9c02c0f2b6adba806936f").ConfigureAwait(false);
+
+        
+    }
+}

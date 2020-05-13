@@ -28,6 +28,8 @@ namespace industry9.DataModel.UI.Documents
 
         [BsonIgnore]
         public IReadOnlyCollection<DataSourceDefinitionDocument> DataSources { get; set; }
-        public IReadOnlyCollection<ObjectId> DataSourceIds { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public IReadOnlyCollection<string> DataSourceIds { get; set; }
     }
 }

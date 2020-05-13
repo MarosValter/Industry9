@@ -23,7 +23,7 @@ namespace industry9.DataModel.UI.Repositories
             return Collection.AsQueryable();
         }
 
-        public async Task<IReadOnlyDictionary<ObjectId, TDocument>> GetDocuments(IReadOnlyList<ObjectId> ids, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyDictionary<string, TDocument>> GetDocuments(IReadOnlyList<string> ids, CancellationToken cancellationToken = default)
         {
             var filters = ids.Select(id => Builders<TDocument>.Filter.Eq(u => u.Id, id)).ToList();
             var documents = await Collection.Find(Builders<TDocument>.Filter.Or(filters))
@@ -32,7 +32,7 @@ namespace industry9.DataModel.UI.Repositories
             return documents.ToDictionary(d => d.Id);
         }
 
-        public Task<TDocument> GetDocumentAsync(ObjectId id, CancellationToken cancellationToken = default)
+        public Task<TDocument> GetDocumentAsync(string id, CancellationToken cancellationToken = default)
         {
             return Collection.AsQueryable().FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
         }

@@ -17,7 +17,7 @@ namespace industry9.GraphQL.UI.Dashboard
             return dashboardRepository.GetAllDocuments();
         }
 
-        public async Task<DashboardDocument> GetDashboard(ObjectId id, IResolverContext ctx, [Service] IDashboardRepository dashboardRepository)
+        public async Task<DashboardDocument> GetDashboard(string id, IResolverContext ctx, [Service] IDashboardRepository dashboardRepository)
         {
             var dashboard = await dashboardRepository.GetDocumentAsync(id);
             if (dashboard == null)
