@@ -1,9 +1,13 @@
-﻿<MatAppBar Fixed="true">
-    <MatAppBarRow>
+﻿@using industry9.Shared.Store.AppBar
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inject IState<AppBarState> AppBarState
+
+<MatAppBar Fixed="true">
+    <MatAppBarRow Style="@GetAppBarColorStyle()">
         <MatAppBarSection>
             <DashboardSelector>
                 <MatAppBarTitle>
-                    @context?.Name
+                    @AppBarState.Value.Title
                 </MatAppBarTitle>
             </DashboardSelector>
         </MatAppBarSection>
@@ -18,3 +22,13 @@
         </MatAppBarSection>
     </MatAppBarRow>
 </MatAppBar>
+
+@code
+{
+
+    private string GetAppBarColorStyle()
+    {
+        return string.IsNullOrEmpty(AppBarState.Value.Color) ? string.Empty : $"background-color: {AppBarState.Value.Color}";
+    }
+
+}

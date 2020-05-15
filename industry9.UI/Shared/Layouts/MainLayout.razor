@@ -7,8 +7,8 @@
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
-                <img alt="Blazor Boilerplate" class="logo-img miniHover" src="_content/industry9.UI/images/blazorboilerplate-dark.svg" title="Blazor Boilerplate">
-                <a class="miniHover" href="/">Blazor Boilerplate</a>
+                <img alt="industry9" class="logo-img miniHover" src="_content/industry9.UI/images/blazorboilerplate-dark.svg" title="Blazor Boilerplate">
+                <a class="miniHover" href="/">industry9</a>
                 <div class="hidden-mdc-down">
                     <MatTooltip Tooltip="Hide">
                         <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
@@ -19,9 +19,9 @@
         </header>
         <NavMenu />
         <footer class="drawer-footer">
-            <MatTooltip Tooltip="Help">
+            @*<MatTooltip Tooltip="Help">
                 <MatButton Icon="help" RefBack="@context" Link="https://github.com/enkodellc/blazorboilerplate"><span class="miniHover">Help & Support</span></MatButton>
-            </MatTooltip>
+            </MatTooltip>*@
         </footer>
     </MatDrawer>
     <MatDrawerContent>
@@ -34,7 +34,7 @@
                 </section>
                 <footer class="page-footer">
                     <div class="flex-1">
-                        © 2019 <a href="//blazorboilerplate.com">Blazor Boilerplate</a> Version 0.6.0 - Developed by <a href="https://keithfimreite.com" target="_blank">Enkode LLC</a>
+                        © 2020 industry9 Version 0.0.9 - Developed by majki
                     </div>
                 </footer>
             </MatAppBarContent>

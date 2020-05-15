@@ -1,10 +1,15 @@
-﻿@inject IIndustry9Client Client
+﻿@using industry9.Shared.Store.UserProfile
 
-<MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="dashboard" />
-@ChildContent(Dashboard)
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<UserProfileState> UserProfileState
+@inject IDispatcher Dispatcher
+
+<MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Donut_large" />
+@ChildContent(UserProfileState.Value.SelectedDashboard)
 <MatMenu @ref="@_menu">
     <MatList>
-        @foreach (var dashboard in _dashboards)
+        @foreach (var dashboard in UserProfileState.Value.Dashboards)
         {
             <MatListItem @key="dashboard" OnClick="@(e => SelectDashboard(dashboard))">@dashboard.Name</MatListItem>
         }
@@ -12,43 +17,18 @@
 </MatMenu>
 
 @code {
-    private IDashboard1[] _dashboards = new IDashboard1[0];
-
-    private IDashboard1 _dashboard = new Dashboard1(string.Empty, string.Empty);
-
-    [Parameter]
-    public IDashboard1 Dashboard
-    {
-        get => _dashboard;
-        set
-        {
-            if (_dashboard != value)
-            {
-                _dashboard = value;
-                if (DashboardChanged.HasDelegate)
-                {
-                    DashboardChanged.InvokeAsync(value);
-                }
-            }
-        }
-    }
-
-    [Parameter]
-    public EventCallback<IDashboard1> DashboardChanged { get; set; }
 
     [Parameter]
     public RenderFragment<IDashboard1> ChildContent { get; set; }
 
+    //readonly ForwardRef Ref = new ForwardRef();
     BaseMatIconButton _button;
     BaseMatMenu _menu;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        var result = await Client.GetDashboardsAsync();
-        if (!result.HasErrors)
-        {
-            _dashboards = result.Data.Dashboards.ToArray();
-        }
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchUserProfileAction());
     }
 
     private async Task OnMenuOpen(MouseEventArgs e)
@@ -58,7 +38,7 @@
 
     private void SelectDashboard(IDashboard1 dashboard)
     {
-        Dashboard = dashboard;
+        Dispatcher.Dispatch(new SelectDashboardAction(dashboard));
     }
 
 }

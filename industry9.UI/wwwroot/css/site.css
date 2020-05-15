@@ -86,10 +86,10 @@ app {
         margin: 20px auto;
     }
 
-.login-container, .loading-container, .mdc-card {
+/*.login-container, .loading-container, .mdc-card {
     border-radius: 0 !important;
     box-shadow: 0 8px 17px 0 rgba(0,0,0,.2), 0 6px 20px 0 rgba(0,0,0,.19) !important;
-}
+}*/
 
     .login-container .mdc-card {
         padding: 40px 30px;
@@ -426,7 +426,7 @@ app {
 
 .mdc-top-app-bar--fixed-adjust {
     padding-top: 0 !important;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .drawer-footer {
@@ -747,4 +747,55 @@ ul.breadcrumb {
 
 .mat-toast-close-button .material-icons {
     color: white;
+}
+
+.card-panel {
+    border-radius: 4px;
+}
+
+.card-panel-content {
+    padding: 1rem;
+}
+
+.tab-panel .mat-tab-group-content {
+    display: initial;
+    position: relative;
+    top: 16px;
+}
+
+.tab-panel.mat-tab-group {
+    display: initial;
+}
+
+.sticky-panel {
+    position: sticky !important;
+    top: 94px;
+}
+
+.cell-label-centered {
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
+.cell-label-centered label {
+    margin: 0;
+}
+
+.dashboard-edit-btn-primary {
+    position: fixed !important;
+    right: 3rem;
+    bottom: 3rem;
+}
+
+.dashboard-edit-btn-secondary {
+    position: fixed !important;
+    right: 7.4rem;
+    bottom: 3rem;
+}
+
+.dashboard-edit-btn-ternary {
+    position: fixed !important;
+    right: 3rem;
+    bottom: 7.4rem;
 }

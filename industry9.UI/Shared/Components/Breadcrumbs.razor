@@ -1,22 +1,25 @@
-﻿@implements IDisposable
+﻿@using industry9.Shared.Navigation
+@using industry9.Shared.Store.AppBar
+@implements IDisposable
 
 @inject AppState AppState
-@inject NavigationManager NavigationManager
+@inject IDispatcher Dispatcher
+@inject industry9NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 
 <ul class="breadcrumb">
     <li>
         <a href="/">@RootLinkTitle</a>
     </li>
-    @foreach (var path in _paths.Select((value, i) => (value, i)))
+    @foreach (var (link, index) in _links.Select((item, index) => (item, index)))
     {
-        if (path.i == _paths.Count())
+        if (index == _links.Length)
         {
-            <li><a href="@(_baseUrl + String.Join("/", _paths))">@path.value.Replace("_", " ")</a></li>
+            <li><a href="@link.AbsolutePath">@link.Title</a></li>
         }
         else
         {
-            <li>@path.value.Replace("_", " ")</li>
+            <li>@link.Title</li>
         }
     }
 </ul>
@@ -32,9 +35,8 @@
     [CascadingParameter]
     Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
+    LinkItem[] _links;
     bool _isLoggedIn;
-    string[] _paths;
-    string _baseUrl;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -44,24 +46,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _baseUrl = NavigationManager.BaseUri;
-        await BuildBreadcrumbsAsync();
+        UpdateBreadcrumbs();
         NavigationManager.LocationChanged += OnLocationChanges;
         await base.OnInitializedAsync();
     }
 
-    void OnLocationChanges(object sender, LocationChangedEventArgs e) => BuildBreadcrumbsAsync();
+    void OnLocationChanges(object sender, LocationChangedEventArgs e) => UpdateBreadcrumbs();
 
-    private async Task BuildBreadcrumbsAsync()
+    private void UpdateBreadcrumbs()
     {
-        string uri = NavigationManager.Uri.Replace(_baseUrl, "").Trim();
-
-        if (_isLoggedIn)
+        _links = NavigationManager.BuildBreadcrumbs();
+        if (_links.Length > 0)
         {
-            await AppState.SaveLastVisitedUri(uri);
+            Dispatcher.Dispatch(new SetAppBarAction(_links[0].Title, null));
         }
-
-        _paths = string.IsNullOrEmpty(uri) ? new string[] { } : uri.Split('/');
         StateHasChanged();
     }
 

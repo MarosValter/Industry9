@@ -1,0 +1,150 @@
+﻿@if (EditMode)
+{
+    <MatH5>Settings</MatH5>
+    <MatTabGroup Class="tab-panel">
+        <MatTab Label="General">
+            <div class="mat-elevation-z4 card-panel">
+                <div class="mat-layout-grid">
+                    <div class="mat-layout-grid-inner">
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Name</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatTextField @bind-Value="@DashboardName" FullWidth="true" Required="true"></MatTextField>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Layout</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2 cell-label-centered">
+                            <label>Column count: </label><strong>@ColumnCount</strong>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
+                            <MatSlider @bind-Value="@ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="4"></MatSlider>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Labels</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <LabelBar Labels="@Dashboard?.Labels" EditMode="@EditMode"></LabelBar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MatTab>
+        <MatTab Label="Security">
+            <div class="mat-elevation-z4 card-panel">
+                <div class="mat-layout-grid">
+                    <div class="mat-layout-grid-inner">
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Sharing</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+                            <label style="color: @(Public ? "green" : "red")">@(Public ? "Public" : "Private")</label>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+                            <MatSlideToggle @bind-Value="@Public"></MatSlideToggle>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+                            <label>Author:</label>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+                            <MatOverline>Author John</MatOverline>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Permissions</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatListGroup>
+                                <MatListGroupSubHeader Style="color: green">Allowed</MatListGroupSubHeader>
+                                <MatDivider></MatDivider>
+                                @RenderPermissionList(AllowPermissions)
+                                <MatListGroupSubHeader Style="color: red">Denied</MatListGroupSubHeader>
+                                <MatDivider></MatDivider>
+                                @RenderPermissionList(DenyPermissions)
+                            </MatListGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MatTab>
+        <MatTab Label="Widgets">
+            <MatAccordion Class="card-panel sticky-panel">
+                <MatExpansionPanel>
+                    <MatExpansionPanelSummary>
+                        <MatExpansionPanelHeader>Collapse</MatExpansionPanelHeader>
+                    </MatExpansionPanelSummary>
+                    <MatExpansionPanelDetails>
+                        <div class="mat-layout-grid">
+                            <div class="mat-layout-grid-inner">
+                                @foreach (var widget in AvailableWidgets ?? Enumerable.Empty<IWidget>())
+                                {
+                                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
+                                        <div class="mat-elevation-z2 card-panel">
+                                            <div class="card-panel-content">
+                                                <MatBody1>@widget.Id</MatBody1>
+                                                <MatOverline> Author John</MatOverline>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+            </MatAccordion>
+        </MatTab>
+    </MatTabGroup>
+}
+
+@code {
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    [Parameter]
+    public IDashboard Dashboard { get; set; }
+
+    public string DashboardName { get; set; }
+
+    public bool Public { get; set; }
+
+    public int ColumnCount { get; set; }
+
+    IWidget[] AvailableWidgets { get; } = {
+        new Widget("Widget1"),
+        new Widget("Widget2"),
+        new Widget("Widget3"),
+        new Widget("Widget4"),
+    };
+
+    Permission[] AllowPermissions { get; } = {
+        new Permission(),
+        new Permission(),
+    };
+
+    Permission[] DenyPermissions { get; }
+
+    private class Permission
+    {
+
+    }
+
+    private RenderFragment RenderPermissionList(IEnumerable<Permission> permissions) =>
+    @<MatList>
+        @foreach (var permission in permissions ?? Enumerable.Empty<Permission>())
+        {
+            <MatListItem>
+                @RenderPermissionItem(permission)
+            </MatListItem>
+        }
+        <MatListItem>
+            <MatListItemText>
+                <MatListItemPrimaryText>@( permissions?.Any() == true ? "Add" : "Empty")</MatListItemPrimaryText>
+                <MatListItemSecondaryText>Create new permission</MatListItemSecondaryText>
+            </MatListItemText>
+        </MatListItem>
+    </MatList>;
+
+private RenderFragment RenderPermissionItem(Permission permission) =>
+@<p>TODO</p>;
+
+}
