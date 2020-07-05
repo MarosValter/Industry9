@@ -14,13 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.Identity.Mongo" Version="6.7.0" />
+    <PackageReference Include="AspNetCore.Identity.Mongo" Version="6.7.1" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="11.0.0-preview.129" />
     <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="11.0.0-preview.129" />
     <PackageReference Include="HotChocolate.Subscriptions.InMemory" Version="11.0.0-preview.129" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0-preview4.20210.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
   </ItemGroup>
 
   <ItemGroup>

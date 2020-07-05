@@ -1,7 +1,6 @@
 ﻿@page "/account/profile"
 @page "/account/profile/{UserId}"
 
-@layout LoginLayout
 @attribute [Authorize]
 
 @inject HttpClient Http
@@ -16,7 +15,7 @@
 }
 else
 {
-    <MatCard>
+    @*<MatCard>*@
         <MatButton Icon="rotate_right" OnClick="@(() => OpenResetPasswordDialog())" Label="Change Password" Raised="true" class="form-group d-flex justify-content-end"></MatButton>
         <EditForm Model="@_userInfo" OnValidSubmit="@UpdateUser">
             <DataAnnotationsValidator />
@@ -72,7 +71,7 @@ else
                 <MatButton OnClick="@ResetUserPasswordAsync">Reset User Password</MatButton>
             </MatDialogActions>
         </MatDialog>
-    </MatCard>
+    @*</MatCard>*@
 }
 @code {
 
@@ -126,16 +125,13 @@ else
         try
         {
             var apiResponse = await AuthStateProvider.UpdateUser(_userInfo);
-            if (!apiResponse.HasErrors)
+            if (apiResponse.StatusCode == 200)
             {
                 MatToaster.Add("Profile update was Successful", MatToastType.Success);
             }
             else
             {
-                foreach (var error in apiResponse.Errors)
-                {
-                    MatToaster.Add(error.Message, MatToastType.Danger, "Profile Update Failed");
-                }
+                MatToaster.Add(apiResponse.Message, MatToastType.Danger, "Profile Update Failed");
             }
         }
         catch (Exception ex)

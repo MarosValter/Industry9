@@ -2,89 +2,45 @@
 
     <MatNavMenu Multi="true" Class="app-sidebar">
         <MatNavItem Href="@NavigationManager.ToAbsoluteUri(" ").AbsoluteUri">
-            <MatIcon>home</MatIcon> <span class="miniHover">Home</span>
+            <MatIcon>@MatIconNames.Home</MatIcon> <span class="miniHover">Home</span>
         </MatNavItem>
 
         <MatNavItem Href="@NavigationManager.ToAbsoluteUri("dashboards").AbsoluteUri">
-            <MatIcon>apps</MatIcon> <span class="miniHover">Dashboards</span>
+            <MatIcon>@MatIconNames.Apps</MatIcon> <span class="miniHover">Dashboards</span>
         </MatNavItem>
 
         <MatNavItem Href="@NavigationManager.ToAbsoluteUri("widgets").AbsoluteUri">
-            <MatIcon>pie_chart</MatIcon> <span class="miniHover">Widgets</span>
+            <MatIcon>@MatIconNames.Pie_chart</MatIcon> <span class="miniHover">Widgets</span>
         </MatNavItem>
 
-        <MatNavSubMenu>
-            <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false">
-                    <MatIcon>stars</MatIcon><span class="miniHover"> Features</span>
-                </MatNavItem>
-            </MatNavSubMenuHeader>
-            <MatNavSubMenuList>
-                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("drag_and_drop").AbsoluteUri">
-                    <MatIcon>touch_app</MatIcon> <span class="miniHover">Drag and Drop</span>
-                </MatNavItem>
-                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("blazor_middlware_audit").AbsoluteUri">
-                    <MatIcon>change_history</MatIcon> <span class="miniHover">Api Audit Log</span>
-                </MatNavItem>
-                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("screenshots").AbsoluteUri">
-                    <MatIcon>screen_share</MatIcon> <span class="miniHover">Screenshots</span>
-                </MatNavItem>
-            </MatNavSubMenuList>
-        </MatNavSubMenu>
-
-        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" Disabled="@(!_isLoggedIn)">
-            <MatIcon>bar_chart</MatIcon> <span class="miniHover">Dashboard</span>
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("dataSources").AbsoluteUri">
+            <MatIcon>@MatIconNames.Storage</MatIcon> <span class="miniHover">Data sources</span>
         </MatNavItem>
-
-        <MatNavSubMenu>
-            <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false" Disabled="@(!_isLoggedIn)">
-                    <MatIcon>mail_outline</MatIcon>
-                    <span class="miniHover"> Email</span>
-                </MatNavItem>
-            </MatNavSubMenuHeader>
-            <MatNavSubMenuList>
-                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("email_view").AbsoluteUri" Disabled="@(!_isLoggedIn)">
-                    <MatIcon>inbox</MatIcon> <span class="miniHover">Read Email</span>
-                </MatNavItem>
-                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("email").AbsoluteUri" Disabled="@(!_isLoggedIn)">
-                    <MatIcon>send</MatIcon> <span class="miniHover">Send Email</span>
-                </MatNavItem>
-            </MatNavSubMenuList>
-        </MatNavSubMenu>
 
         <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
             <Authorized>
                 <MatNavSubMenu>
                     <MatNavSubMenuHeader>
                         <MatNavItem AllowSelection="false">
-                            <MatIcon>settings_applications</MatIcon> <span class="miniHover">Admin</span>
+                            <MatIcon>@MatIconNames.Settings_applications</MatIcon> <span class="miniHover">Admin</span>
                         </MatNavItem>
                     </MatNavSubMenuHeader>
                     <MatNavSubMenuList>
                         <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/users").AbsoluteUri">
-                            <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Users</span>
+                            <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Users</span>
                         </MatNavItem>
                         <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/roles").AbsoluteUri">
-                            <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Roles</span>
+                            <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Roles</span>
                         </MatNavItem>
                     </MatNavSubMenuList>
                 </MatNavSubMenu>
             </Authorized>
             <NotAuthorized>
                 <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/users").AbsoluteUri" Disabled="true">
-                    <MatIcon>supervisor_account</MatIcon> <span class="miniHover">Admin</span>
+                    <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Admin</span>
                 </MatNavItem>
             </NotAuthorized>
         </AuthorizeView>
-
-        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!_isLoggedIn)">
-            <MatIcon>forum</MatIcon> <span class="miniHover">Forum</span>
-        </MatNavItem>
-
-        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("sponsors").AbsoluteUri">
-            <MatIcon>attach_money</MatIcon> <span class="miniHover">Sponsors</span>
-        </MatNavItem>
     </MatNavMenu>
 
 @code {
@@ -96,13 +52,13 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        //var user = (await AuthenticationStateTask).User;
-        _isLoggedIn = false; //user.Identity.IsAuthenticated;
+        var user = (await AuthenticationStateTask).User;
+        _isLoggedIn = user.Identity.IsAuthenticated;
 
-    //https://gist.github.com/SteveSandersonMS/175a08dcdccb384a52ba760122cd2eda Examples
-    //if (user.IsInRole("Admin"))
-    //{
-    // Perform some action only available to users in the 'admin' role
-    //}
+        //https://gist.github.com/SteveSandersonMS/175a08dcdccb384a52ba760122cd2eda Examples
+        //if (user.IsInRole("Admin"))
+        //{
+        // Perform some action only available to users in the 'admin' role
+        //}
     }
 }

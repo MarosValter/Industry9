@@ -5,21 +5,13 @@
 <MatAppBar Fixed="true">
     <MatAppBarRow Style="@GetAppBarColorStyle()">
         <MatAppBarSection>
-            <DashboardSelector>
-                <MatAppBarTitle>
-                    @AppBarState.Value.Title
-                </MatAppBarTitle>
-            </DashboardSelector>
+            <MatAppBarTitle>
+                @AppBarState.Value.Title
+            </MatAppBarTitle>
         </MatAppBarSection>
         <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-            @*<MatTooltip Tooltip="Donate to Support">
-            <MatIconButton Link="https://www.paypal.me/enkodellc" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
-        </MatTooltip>
-        <MatTooltip Tooltip="Github Repository">
-            <MatIconButton Link="https://github.com/enkodellc/blazorboilerplate" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
-        </MatTooltip>*@
-            <UserProfile />
-            <Login></Login>
+            <UserProfile/>
+            <Login/>
         </MatAppBarSection>
     </MatAppBarRow>
 </MatAppBar>

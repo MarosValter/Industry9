@@ -10,24 +10,24 @@
 <MatCard>
     <MatIconButton Icon="home" Link="/" Class="float-right"></MatIconButton>
     <div class="logo">
-        <a href="/" title="Blazor Boilerplate Home"><img src="_content/industry9.UI/images/blazorboilerplate.svg" style="width:100px;" title="Blazor Boilerplate Home" alt="Blazor Boilerplate" /><br />Blazor Boilerplate</a>
+        <a href="/" title="industry9 Home"><img src="_content/industry9.UI/images/blazorboilerplate.svg" style="width:100px;" title="industry9 Home" alt="industry9" /><br />industry9</a>
         <br />
         <h4>Log In</h4>
-        User -> Username: <b>user</b> Password: <b>user123</b><br />
-        Admin -> Username: <b>admin</b> Password: <b>admin123</b><br />
+        @*User -> Username: <b>user</b> Password: <b>user123</b><br />
+        Admin -> Username: <b>admin</b> Password: <b>admin123</b><br />*@
     </div>
-    <EditForm Model="@_loginParameters" OnValidSubmit="@SubmitLogin">
+    <EditForm Model="@LoginParameters" OnValidSubmit="@SubmitLogin">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <fieldset>
             <div class="form-group">
-                <MatTextField @bind-Value="@_loginParameters.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                <MatTextField @bind-Value="@LoginParameters.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@_loginParameters.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                <MatTextField @bind-Value="@LoginParameters.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
             </div>
             <div class="form-group">
-                <MatCheckbox @bind-Value="@_loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>
+                <MatCheckbox @bind-Value="@LoginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>
                 <MatButton class="float-right" Type="submit" Raised="true">Login</MatButton>
             </div>
             <hr />
@@ -45,12 +45,12 @@
             <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
         </MatExpansionPanelSummary>
         <MatExpansionPanelDetails>
-            <EditForm Model="@_forgotPasswordParameters" OnValidSubmit="@ForgotPassword">
+            <EditForm Model="@ForgotPasswordParameters" OnValidSubmit="@ForgotPassword">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <MatTextField @bind-Value="@_forgotPasswordParameters.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <MatTextField @bind-Value="@ForgotPasswordParameters.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                 </div>
                 <div class="form-group">
                     <MatButton class="float-right" Type="submit" Raised="true">Submit</MatButton>
@@ -65,21 +65,21 @@
     [CascadingParameter]
     Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-    string _navigateTo = "";
+    string _navigateTo = string.Empty;
     bool _forgotPasswordToggle;
-    readonly LoginData _loginParameters = new LoginData();
-    readonly ForgotPasswordData _forgotPasswordParameters = new ForgotPasswordData();
+
+    LoginData LoginParameters { get; } = new LoginData();
+    ForgotPasswordData ForgotPasswordParameters { get; } = new ForgotPasswordData();
 
     protected override async Task OnParametersSetAsync()
     {
         var user = (await AuthenticationStateTask).User;
-
         if (user.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo(NavigationManager.BaseUri + _navigateTo);
         }
     }
-    
+
     async Task GoogleSignIn()
     {
         NavigationManager.NavigateTo(NavigationManager.BaseUri + "api/externalauth/challenge/google", true);
@@ -94,26 +94,19 @@
     {
         try
         {
-            var response = await AuthStateProvider.Login(_loginParameters);
-            if (!response.HasErrors)
+            var response = await AuthStateProvider.Login(LoginParameters);
+            if (response.StatusCode == 200)
             {
                 // On successful Login the response.Message is the Last Page Visited from User Profile
                 // We can't navigate yet as the setup is proceeding asynchronously
-                //if (!string.IsNullOrEmpty(response.Message))
+                if (!string.IsNullOrEmpty(response.Message))
                 {
-                    //navigateTo = response.Message;
-                }
-                //else
-                {
-                    _navigateTo = "/dashboard";
+                    _navigateTo = response.Message;
                 }
             }
             else
             {
-                foreach (var error in response.Errors)
-                {
-                    MatToaster.Add(error.Message, MatToastType.Danger, "Login Attempt Failed");
-                }
+                MatToaster.Add(response.Message, MatToastType.Danger, "Login Attempt Failed");
             }
         }
         catch (Exception ex)
@@ -126,9 +119,9 @@
     {
         try
         {
-            await AuthStateProvider.ForgotPassword(_forgotPasswordParameters);
+            await AuthStateProvider.ForgotPassword(ForgotPasswordParameters);
             MatToaster.Add("Forgot Password Email Sent", MatToastType.Success);
-            _forgotPasswordParameters.Email = "";
+            ForgotPasswordParameters.Email = "";
             _forgotPasswordToggle = false;
         }
         catch (Exception ex)

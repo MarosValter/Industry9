@@ -75,7 +75,7 @@ namespace industry9.Server.Controllers
                 {
                     _logger.LogInformation("Logged In: {0}", parameters.UserName);
                     //var profile = _userProfileService.GetLastPageVisited(parameters.UserName);
-                    return new ApiResponse(200, null, "/");
+                    return new ApiResponse(200);
                 }
             }
             catch (Exception ex)

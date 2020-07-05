@@ -1,7 +1,6 @@
-﻿@using System.Text.Json
-@inject IdentityAuthenticationStateProvider AuthStateProvider
+﻿@inject IdentityAuthenticationStateProvider AuthStateProvider
 
-<AuthorizeView Context="AuthorizeContext">
+<AuthorizeView>
     <Authorized>
         @*<MatTooltip Tooltip="Profile">*@
             @*<div class="drawer-profile">*@
@@ -35,8 +34,5 @@
         {
             _userInfo = await AuthStateProvider.GetUserInfo();
         }
-
-        Console.WriteLine(JsonSerializer.Serialize(user.Identity));
-        Console.WriteLine(JsonSerializer.Serialize(_userInfo));
     }
 }

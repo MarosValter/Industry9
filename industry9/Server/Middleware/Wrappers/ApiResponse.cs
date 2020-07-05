@@ -26,7 +26,7 @@ namespace industry9.Server.Middleware.Wrappers
         [DataMember(EmitDefaultValue = false)]
         public object Result { get; set; }
 
-        [JsonConstructor]
+        //[JsonConstructor]
         public ApiResponse(int statusCode, string message = "", object result = null, ApiError apiError = null, string apiVersion = "0.6.0")
         {
             StatusCode = statusCode;

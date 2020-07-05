@@ -355,19 +355,20 @@ app {
 }
 
 .drawer-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #5D2E8F;
-    height: 64px;
+    float: left;
+}
+
+.drawer-logo a {
     color: #fff;
 }
 
-    .drawer-logo a {
-        color: #fff;
-    }
-
 .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5D2E8F;
+    height: 64px;
+    color: #fff;
 }
 
 .drawer-profile {

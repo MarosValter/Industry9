@@ -44,7 +44,7 @@ namespace industry9.Client
                 // config.AddPolicy(Policies.IsMyDomain, Policies.IsMyDomainPolicy());  Only works on the server end
             });
             services.AddScoped<IdentityAuthenticationStateProvider>();
-            services.AddScoped<AuthenticationStateProvider, IdentityAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationStateProvider>());
             services.AddScoped<IAuthorizeApi, AuthorizeApi>();
             services.AddScoped<IUserProfileApi, UserProfileApi>();
             services.AddLoadingBar();
