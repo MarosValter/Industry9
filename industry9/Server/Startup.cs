@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using AspNetCore.Identity.Mongo;
 using Fluxor;
 using HotChocolate;
 using HotChocolate.AspNetCore;
@@ -24,7 +27,16 @@ using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
 using industry9.GraphQL.UI.Scalars;
 using industry9.GraphQL.UI.Widget;
+using industry9.Server.Identity;
+using industry9.Server.Services;
+using industry9.Shared.Authorization;
 using industry9.Shared.Store.UserProfile;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -33,20 +45,33 @@ namespace industry9.Server
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public string MongoConnectionString => Configuration.GetConnectionString("MongoDB");
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+
             BsonSerializer.RegisterSerializer(new ColorSerializer());
             BsonSerializer.RegisterSerializer(new SizeSerializer());
             BsonSerializer.RegisterSerializer(new PositionSerializer());
 
-            services.AddSingleton<IMongoClient>(new MongoClient("mongodb://127.0.0.1:27017"));
+            services.AddSingleton<IMongoClient>(new MongoClient(MongoConnectionString));
             services.AddSingleton(s => s.GetRequiredService<IMongoClient>().GetDatabase("industry9"));
 
             services.AddSingleton(s => s.GetRequiredService<IMongoDatabase>().GetCollection<DashboardDocument>("Dashboards"));
             services.AddSingleton(s => s.GetRequiredService<IMongoDatabase>().GetCollection<WidgetDocument>("Widgets"));
             services.AddSingleton(s => s.GetRequiredService<IMongoDatabase>().GetCollection<DataSourceDefinitionDocument>("DataSourceDefinitions"));
+
+            services.AddTransient<IAccountService, AccountService>();
 
             services.AddScoped<IDashboardRepository, DashboardRepository>();
             services.AddScoped<IWidgetRepository, WidgetRepository>();
@@ -65,7 +90,6 @@ namespace industry9.Server
                     .BindClrType<Size, SizeType>()
                     .BindClrType<DateTime, DateTimeType>()
 
-
                     .AddQueryType(d => d.Name("Query"))
                     .AddType<DashboardQueries>()
                     .AddType<WidgetQueries>()
@@ -74,6 +98,7 @@ namespace industry9.Server
                     .AddType<WidgetMutations>()
                     .AddSubscriptionType(d => d.Name("Subscription"))
                     .AddType<DataSubscriptions>()
+
                     // Types
                     .AddType<DashboardType>()
                     .AddType<WidgetType>()
@@ -84,6 +109,7 @@ namespace industry9.Server
                     //.AddType<TimeSettings>()
                     //.AddType<RelativeTimeSettings>()
                     //.AddType<AbsoluteTimeSettings>()
+
                     // Input types
                     .AddType<DashboardInputType>()
                     .AddType<WidgetInputType>()
@@ -93,10 +119,97 @@ namespace industry9.Server
                     //.AddInputObjectType<TimeSettings>()
                     //.AddInputObjectType<RelativeTimeSettings>()
                     //.AddInputObjectType<AbsoluteTimeSettings>()
+
                     // Enums
                     .AddEnumType<RelativeTimeMode>()
                     .Create()
                 );
+
+            //Add Policies / Claims / Authorization - https://stormpath.com/blog/tutorial-policy-based-authorization-asp-net-core
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
+                options.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
+                options.AddPolicy(Policies.IsReadOnly, Policies.IsReadOnlyPolicy());
+                //options.AddPolicy(Policies.IsMyDomain, Policies.IsMyDomainPolicy());  // valid only on serverside operations
+            });
+
+            services.AddIdentityMongoDbProvider<ApplicationUser, ApplicationRole>(identity =>
+                {
+                    // Password settings
+                    identity.Password.RequireDigit = false;
+                    identity.Password.RequireLowercase = false;
+                    identity.Password.RequireNonAlphanumeric = false;
+                    identity.Password.RequireUppercase = false;
+                    identity.Password.RequiredLength = 1;
+                    identity.Password.RequiredUniqueChars = 0;
+
+                    // Lockout settings
+                    //identity.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                    //identity.Lockout.MaxFailedAccessAttempts = 10;
+                    //identity.Lockout.AllowedForNewUsers = true;
+
+                    // Require Confirmed Email User settings
+                    if (Convert.ToBoolean(Configuration["industry9:RequireConfirmedEmail"] ?? "false"))
+                    {
+                        identity.User.RequireUniqueEmail = false;
+                        identity.SignIn.RequireConfirmedEmail = true;
+                    }
+                }, db => { db.ConnectionString = MongoConnectionString; })
+                .AddDefaultTokenProviders();
+
+            var authBuilder = services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            });
+
+            if (Convert.ToBoolean(Configuration["ExternalAuthProviders:Google:Enabled"] ?? "false"))
+            {
+                authBuilder.AddGoogle(options =>
+                {
+                    options.SignInScheme = GoogleDefaults.AuthenticationScheme;
+
+                    options.ClientId = Configuration["ExternalAuthProviders:Google:ClientId"];
+                    options.ClientSecret = Configuration["ExternalAuthProviders:Google:ClientSecret"];
+                });
+            }
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.ConfigureExternalCookie(options =>
+            {
+                // macOS login fix
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // macOS login fix
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.HttpOnly = false;
+
+                // Suppress redirect on API URLs in ASP.NET Core -> https://stackoverflow.com/a/56384729/54159
+                options.Events = new CookieAuthenticationEvents()
+                {
+                    OnRedirectToAccessDenied = context =>
+                    {
+                        if (context.Request.Path.StartsWithSegments("/api"))
+                        {
+                            context.Response.StatusCode = (int)(HttpStatusCode.Unauthorized);
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             services.AddSwaggerGen(options =>
             {
@@ -135,6 +248,10 @@ namespace industry9.Server
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseWebSockets();
             app.UseGraphQL("/graphql");
             app.UsePlayground("/graphql");

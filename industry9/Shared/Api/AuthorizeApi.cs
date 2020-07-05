@@ -1,74 +1,82 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using industry9.Shared.Dto;
 using industry9.Shared.Dto.Account;
-using StrawberryShake;
+using Microsoft.AspNetCore.Components;
 
 namespace industry9.Shared.Api
 {
     public class AuthorizeApi : IAuthorizeApi
     {
-        public Task<IOperationResult> Login(LoginData loginParameters)
+        private readonly HttpClient _httpClient;
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
         {
-            throw new System.NotImplementedException();
+            PropertyNameCaseInsensitive = true
+        };
+        public static readonly UserInfoData PublicUser = new UserInfoData { IsAuthenticated = false, Roles = new List<string>() };
+
+        public AuthorizeApi(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
         }
 
-        public Task<IOperationResult> Logout()
+        public async Task<ApiResponseData> Login(LoginData loginParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/Login", loginParameters);
         }
 
-        public Task<IOperationResult> Create(RegisterData registerParameters)
+        public async Task<ApiResponseData> Logout()
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/Logout", null);
         }
 
-        public Task<IOperationResult> Register(RegisterData registerParameters)
+        public async Task<ApiResponseData> Create(RegisterData registerParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/Create", registerParameters);
+
         }
 
-        public Task<IOperationResult> ForgotPassword(ForgotPasswordData forgotPasswordParameters)
+        public async Task<ApiResponseData> Register(RegisterData registerParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/Register", registerParameters);
         }
 
-        public Task<IOperationResult> ResetPassword(ResetPasswordData resetPasswordParameters)
+        public async Task<ApiResponseData> ForgotPassword(ForgotPasswordData forgotPasswordParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/ForgotPassword", forgotPasswordParameters);
         }
 
-        public Task<IOperationResult> ConfirmEmail(ConfirmEmailData confirmEmailParameters)
+        public async Task<ApiResponseData> ResetPassword(ResetPasswordData resetPasswordParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/ResetPassword", resetPasswordParameters);
         }
 
-        public Task<IOperationResult> UpdateUser(UserInfoData userInfo)
+        public async Task<ApiResponseData> ConfirmEmail(ConfirmEmailData confirmEmailParameters)
         {
-            throw new System.NotImplementedException();
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/ConfirmEmail", confirmEmailParameters);
         }
 
-        public Task<UserInfoData> GetUserInfo()
+        public async Task<ApiResponseData> UpdateUser(UserInfoData userInfo)
         {
-            return Task.FromResult(new UserInfoData
-            {
-                Email = "asdf",
-                FirstName = "asdf",
-                LastName = "asdf",
-                UserName = "asdf",
-                ExposedClaims = new List<KeyValuePair<string, string>>()
-            });
+            return await _httpClient.PostJsonAsync<ApiResponseData>("api/Account/UpdateUser", userInfo);
         }
 
-        public Task<UserInfoData> GetUser()
+        public async Task<UserInfoData> GetUserInfo()
         {
-            return Task.FromResult(new UserInfoData
-            {
-                Email = "asdf",
-                FirstName = "asdf",
-                LastName = "asdf",
-                UserName = "asdf",
-                ExposedClaims = new List<KeyValuePair<string, string>>()
-            });
+            var apiResponse = await _httpClient.GetJsonAsync<ApiResponseData>("api/Account/UserInfo");
+            return apiResponse.StatusCode == 200
+                ? JsonSerializer.Deserialize<UserInfoData>(apiResponse.Result.ToString(), JsonOptions)
+                : PublicUser;
+        }
+
+        public async Task<UserInfoData> GetUser()
+        {
+            var apiResponse = await _httpClient.GetJsonAsync<ApiResponseData>("api/Account/GetUser");
+            var user = JsonSerializer.Deserialize<UserInfoData>(apiResponse.Result.ToString(), JsonOptions);
+            return user;
         }
     }
 }

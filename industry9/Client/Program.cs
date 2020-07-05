@@ -40,7 +40,7 @@ namespace industry9.Client
             {
                 config.AddPolicy(Policies.IsAdmin, Policies.IsAdminPolicy());
                 config.AddPolicy(Policies.IsUser, Policies.IsUserPolicy());
-                config.AddPolicy(Policies.IsReadOnly, Policies.IsUserPolicy());
+                config.AddPolicy(Policies.IsReadOnly, Policies.IsReadOnlyPolicy());
                 // config.AddPolicy(Policies.IsMyDomain, Policies.IsMyDomainPolicy());  Only works on the server end
             });
             services.AddScoped<IdentityAuthenticationStateProvider>();

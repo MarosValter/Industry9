@@ -1,18 +1,21 @@
-﻿@inject IdentityAuthenticationStateProvider AuthStateProvider
+﻿@using System.Text.Json
+@inject IdentityAuthenticationStateProvider AuthStateProvider
 
-<AuthorizeView>
+<AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <div class="drawer-profile">
-            <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
-            @if (_userInfo == null)
-            {
-                <div class="spinner-border spinner-border-sm" role="status"></div>
-            }
-            else
-            {
-                <span class="miniHover"><b><a href="/account/profile">@_userInfo.UserName</a></b></span>
-            }
-        </div>
+        @*<MatTooltip Tooltip="Profile">*@
+            @*<div class="drawer-profile">*@
+                <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
+                @if (_userInfo == null)
+                {
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                }
+                else
+                {
+                    <span class="miniHover"><b><a href="/account/profile">@_userInfo.UserName</a></b></span>
+                }
+            @*</div>*@
+        @*</MatTooltip>*@
     </Authorized>
 </AuthorizeView>
 
@@ -21,16 +24,19 @@
     UserInfoData _userInfo;
 
     [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
+    Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        //_userInfo = null;
-        //var user = (await authenticationStateTask).User;
+        _userInfo = null;
+        var user = (await AuthenticationStateTask).User;
 
-        //if (user.Identity.IsAuthenticated)
+        if (user.Identity.IsAuthenticated)
         {
             _userInfo = await AuthStateProvider.GetUserInfo();
         }
+
+        Console.WriteLine(JsonSerializer.Serialize(user.Identity));
+        Console.WriteLine(JsonSerializer.Serialize(_userInfo));
     }
 }

@@ -57,23 +57,23 @@ namespace industry9.Shared
             return new UserProfileData();
         }
 
-        public async Task UpdateUserProfileCount(int count)
-        {
-            UserProfile.Count = count;
-            await UpdateUserProfile();
-            NotifyStateChanged();
-        }
+        //public async Task UpdateUserProfileCount(int count)
+        //{
+        //    UserProfile.Count = count;
+        //    await UpdateUserProfile();
+        //    NotifyStateChanged();
+        //}
 
-        public async Task<int> GetUserProfileCount()
-        {
-            if (UserProfile == null)
-            {
-                UserProfile = await GetUserProfile();
-                return UserProfile.Count;
-            }
+        //public async Task<int> GetUserProfileCount()
+        //{
+        //    if (UserProfile == null)
+        //    {
+        //        UserProfile = await GetUserProfile();
+        //        return UserProfile.Count;
+        //    }
 
-            return UserProfile.Count;
-        }
+        //    return UserProfile.Count;
+        //}
 
         public async Task SaveLastVisitedUri(string uri)
         {

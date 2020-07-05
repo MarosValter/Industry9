@@ -79,7 +79,7 @@
             NavigationManager.NavigateTo(NavigationManager.BaseUri + _navigateTo);
         }
     }
-
+    
     async Task GoogleSignIn()
     {
         NavigationManager.NavigateTo(NavigationManager.BaseUri + "api/externalauth/challenge/google", true);
