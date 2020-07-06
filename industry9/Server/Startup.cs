@@ -27,6 +27,7 @@ using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
 using industry9.GraphQL.UI.Scalars;
 using industry9.GraphQL.UI.Widget;
+using industry9.Server.Data;
 using industry9.Server.Identity;
 using industry9.Server.Services;
 using industry9.Shared.Authorization;
@@ -71,6 +72,7 @@ namespace industry9.Server
             services.AddSingleton(s => s.GetRequiredService<IMongoDatabase>().GetCollection<WidgetDocument>("Widgets"));
             services.AddSingleton(s => s.GetRequiredService<IMongoDatabase>().GetCollection<DataSourceDefinitionDocument>("DataSourceDefinitions"));
 
+            services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
             services.AddTransient<IAccountService, AccountService>();
 
             services.AddScoped<IDashboardRepository, DashboardRepository>();
@@ -233,6 +235,12 @@ namespace industry9.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var databaseInitializer = serviceScope.ServiceProvider.GetService<IDatabaseInitializer>();
+                databaseInitializer.SeedAsync().Wait();
+            }
+
             app.UseResponseCompression();
 
             if (env.IsDevelopment())

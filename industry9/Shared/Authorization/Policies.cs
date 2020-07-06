@@ -14,7 +14,7 @@ namespace industry9.Shared.Authorization
         {
             return new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireClaim("IsAdministrator")
+                .RequireClaim(ApplicationRoleType.Administrator.ToClaim())
                 .Build();
         }
 
@@ -22,7 +22,7 @@ namespace industry9.Shared.Authorization
         {
             return new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireClaim("IsUser")
+                .RequireClaim(ApplicationRoleType.User.ToClaim())
                 .Build();
         }
 

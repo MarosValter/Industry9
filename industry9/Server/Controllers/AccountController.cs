@@ -25,6 +25,7 @@ namespace industry9.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly IAccountService _accountService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public AccountController(
@@ -32,13 +33,15 @@ namespace industry9.Server.Controllers
             IConfiguration configuration,
             IAccountService accountService,
             UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager)
         {
             _logger = logger;
             _configuration = configuration;
-            _userManager = userManager;
-            _signInManager = signInManager;
             _accountService = accountService;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         // POST: api/Account/Login
@@ -288,13 +291,13 @@ namespace industry9.Server.Controllers
             return new ApiResponse(200, "Get User Successful", userInfo);
         }
 
-        //[HttpGet("ListRoles")]
-        //[Authorize]
-        //public async Task<ApiResponse> ListRoles()
-        //{
-        //    var roleList = _roleManager.Roles.Select(x => x.Name).ToList();
-        //    return new ApiResponse(200, "", roleList);
-        //}
+        [HttpGet("ListRoles")]
+        [Authorize]
+        public ApiResponse ListRoles()
+        {
+            var roleList = _roleManager.Roles.Select(x => x.Name).ToList();
+            return new ApiResponse(200, "", roleList);
+        }
 
         private async Task<UserInfoData> BuildUserInfo()
         {
@@ -315,7 +318,7 @@ namespace industry9.Server.Controllers
                         //Optionally: filter the claims you want to expose to the client
                         ExposedClaims = User.Claims.Select(c => new KeyValuePair<string, string>(c.Type, c.Value)).ToList(),
                         Roles = ((ClaimsIdentity)User.Identity).Claims
-                            .Where(c => c.Type == "role")
+                            .Where(c => c.Type == ClaimTypes.Role)
                             .Select(c => c.Value).ToList()
                     };
                 }

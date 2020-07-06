@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using industry9.Server.Authorization;
 using industry9.Server.Identity;
 using industry9.Shared.Authorization;
 using industry9.Shared.Exception;
@@ -43,14 +44,15 @@ namespace industry9.Server.Services
             }
 
             await _userManager.AddClaimsAsync(user, new []{
-                    new Claim(Policies.IsUser,""),
+                    new Claim(ApplicationRoleType.User.ToClaim(),"true", ClaimValueTypes.Boolean),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    //new Claim(JwtClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    // TODO claim
                     //new Claim(JwtClaimTypes.EmailVerified, "false", ClaimValueTypes.Boolean)
                 });
 
             //Role - Here we tie the new user to the "User" role
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, ApplicationRoleType.User.ToName());
 
             _logger.LogInformation("New user registered: {0}", user);
 
