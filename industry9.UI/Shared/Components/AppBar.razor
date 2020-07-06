@@ -1,27 +1,96 @@
-﻿@using industry9.Shared.Store.AppBar
+﻿@using industry9.Shared.Navigation
+@using industry9.Shared.Store.AppBar
+@using industry9.Shared.Store.UserProfile
+
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
 @inject IState<AppBarState> AppBarState
+@inject IState<UserProfileState> UserProfileState
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <MatAppBar Fixed="true">
     <MatAppBarRow Style="@GetAppBarColorStyle()">
-        <MatAppBarSection>
+        @*<MatAppBarSection>
+            @if (IsHome())
+            {
+            <DashboardSelector></DashboardSelector>
+            }
             <MatAppBarTitle>
-                @AppBarState.Value.Title
+                @GetTitle()
             </MatAppBarTitle>
-        </MatAppBarSection>
+        </MatAppBarSection>*@
         <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-            <UserProfile/>
-            <Login/>
+            <UserProfile />
+            <Login />
         </MatAppBarSection>
     </MatAppBarRow>
 </MatAppBar>
 
 @code
 {
+    string _currentLocation = string.Empty;
+
+    private string GetTitle()
+    {
+        return IsHome() && !string.IsNullOrEmpty(UserProfileState.Value.SelectedDashboard?.Name) ? UserProfileState.Value.SelectedDashboard?.Name : _currentLocation;
+    }
+
+    private bool IsHome()
+    {
+        return new Uri(NavigationManager.Uri).AbsolutePath == "/";
+    }
 
     private string GetAppBarColorStyle()
     {
         return string.IsNullOrEmpty(AppBarState.Value.Color) ? string.Empty : $"background-color: {AppBarState.Value.Color}";
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await SetTitle(new Uri(NavigationManager.Uri).Segments.Last());
+    }
+
+    protected override void OnInitialized()
+    {
+        UserProfileState.StateChanged += UserProfileStateOnStateChanged;
+        NavigationManager.LocationChanged += NavigationManagerOnLocationChanged;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            UserProfileState.StateChanged -= UserProfileStateOnStateChanged;
+            NavigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
+        }
+        base.Dispose(disposing);
+    }
+
+    private async void UserProfileStateOnStateChanged(object sender, UserProfileState e)
+    {
+        if (e.SelectedDashboard != null)
+        {
+            await SetTitle(e.SelectedDashboard.Name);
+        }
+    }
+
+    private async void NavigationManagerOnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        var loc = new Uri(e.Location).Segments.Last();
+        await SetTitle(loc);
+    }
+
+    private async Task SetTitle(string location)
+    {
+        /*var pageTitle = PageTitleGenerator.Create(location);
+        _currentLocation = pageTitle.Name;
+        await JSRuntime.InvokeVoidAsync("JsFunctions.setDocumentTitle", pageTitle.Title);
+        StateHasChanged();*/
+    }
 }

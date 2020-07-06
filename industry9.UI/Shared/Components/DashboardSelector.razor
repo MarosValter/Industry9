@@ -6,7 +6,6 @@
 @inject IDispatcher Dispatcher
 
 <MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Donut_large" />
-@ChildContent(UserProfileState.Value.SelectedDashboard)
 <MatMenu @ref="@_menu">
     <MatList>
         @foreach (var dashboard in UserProfileState.Value.Dashboards)
@@ -17,11 +16,6 @@
 </MatMenu>
 
 @code {
-
-    [Parameter]
-    public RenderFragment<IDashboard1> ChildContent { get; set; }
-
-    //readonly ForwardRef Ref = new ForwardRef();
     BaseMatIconButton _button;
     BaseMatMenu _menu;
 

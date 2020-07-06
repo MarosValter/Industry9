@@ -3,7 +3,7 @@
 @inject NavigationManager navigationManager
 @inject AppState appState
 
-<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
+<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@_bbDrawerClass">
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
@@ -70,15 +70,15 @@
 @code {
     bool _navMenuOpened = true;
     bool _navMinified = false;
-    public string bbDrawerClass = "";
+    string _bbDrawerClass = "";
 
     [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
+    Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         // Uncomment to secure entire app  with no anonymous user access
-        navigationManager.NavigateTo("/account/login");
+        //navigationManager.NavigateTo("/account/login");
 
         // Set Default landing page if you want for anonymous user.
         // Authenticated users are redirected after successful login.
@@ -99,14 +99,14 @@
         _navMenuOpened = !_navMenuOpened;
         if (_navMenuOpened)
         {
-            bbDrawerClass = "full";
+            _bbDrawerClass = "full";
         }
         else
         {
-            bbDrawerClass = "closed";
+            _bbDrawerClass = "closed";
         }
 
-        this.StateHasChanged();
+        StateHasChanged();
     }
 
     void NavLock()
@@ -125,15 +125,15 @@
 
         if (_navMinified)
         {
-            bbDrawerClass = "mini";
+            _bbDrawerClass = "mini";
             _navMenuOpened = true;
         }
         else if (_navMenuOpened)
         {
-            bbDrawerClass = "full";
+            _bbDrawerClass = "full";
         }
 
         _navMenuOpened = true;
-        this.StateHasChanged();
+        StateHasChanged();
     }
 }

@@ -11,47 +11,47 @@
 <DashboardSettings Dashboard="@DashboardState.Value.SelectedDashboard" EditMode="@DashboardState.Value.EditMode"></DashboardSettings>
 @if (!DashboardState.Value.EditMode)
 {
-    <LabelBar Labels="@DashboardState.Value.SelectedDashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
-    @_labelBar
+<LabelBar Labels="@DashboardState.Value.SelectedDashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
+@*@_labelBar*@
 }
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
         @foreach (var widget in DashboardState.Value.SelectedDashboard?.Widgets ?? Enumerable.Empty<IWidget>())
         {
-            <div class="mat-layout-grid-cell">
+        <div class="mat-layout-grid-cell">
 
-            </div>
+        </div>
         }
     </div>
 </div>
 
 @if (DashboardState.Value.IsLoading)
 {
-    <div class="loading-container">
+<div class="loading-container">
 
-    </div>
+</div>
 }
 
-<MatFAB Icon="@MatIconNames.Undo" Class="dashboard-edit-btn-ternary" OnClick="@(e => Undo())"></MatFAB>
 @if (DashboardState.Value.EditMode)
 {
-    <MatFAB Icon="@MatIconNames.Done" Class="dashboard-edit-btn-secondary" OnClick="@(e => ToggleEditMode(false, true))"></MatFAB>
-    <MatFAB Icon="@MatIconNames.Clear" Class="dashboard-edit-btn-primary" OnClick="@(e => ToggleEditMode(false, false))"></MatFAB>
+<MatFAB Icon="@MatIconNames.Undo" Class="dashboard-edit-btn-ternary" OnClick="@(e => Undo())"></MatFAB>
+<MatFAB Icon="@MatIconNames.Done" Class="dashboard-edit-btn-secondary" OnClick="@(e => ToggleEditMode(false, true))"></MatFAB>
+<MatFAB Icon="@MatIconNames.Clear" Class="dashboard-edit-btn-primary" OnClick="@(e => ToggleEditMode(false, false))"></MatFAB>
 }
 else
 {
-    <MatFAB Icon="@MatIconNames.Edit" Class="dashboard-edit-btn-primary" OnClick="@(e => ToggleEditMode(true, false))"></MatFAB>
+<MatFAB Icon="@MatIconNames.Edit" Class="dashboard-edit-btn-primary" OnClick="@(e => ToggleEditMode(true, false))"></MatFAB>
 }
 
 @code {
-    RenderFragment _labelBar;
+    @*RenderFragment _labelBar;
 
-    protected override Task OnInitializedAsync()
-    {
-        _labelBar =@<LabelBar Labels="@DashboardState.Value.SelectedDashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>;
-        return base.OnInitializedAsync();
-    }
+        protected override Task OnInitializedAsync()
+        {
+            _labelBar =@<LabelBar Labels="@DashboardState.Value.SelectedDashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>;
+            return base.OnInitializedAsync();
+        }*@
 
     private void ToggleEditMode(bool enabled, bool saveChanges)
     {

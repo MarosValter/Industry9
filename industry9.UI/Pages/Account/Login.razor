@@ -80,12 +80,12 @@
         }
     }
 
-    async Task GoogleSignIn()
+    void GoogleSignIn()
     {
         NavigationManager.NavigateTo(NavigationManager.BaseUri + "api/externalauth/challenge/google", true);
     }
 
-    async Task Register()
+    void Register()
     {
         NavigationManager.NavigateTo("/account/register");
     }
