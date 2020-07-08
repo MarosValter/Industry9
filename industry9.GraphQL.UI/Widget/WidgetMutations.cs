@@ -11,8 +11,8 @@ namespace industry9.GraphQL.UI.Widget
     [ExtendObjectType(Name = "Mutation")]
     public class WidgetMutations
     {
-        public async Task<WidgetDocument> CreateWidget(WidgetInputDocument widget, IResolverContext context,
-            [Service] IWidgetRepository widgetRepository, [Service] IDashboardRepository dashboardRepository)
+        public async Task<WidgetDocument> CreateWidget(WidgetInputDocument widget,
+            [Service] IWidgetRepository widgetRepository, [Service] IDashboardRepository dashboardRepository, IResolverContext ctx)
         {
             await widgetRepository.CreateDocumentAsync(widget);
 
@@ -20,7 +20,7 @@ namespace industry9.GraphQL.UI.Widget
             //if (args.TryGetValue("dashboardId", out var id) && id is string dashboardId)
             if (!string.IsNullOrEmpty(widget.DashboardId))
             {
-                var addResult = await dashboardRepository.AddWidgetsToDashboard(widget.DashboardId, new []{ widget.Id });
+                var addResult = await dashboardRepository.AddWidgetsToDashboard(widget.DashboardId, new []{ widget.Id }, ctx.RequestAborted);
                 if (!addResult.IsAcknowledged)
                 {
                     // TODO

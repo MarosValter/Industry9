@@ -30,7 +30,7 @@
         await _menu.OpenAsync(_button.Ref);
     }
 
-    private void SelectDashboard(IDashboard1 dashboard)
+    private void SelectDashboard(IDashboardLite dashboard)
     {
         Dispatcher.Dispatch(new SelectDashboardAction(dashboard));
     }

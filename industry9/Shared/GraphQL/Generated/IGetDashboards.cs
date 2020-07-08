@@ -8,6 +8,6 @@ namespace industry9.Shared
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
     public partial interface IGetDashboards
     {
-        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboard1> Dashboards { get; }
+        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardLite> Dashboards { get; }
     }
 }

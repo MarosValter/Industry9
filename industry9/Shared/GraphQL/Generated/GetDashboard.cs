@@ -10,11 +10,11 @@ namespace industry9.Shared
         : IGetDashboard
     {
         public GetDashboard(
-            global::industry9.Shared.IDashboard dashboard)
+            global::industry9.Shared.IDashboardDetail dashboard)
         {
             Dashboard = dashboard;
         }
 
-        public global::industry9.Shared.IDashboard Dashboard { get; }
+        public global::industry9.Shared.IDashboardDetail Dashboard { get; }
     }
 }

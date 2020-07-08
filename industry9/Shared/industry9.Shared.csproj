@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <GraphQL Remove="GraphQL\Extensions.graphql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Watch Remove="GraphQL\Extensions.graphql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Fluxor" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview3.20168.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.5" />

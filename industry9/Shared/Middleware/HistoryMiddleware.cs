@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,21 +6,46 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Shared.Store.Base;
+using Microsoft.Extensions.Logging;
 
 namespace industry9.Shared.Middleware
 {
     public class HistoryMiddleware : Fluxor.Middleware, IDisposable
     {
+        private const LogLevel Level = LogLevel.Information;
+        private readonly ILogger<HistoryMiddleware> _logger;
         private IStore _store;
-        private IReadOnlyDictionary<string, Queue> _historyQueues;
-        private ISet<string> _queueEnabled;
+        private ISet<string> _restoringState;
+        private ISet<string> _stackEnabled;
+        private IReadOnlyDictionary<string, LinkedList<object>> _historyStacks;
         private IReadOnlyDictionary<string, IFeature> _historyFeatures;
+
+        public HistoryMiddleware(ILogger<HistoryMiddleware> logger)
+        {
+            _logger = logger;
+        }
 
         public override Task InitializeAsync(IStore store)
         {
             _store = store;
-            InitializeQueues();
+            InitializeStacks();
             return base.InitializeAsync(store);
+        }
+
+        private void InitializeStacks()
+        {
+            var stacks = new Dictionary<string, LinkedList<object>>();
+            _historyFeatures = new ReadOnlyDictionary<string, IFeature>(new Dictionary<string, IFeature>(_store.Features.Where(f => f.Value is IHistoryFeature)));
+            foreach (var feature in _historyFeatures.Values)
+            {
+                stacks.Add(feature.GetName(), new LinkedList<object>());
+                feature.StateChanged += FeatureOnStateChanged;
+            }
+            _historyStacks = new ReadOnlyDictionary<string, LinkedList<object>>(stacks);
+            _stackEnabled = new HashSet<string>();
+            _restoringState = new HashSet<string>();
+
+            _logger.LogDebug("History tracking enabled for following features: {0}", string.Join(',', _historyFeatures.Keys));
         }
 
         public override bool MayDispatchAction(object action)
@@ -31,16 +55,31 @@ namespace industry9.Shared.Middleware
                 return true;
             }
 
-            foreach (var historyFeature in undoAction.Features)
+            _logger.Log(Level, "Undo action requested for following features: {0}.", string.Join(',', undoAction.Features));
+            foreach (var feature in undoAction.Features)
             {
-                if (!_historyFeatures.TryGetValue(historyFeature, out var feature) ||
-                    !_historyQueues.TryGetValue(historyFeature, out var queue))
+                if (!_historyFeatures.TryGetValue(feature, out var historyFeature) ||
+                    !_historyStacks.TryGetValue(feature, out var stack))
                 {
                     continue;
                 }
 
-                var prevState = queue.Dequeue();
-                feature.RestoreState(prevState);
+                // can't undo initial state
+                if (stack.Count < 2)
+                {
+                    _logger.Log(Level, "{0}: can't undo as feature has its initial state already.", feature);
+                    continue;
+                }
+
+                // remove newest state as it is no longer valid
+                stack.RemoveLast();
+                // set previous state without removing it
+                _restoringState.Add(feature);
+                historyFeature.RestoreState(stack.Last.Value);
+                _restoringState.Remove(feature);
+
+                _logger.Log(Level, "{0}: previous state restored with values {1}.", feature, JsonSerializer.Serialize(stack.Last.Value));
+                _logger.Log(Level, "{0}: number of tracked states is {1}", feature, stack.Count);
             }
 
             return false;
@@ -49,55 +88,88 @@ namespace industry9.Shared.Middleware
 
         public override void BeforeDispatch(object action)
         {
-            if (action is IEditAction editAction)
+            if (!(action is IEditAction editAction) || !editAction.Enabled)
             {
-                Console.WriteLine($"BEFORE ACTION: {JsonSerializer.Serialize(action)}");
-                foreach (var feature in editAction.Features)
-                {
-                    _queueEnabled.Add(feature);
-                }
+                return;
             }
+
+            var features = new HashSet<string>();
+            foreach (var feature in editAction.Features)
+            {
+                if (!_historyFeatures.TryGetValue(feature, out var historyFeature) ||
+                    !_historyStacks.TryGetValue(feature, out var stack))
+                {
+                    continue;
+                }
+
+                features.Add(feature);
+                // get initial state before any modifications
+                stack.AddFirst(historyFeature.GetState());
+                // enable storing modified states
+                _stackEnabled.Add(feature);
+            }
+
+            _logger.Log(Level, "History enabled for following features: {0}", string.Join(',', features));
         }
 
         public override void AfterDispatch(object action)
         {
-            if (action is IEditAction editAction)
+            if (!(action is IEditAction editAction) || editAction.Enabled)
             {
-                foreach (var feature in editAction.Features)
+                return;
+            }
+
+            var features = new HashSet<string>();
+            foreach (var feature in editAction.Features)
+            {
+                if (!_historyFeatures.TryGetValue(feature, out var historyFeature) ||
+                    !_historyStacks.TryGetValue(feature, out var stack))
                 {
-                    _queueEnabled.Remove(feature);
+                    continue;
                 }
-                Console.WriteLine($"AFTER ACTION: {JsonSerializer.Serialize(action)}");
-            }
-        }
 
-        private void InitializeQueues()
-        {
-            var queues = new Dictionary<string, Queue>();
-            _historyFeatures = new ReadOnlyDictionary<string, IFeature>(new Dictionary<string, IFeature>(_store.Features.Where(f => f.Value is IHistoryFeature)));
-            foreach (var feature in _historyFeatures.Values)
-            {
-                var historyFeature = (IHistoryFeature) feature;
-                queues.Add(feature.GetName(), new Queue(historyFeature.HistoryLength));
+                features.Add(feature);
+                if (editAction.SaveChanges)
+                {
+                    // TODO persist changes
+                    var f = (IHistoryFeature) historyFeature;
+                    f.PersistChanges();
+                }
+                else
+                {
+                    // restore state to initial value
+                    var initialState = stack.First.Value;
+                    historyFeature.RestoreState(initialState);
+                }
 
-                feature.StateChanged += FeatureOnStateChanged;
+                stack.Clear();
+                _stackEnabled.Remove(feature);
             }
-            _historyQueues = new ReadOnlyDictionary<string, Queue>(queues);
-            _queueEnabled = new HashSet<string>();
+
+            _logger.Log(Level, "Changes {1} for following features: {0}", string.Join(',', features), editAction.SaveChanges ? "persisted" : "reverted");
         }
 
         private void FeatureOnStateChanged(object sender, EventArgs e)
         {
-            Console.WriteLine($"FEATURE: {JsonSerializer.Serialize(sender)}");
             var feature = (IFeature) sender;
             var featureName = feature.GetName();
-            if (_queueEnabled.Contains(featureName))
+
+            // restoring previous state
+            if (_restoringState.Contains(featureName))
             {
-                Console.WriteLine($"FEATURE UPDATED: {featureName}");
-                _historyQueues[featureName].Enqueue(feature.GetState());
+                return;
             }
 
-            Console.WriteLine($"QUEUE LENGTH: {_historyQueues[featureName].Count}");
+            if (!_stackEnabled.Contains(featureName))
+            {
+                return;
+            }
+
+            var state = feature.GetState();
+            _historyStacks[featureName].AddLast(state);
+
+            _logger.Log(Level, "{0}: state updated with values {1}", featureName, JsonSerializer.Serialize(state));
+            _logger.Log(Level, "{0}: number of tracked states is {1}", featureName, _historyStacks[featureName].Count);
         }
 
         public void Dispose()

@@ -6,6 +6,7 @@ using industry9.Shared;
 using industry9.Shared.Api;
 using industry9.Shared.Authorization;
 using industry9.Shared.Authorization.Implementation;
+using industry9.Shared.GraphQL.Serializers;
 using industry9.Shared.Middleware;
 using industry9.Shared.Navigation;
 using industry9.Shared.Store.UserProfile;
@@ -14,6 +15,7 @@ using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using StrawberryShake;
 using StrawberryShake.Transport.WebSockets;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -63,6 +65,9 @@ namespace industry9.Client
             services.AddWebSocketClient("industry9Client", (sp, c) => c.Uri = new UriBuilder(new Uri(environment.BaseAddress)) { Scheme = "wss", Path = "graphql" }.Uri);
             services.Addindustry9Client();
             services.AddSingleton<industry9NavigationManager>();
+
+            services.AddSingleton<IValueSerializer, ColorSerializer>();
+            services.AddSingleton<IValueSerializer, PositionValueSerializer>();
 
             services.AddFluxor(opt =>
             {

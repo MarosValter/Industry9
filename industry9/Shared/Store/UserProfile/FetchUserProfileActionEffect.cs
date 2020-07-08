@@ -15,6 +15,7 @@ namespace industry9.Shared.Store.UserProfile
         protected override async Task HandleAsync(FetchUserProfileAction action, IDispatcher dispatcher)
         {
             var result = await _client.GetDashboardsAsync();
+            // TODO fetch selected dashboard from user profile
             dispatcher.Dispatch(new FetchUserProfileResultAction(null, result.Data.Dashboards));
         }
     }

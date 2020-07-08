@@ -2,9 +2,9 @@
 {
     public class FetchDashboardResultAction
     {
-        public IDashboard Dashboard { get; }
+        public IDashboardDetail Dashboard { get; }
 
-        public FetchDashboardResultAction(IDashboard dashboard)
+        public FetchDashboardResultAction(IDashboardDetail dashboard)
         {
             Dashboard = dashboard;
         }

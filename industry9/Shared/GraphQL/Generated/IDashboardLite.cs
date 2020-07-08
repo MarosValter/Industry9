@@ -6,14 +6,16 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial interface IDashboard
+    public partial interface IDashboardLite
     {
         string Id { get; }
 
         string Name { get; }
 
-        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabelData> Labels { get; }
+        string AuthorId { get; }
 
-        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidget> Widgets { get; }
+        System.DateTimeOffset Created { get; }
+
+        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> Labels { get; }
     }
 }

@@ -8,29 +8,31 @@ namespace industry9.Shared.Store.Dashboard
     public static class DashboardReducer
     {
         [ReducerMethod]
-        public static DashboardState ReduceToggleEditModeAction(DashboardState state, ToggleEditModeAction action)
-            => new DashboardState(false, action.Enabled, state.SelectedDashboard);
+        public static DashboardDetailState ReduceToggleEditModeAction(DashboardDetailState state, ToggleEditModeAction action)
+            => new DashboardDetailState(false, action.Enabled, state.SelectedDashboard);
 
         [ReducerMethod]
-        public static DashboardState ReduceSelectDashboardAction(DashboardState state, SelectDashboardAction action)
-            => new DashboardState(true, false, null);
+        public static DashboardDetailState ReduceSelectDashboardAction(DashboardDetailState state, SelectDashboardAction action)
+            => new DashboardDetailState(true, false, null);
 
         [ReducerMethod]
-        public static DashboardState ReduceFetchDashboardResultAction(DashboardState state, FetchDashboardResultAction action)
-            => new DashboardState(false, false, action.Dashboard);
+        public static DashboardDetailState ReduceFetchDashboardResultAction(DashboardDetailState state, FetchDashboardResultAction action)
+            => new DashboardDetailState(false, false, action.Dashboard);
 
         [ReducerMethod]
-        public static DashboardState ReduceAddLabelAction(DashboardState state, AddLabelAction action)
-            => new DashboardState(state.IsLoading, state.EditMode,
-                new Shared.Dashboard(state.SelectedDashboard.Id, state.SelectedDashboard.Name,
-                    new ReadOnlyCollection<ILabelData>(state.SelectedDashboard.Labels.Concat(new []{action.Label}).ToList()),
+        public static DashboardDetailState ReduceAddLabelAction(DashboardDetailState state, AddLabelAction action)
+            => new DashboardDetailState(state.IsLoading, state.EditMode,
+                new DashboardDetail(state.SelectedDashboard.Id, state.SelectedDashboard.Name,
+                    state.SelectedDashboard.AuthorId, state.SelectedDashboard.Created,
+                    new ReadOnlyCollection<ILabel>(state.SelectedDashboard.Labels.Concat(new []{action.Label}).ToList()),
                     state.SelectedDashboard.Widgets));
 
         [ReducerMethod]
-        public static DashboardState ReduceRemoveLabelAction(DashboardState state, RemoveLabelAction action)
-            => new DashboardState(state.IsLoading, state.EditMode,
-                new Shared.Dashboard(state.SelectedDashboard.Id, state.SelectedDashboard.Name,
-                    new ReadOnlyCollection<ILabelData>(state.SelectedDashboard.Labels.Where(l => l.Name != action.LabelName).ToList()),
-                    state.SelectedDashboard.Widgets));
+        public static DashboardDetailState ReduceRemoveLabelAction(DashboardDetailState detailState, RemoveLabelAction action)
+            => new DashboardDetailState(detailState.IsLoading, detailState.EditMode,
+                new DashboardDetail(detailState.SelectedDashboard.Id, detailState.SelectedDashboard.Name,
+                    detailState.SelectedDashboard.AuthorId, detailState.SelectedDashboard.Created,
+                    new ReadOnlyCollection<ILabel>(detailState.SelectedDashboard.Labels.Where(l => l.Name != action.LabelName).ToList()),
+                    detailState.SelectedDashboard.Widgets));
     }
 }

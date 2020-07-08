@@ -4,7 +4,7 @@
 @if (Labels?.Any() == true || EditMode)
 {
     <MatChipSet>
-        @foreach (var label in Labels ?? Enumerable.Empty<ILabelData>())
+        @foreach (var label in Labels ?? Enumerable.Empty<ILabel>())
         {
             <MatChip @onclick="@(e => RemoveLabel(label.Name))" Label="@label.Name" TrailingIcon="@(EditMode ? "clear" : null)"></MatChip>
         }
@@ -19,7 +19,7 @@
     <MatDialogTitle>Add label</MatDialogTitle>
     <MatDialogContent>
         <p>Name</p>
-        <MatTextField @bind-Value="@_newLabelName"></MatTextField>
+        <MatTextField @bind-Value="@NewLabelName"></MatTextField>
     </MatDialogContent>
     <MatDialogActions>
         <MatButton OnClick="@(e => { _isDialogOpen = false; })">Cancel</MatButton>
@@ -29,10 +29,10 @@
 
 @code {
     bool _isDialogOpen;
-    string _newLabelName;
+    string NewLabelName { get; set; } = string.Empty;
 
     [Parameter]
-    public IReadOnlyList<ILabelData> Labels { get; set; }
+    public IReadOnlyList<ILabel> Labels { get; set; }
 
     [Parameter]
     public bool EditMode { get; set; }
@@ -46,10 +46,10 @@
     void OkClick()
     {
         _isDialogOpen = false;
-        Console.WriteLine($"ADD LABEL: {_newLabelName}");
-        if (!string.IsNullOrEmpty(_newLabelName))
+        Console.WriteLine($"ADD LABEL: {NewLabelName}");
+        if (!string.IsNullOrEmpty(NewLabelName))
         {
-            Dispatcher.Dispatch(new AddLabelAction(new LabelData(_newLabelName)));
+            Dispatcher.Dispatch(new AddLabelAction(new Label(NewLabelName)));
         }
     }
 }

@@ -6,15 +6,10 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class LabelData
-        : ILabelData
+    public partial class DataSourceDefinitionInput
     {
-        public LabelData(
-            string name)
-        {
-            Name = name;
-        }
+        public Optional<IReadOnlyList<string>> Inputs { get; set; }
 
-        public string Name { get; }
+        public Optional<DataSourceType> Type { get; set; }
     }
 }

@@ -5,7 +5,7 @@
 
 @*@attribute [Authorize]*@
 
-@inject IState<DashboardState> DashboardState
+@inject IState<DashboardDetailState> DashboardState
 @inject IDispatcher Dispatcher
 
 <DashboardSettings Dashboard="@DashboardState.Value.SelectedDashboard" EditMode="@DashboardState.Value.EditMode"></DashboardSettings>
@@ -17,7 +17,7 @@
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
-        @foreach (var widget in DashboardState.Value.SelectedDashboard?.Widgets ?? Enumerable.Empty<IWidget>())
+        @foreach (var widget in DashboardState.Value.SelectedDashboard?.Widgets ?? Enumerable.Empty<IWidgetId>())
         {
         <div class="mat-layout-grid-cell">
 
@@ -60,10 +60,11 @@ else
 
     private void Undo()
     {
-        Dispatcher.Dispatch(new UndoAction("Dashboard", "AppBar"));
+        Dispatcher.Dispatch(new UndoAction("Dashboard"));
     }
 
-    private string GetWidgetCellSpan(IWidget widget)
+    // TODO argument should be IWidgetLite probably, to be able to access size & position
+    private string GetWidgetCellSpan(IWidgetId widget)
     {
         return "";
     }

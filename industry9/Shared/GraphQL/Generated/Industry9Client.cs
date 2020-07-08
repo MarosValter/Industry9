@@ -22,6 +22,27 @@ namespace industry9.Shared
             _streamExecutor = executorPool.CreateStreamExecutor(_clientName);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+
+            return _executor.ExecuteAsync(
+                new GetDashboardsOperation(),
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
+            GetDashboardsOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDashboard>> GetDashboardAsync(
             global::StrawberryShake.Optional<string> id = default,
             global::System.Threading.CancellationToken cancellationToken = default)
@@ -48,17 +69,168 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
-        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetWidgets>> GetWidgetsAsync(
             global::System.Threading.CancellationToken cancellationToken = default)
         {
 
             return _executor.ExecuteAsync(
-                new GetDashboardsOperation(),
+                new GetWidgetsOperation(),
                 cancellationToken);
         }
 
-        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDashboards>> GetDashboardsAsync(
-            GetDashboardsOperation operation,
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetWidgets>> GetWidgetsAsync(
+            GetWidgetsOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetWidget>> GetWidgetAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new GetWidgetOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetWidget>> GetWidgetAsync(
+            GetWidgetOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDataSourceDefinitions>> GetDataSourceDefinitionsAsync(
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+
+            return _executor.ExecuteAsync(
+                new GetDataSourceDefinitionsOperation(),
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDataSourceDefinitions>> GetDataSourceDefinitionsAsync(
+            GetDataSourceDefinitionsOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDataSourceDefinition>> GetDataSourceDefinitionAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new GetDataSourceDefinitionOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IGetDataSourceDefinition>> GetDataSourceDefinitionAsync(
+            GetDataSourceDefinitionOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDashboard>> UpsertDashboardAsync(
+            global::StrawberryShake.Optional<global::industry9.Shared.DashboardInput> dashboard = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (dashboard.HasValue && dashboard.Value is null)
+            {
+                throw new ArgumentNullException(nameof(dashboard));
+            }
+
+            return _executor.ExecuteAsync(
+                new UpsertDashboardOperation { Dashboard = dashboard },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDashboard>> UpsertDashboardAsync(
+            UpsertDashboardOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertWidget>> UpsertWidgetAsync(
+            global::StrawberryShake.Optional<global::industry9.Shared.WidgetInput> widget = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (widget.HasValue && widget.Value is null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            return _executor.ExecuteAsync(
+                new UpsertWidgetOperation { Widget = widget },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertWidget>> UpsertWidgetAsync(
+            UpsertWidgetOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
+            global::StrawberryShake.Optional<global::industry9.Shared.DataSourceDefinitionInput> definition = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (definition.HasValue && definition.Value is null)
+            {
+                throw new ArgumentNullException(nameof(definition));
+            }
+
+            return _executor.ExecuteAsync(
+                new UpsertDataSourceDefinitionOperation { Definition = definition },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
+            UpsertDataSourceDefinitionOperation operation,
             global::System.Threading.CancellationToken cancellationToken = default)
         {
             if (operation is null)

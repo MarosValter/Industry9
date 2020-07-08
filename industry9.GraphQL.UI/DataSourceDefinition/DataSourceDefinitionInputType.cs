@@ -1,4 +1,5 @@
-﻿using HotChocolate.Types;
+﻿using System.Linq;
+using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 
 namespace industry9.GraphQL.UI.DataSourceDefinition
@@ -8,7 +9,9 @@ namespace industry9.GraphQL.UI.DataSourceDefinition
         protected override void Configure(IInputObjectTypeDescriptor<DataSourceDefinitionDocument> descriptor)
         {
             descriptor.Name("DataSourceDefinitionInput");
-            descriptor.Field(d => d.Properties).Ignore();
+            descriptor.BindFieldsExplicitly();
+            descriptor.Field(d => d.Type);
+            descriptor.Field(d => d.Inputs).DefaultValue(Enumerable.Empty<string>().ToList());
         }
     }
 }

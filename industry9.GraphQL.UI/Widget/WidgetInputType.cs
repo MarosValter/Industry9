@@ -11,10 +11,11 @@ namespace industry9.GraphQL.UI.Widget
             descriptor.Name("WidgetInput");
             descriptor.BindFieldsExplicitly();
             descriptor.Field(d => d.Name).Type<NonNullType<StringType>>();
-            descriptor.Field(d => d.Position);
-            descriptor.Field(d => d.Size);
+            //descriptor.Field(d => d.Position);
+            //descriptor.Field(d => d.Size);
             descriptor.Field(d => d.Labels).DefaultValue(Enumerable.Empty<LabelData>().ToList());
             descriptor.Field(d => d.ColumnMappings).DefaultValue(Enumerable.Empty<ColumnMappingData>().ToList());
+            descriptor.Field(d => d.DataSourceIds).DefaultValue(Enumerable.Empty<string>().ToList());
             descriptor.Field(d => d.DashboardId);
         }
     }

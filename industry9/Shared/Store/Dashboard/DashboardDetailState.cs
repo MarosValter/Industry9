@@ -2,15 +2,15 @@
 
 namespace industry9.Shared.Store.Dashboard
 {
-    public class DashboardState : IHistoryState
+    public class DashboardDetailState : IHistoryState
     {
         public bool IsLoading { get; }
         public bool EditMode { get; }
-        public IDashboard SelectedDashboard { get; }
+        public IDashboardDetail SelectedDashboard { get; }
 
         public bool CanUndo { get; }
 
-        public DashboardState(bool isLoading, bool editMode, IDashboard selectedDashboard, bool canUndo = false)
+        public DashboardDetailState(bool isLoading, bool editMode, IDashboardDetail selectedDashboard, bool canUndo = false)
         {
             IsLoading = isLoading;
             EditMode = editMode;

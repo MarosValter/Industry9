@@ -6,15 +6,8 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class Widget
-        : IWidget
+    public partial interface ILabel
     {
-        public Widget(
-            string id)
-        {
-            Id = id;
-        }
-
-        public string Id { get; }
+        string Name { get; }
     }
 }

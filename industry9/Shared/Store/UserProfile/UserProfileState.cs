@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace industry9.Shared.Store.UserProfile
 {
     public class UserProfileState
     {
         public bool IsLoading { get; }
-        public IEnumerable<IDashboard1> Dashboards { get; }
-        public IDashboard1 SelectedDashboard { get; }
+        public IEnumerable<IDashboardLite> Dashboards { get; }
+        public IDashboardLite SelectedDashboard { get; }
 
-        public UserProfileState(bool isLoading, IEnumerable<IDashboard1> dashboards, IDashboard1 selectedDashboard)
+        public UserProfileState(bool isLoading, IEnumerable<IDashboardLite> dashboards, IDashboardLite selectedDashboard)
         {
             IsLoading = isLoading;
             Dashboards = dashboards;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using industry9.Common.Enums;
 using industry9.Common.Structs;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -16,10 +17,10 @@ namespace industry9.DataModel.UI.Documents
 
         public string Name { get; set; }
 
-        //public WidgetType Type { get; set; }
+        public WidgetType Type { get; set; }
 
-        public Position Position { get; set; }
-        public Size Size { get; set; }
+        //public Position Position { get; set; }
+        //public Size Size { get; set; }
         //public TimeSettings TimeSettings { get; set; }
 
         public IReadOnlyList<LabelData> Labels { get; set; }

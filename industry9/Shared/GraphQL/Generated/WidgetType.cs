@@ -6,8 +6,11 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial interface IWidget
+    public enum WidgetType
     {
-        string Id { get; }
+        Linechart,
+        Barchart,
+        Piechart,
+        Table
     }
 }

@@ -76,7 +76,7 @@
                     <MatExpansionPanelDetails>
                         <div class="mat-layout-grid">
                             <div class="mat-layout-grid-inner">
-                                @foreach (var widget in AvailableWidgets ?? Enumerable.Empty<IWidget>())
+                                @foreach (var widget in AvailableWidgets ?? Enumerable.Empty<IWidgetLite>())
                                 {
                                     <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
                                         <div class="mat-elevation-z2 card-panel">
@@ -101,7 +101,7 @@
     public bool EditMode { get; set; }
 
     [Parameter]
-    public IDashboard Dashboard { get; set; }
+    public IDashboardDetail Dashboard { get; set; }
 
     public string DashboardName { get; set; }
 
@@ -109,11 +109,12 @@
 
     public int ColumnCount { get; set; }
 
-    IWidget[] AvailableWidgets { get; } = {
-        new Widget("Widget1"),
-        new Widget("Widget2"),
-        new Widget("Widget3"),
-        new Widget("Widget4"),
+    IWidgetLite[] AvailableWidgets { get; } = {
+        new WidgetLite("Widget1", "Widget 1", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
+        new WidgetLite("Widget2", "Widget 2", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
+        new WidgetLite("Widget3", "Widget 3", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
+        new WidgetLite("Widget4", "Widget 4", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
+        new WidgetLite("Widget5", "Widget 5", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
     };
 
     Permission[] AllowPermissions { get; } = {

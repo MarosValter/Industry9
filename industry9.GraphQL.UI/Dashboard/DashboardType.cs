@@ -4,7 +4,6 @@ using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.GraphQL.UI.Base;
 using industry9.GraphQL.UI.Widget;
-using MongoDB.Bson;
 
 namespace industry9.GraphQL.UI.Dashboard
 {

@@ -2,9 +2,9 @@
 {
     public class AddLabelAction
     {
-        public ILabelData Label { get; }
+        public ILabel Label { get; }
 
-        public AddLabelAction(ILabelData label)
+        public AddLabelAction(ILabel label)
         {
             Label = label;
         }

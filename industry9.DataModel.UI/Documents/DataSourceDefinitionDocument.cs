@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using industry9.DataModel.UI.Enums;
-using MongoDB.Bson;
+using industry9.Common.Enums;
 
 namespace industry9.DataModel.UI.Documents
 {

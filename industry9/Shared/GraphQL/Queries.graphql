@@ -1,26 +1,150 @@
+query getDashboards() {
+	dashboards {
+		...DashboardLite
+	}
+}
+
 query getDashboard($id: String!) {
     dashboard(id: $id) {
-		id,
-        name,
-		labels {
-			name
-		},
-		widgets {
-			id
-		}
+		...DashboardDetail
     }
 }
 
-query getDashboards() {
-	dashboards {
-		id,
-		name
+
+query getWidgets() {
+	widgets {
+		...WidgetLite
 	}
 }
+
+query getWidget($id: String!) {
+    widget(id: $id) {
+		...WidgetDetail
+    }
+}
+
+
+query getDataSourceDefinitions() {
+	dataSourceDefinitions {
+		...DataSourceDefinitionLite
+	}
+}
+
+query getDataSourceDefinition($id: String!) {
+    dataSourceDefinition(id: $id) {
+		...DataSourceDefinitionDetail
+    }
+}
+
+
+mutation upsertDashboard($dashboard: DashboardInput!) {
+  createDashboard(dashboard: $dashboard) {
+    ...DashboardId
+  }
+}
+
+mutation upsertWidget($widget: WidgetInput!) {
+  createWidget(widget: $widget) {
+    ...WidgetId
+  }
+}
+
+mutation upsertDataSourceDefinition($definition: DataSourceDefinitionInput!) {
+  createDataSourceDefinition(dataSourceDefinition: $definition) {
+    ...DataSourceDefinitionId
+  }
+}
+
 
 subscription onDataReceived($widgetId: String!) {
 	onDataReceived(widgetId: $widgetId) {
 		name,
 		value
 	}
+}
+
+
+fragment DashboardId on Dashboard {
+	id
+}
+
+fragment DashboardLite on Dashboard {
+	id,
+	name,
+	authorId,
+	created,
+	labels {
+		...Label
+	}
+}
+
+fragment DashboardDetail on Dashboard {
+	id,
+	name,
+	authorId,
+	created,
+	labels {
+		...Label
+	},
+	widgets {
+		...WidgetId
+	}
+}
+
+
+fragment WidgetId on Widget {
+	id
+}
+
+fragment WidgetLite on Widget {
+	id,
+	name,
+	created,
+	type,
+	labels {
+		...Label
+	}
+}
+
+fragment WidgetDetail on Widget {
+	id,
+	name,
+	created,
+	type,
+	labels {
+		...Label
+	},
+	columnMappings {
+		...ColumnMapping
+	}
+}
+
+
+fragment DataSourceDefinitionId on DataSourceDefinition {
+	id
+}
+
+fragment DataSourceDefinitionLite on DataSourceDefinition {
+	id,
+	created,
+	type
+}
+
+fragment DataSourceDefinitionDetail on DataSourceDefinition {
+	id,
+	created,
+	type,
+	inputs
+}
+
+
+fragment Label on LabelData {
+	name
+}
+
+fragment ColumnMapping on ColumnMappingData {
+	name,
+	format,
+	dataSourceId,
+	sourceColumn
 }

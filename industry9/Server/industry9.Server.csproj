@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\industry9.DataSource\industry9.DataSource.csproj" />
     <ProjectReference Include="..\..\industry9.GraphQL.UI\industry9.GraphQL.UI.csproj" />
     <ProjectReference Include="..\Client\industry9.Client.csproj" />
     <ProjectReference Include="..\Shared\industry9.Shared.csproj" />

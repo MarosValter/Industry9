@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\industry9.Common\industry9.Common.csproj" />
+    <ProjectReference Include="..\industry9.Database\industry9.Database.csproj" />
+    <ProjectReference Include="..\industry9.DataModel.UI\industry9.DataModel.UI.csproj" />
+  </ItemGroup>
+
+</Project>

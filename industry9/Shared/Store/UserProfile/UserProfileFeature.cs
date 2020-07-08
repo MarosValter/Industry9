@@ -9,7 +9,7 @@ namespace industry9.Shared.Store.UserProfile
 
         protected override UserProfileState GetInitialState()
         {
-            return new UserProfileState(false, Array.Empty<IDashboard1>(), null);
+            return new UserProfileState(false, Array.Empty<IDashboardLite>(), null);
         }
     }
 }

@@ -1,20 +1,25 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Widget;
-using MongoDB.Bson;
 
 namespace industry9.GraphQL.UI.Widget
 {
     [ExtendObjectType(Name = "Query")]
     public class WidgetQueries
     {
-        public async Task<WidgetDocument> GetWidget(string id, IResolverContext ctx,
-            [Service] IWidgetRepository widgetRepository)
+        public IEnumerable<WidgetDocument> GetWidgets([Service] IWidgetRepository widgetRepository)
         {
-            var widget = await widgetRepository.GetDocumentAsync(id);
+            return widgetRepository.GetAllDocuments();
+        }
+
+        public async Task<WidgetDocument> GetWidget(string id,
+            [Service] IWidgetRepository widgetRepository, IResolverContext ctx)
+        {
+            var widget = await widgetRepository.GetDocumentAsync(id, ctx.RequestAborted);
             if (widget == null)
             {
                 ctx.ReportError($"Widget with Id {id} not found.");

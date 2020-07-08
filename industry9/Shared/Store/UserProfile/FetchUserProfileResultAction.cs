@@ -4,10 +4,10 @@ namespace industry9.Shared.Store.UserProfile
 {
     public class FetchUserProfileResultAction
     {
-        public IDashboard1 SelectedDashboard { get; }
-        public IEnumerable<IDashboard1> Dashboards { get; }
+        public IDashboardLite SelectedDashboard { get; }
+        public IEnumerable<IDashboardLite> Dashboards { get; }
 
-        public FetchUserProfileResultAction(IDashboard1 selectedDashboard, IEnumerable<IDashboard1> dashboards)
+        public FetchUserProfileResultAction(IDashboardLite selectedDashboard, IEnumerable<IDashboardLite> dashboards)
         {
             SelectedDashboard = selectedDashboard;
             Dashboards = dashboards;

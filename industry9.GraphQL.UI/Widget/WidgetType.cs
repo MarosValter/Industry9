@@ -3,7 +3,7 @@ using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.GraphQL.UI.Base;
-using MongoDB.Bson;
+using industry9.GraphQL.UI.DataSourceDefinition;
 
 namespace industry9.GraphQL.UI.Widget
 {
@@ -15,7 +15,7 @@ namespace industry9.GraphQL.UI.Widget
 
             descriptor.Name("Widget");
             descriptor.Field(d => d.DataSources)
-                .Type<ListType<WidgetType>>()
+                .Type<ListType<DataSourceDefinitionType>>()
                 .Resolver(async ctx =>
                 {
                     var repository = ctx.Service<IDataSourceDefinitionRepository>();

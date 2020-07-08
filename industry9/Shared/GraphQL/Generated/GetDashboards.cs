@@ -10,11 +10,11 @@ namespace industry9.Shared
         : IGetDashboards
     {
         public GetDashboards(
-            global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboard1> dashboards)
+            global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardLite> dashboards)
         {
             Dashboards = dashboards;
         }
 
-        public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboard1> Dashboards { get; }
+        public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardLite> Dashboards { get; }
     }
 }

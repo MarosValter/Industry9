@@ -15,6 +15,7 @@ namespace industry9.Shared
         : JsonResultParserBase<IGetDashboard>
     {
         private readonly IValueSerializer _stringSerializer;
+        private readonly IValueSerializer _dateTimeSerializer;
 
         public GetDashboardResultParser(IValueSerializerCollection serializerResolver)
         {
@@ -23,6 +24,7 @@ namespace industry9.Shared
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
             _stringSerializer = serializerResolver.Get("String");
+            _dateTimeSerializer = serializerResolver.Get("DateTime");
         }
 
         protected override IGetDashboard ParserData(JsonElement data)
@@ -34,7 +36,7 @@ namespace industry9.Shared
 
         }
 
-        private global::industry9.Shared.IDashboard ParseGetDashboardDashboard(
+        private global::industry9.Shared.IDashboardDetail ParseGetDashboardDashboard(
             JsonElement parent,
             string field)
         {
@@ -48,16 +50,18 @@ namespace industry9.Shared
                 return null;
             }
 
-            return new Dashboard
+            return new DashboardDetail
             (
-                DeserializeNullableString(obj, "id"),
+                DeserializeString(obj, "id"),
                 DeserializeNullableString(obj, "name"),
+                DeserializeNullableString(obj, "authorId"),
+                DeserializeDateTime(obj, "created"),
                 ParseGetDashboardDashboardLabels(obj, "labels"),
                 ParseGetDashboardDashboardWidgets(obj, "widgets")
             );
         }
 
-        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabelData> ParseGetDashboardDashboardLabels(
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> ParseGetDashboardDashboardLabels(
             JsonElement parent,
             string field)
         {
@@ -72,11 +76,11 @@ namespace industry9.Shared
             }
 
             int objLength = obj.GetArrayLength();
-            var list = new global::industry9.Shared.ILabelData[objLength];
+            var list = new global::industry9.Shared.ILabel[objLength];
             for (int objIndex = 0; objIndex < objLength; objIndex++)
             {
                 JsonElement element = obj[objIndex];
-                list[objIndex] = new LabelData
+                list[objIndex] = new Label
                 (
                     DeserializeNullableString(element, "name")
                 );
@@ -86,7 +90,7 @@ namespace industry9.Shared
             return list;
         }
 
-        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidget> ParseGetDashboardDashboardWidgets(
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidgetId> ParseGetDashboardDashboardWidgets(
             JsonElement parent,
             string field)
         {
@@ -101,18 +105,24 @@ namespace industry9.Shared
             }
 
             int objLength = obj.GetArrayLength();
-            var list = new global::industry9.Shared.IWidget[objLength];
+            var list = new global::industry9.Shared.IWidgetId[objLength];
             for (int objIndex = 0; objIndex < objLength; objIndex++)
             {
                 JsonElement element = obj[objIndex];
-                list[objIndex] = new Widget
+                list[objIndex] = new WidgetId
                 (
-                    DeserializeNullableString(element, "id")
+                    DeserializeString(element, "id")
                 );
 
             }
 
             return list;
+        }
+
+        private string DeserializeString(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (string)_stringSerializer.Deserialize(value.GetString());
         }
 
         private string DeserializeNullableString(JsonElement obj, string fieldName)
@@ -128,6 +138,12 @@ namespace industry9.Shared
             }
 
             return (string)_stringSerializer.Deserialize(value.GetString());
+        }
+
+        private System.DateTimeOffset DeserializeDateTime(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (System.DateTimeOffset)_dateTimeSerializer.Deserialize(value.GetString());
         }
     }
 }

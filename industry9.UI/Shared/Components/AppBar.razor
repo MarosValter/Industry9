@@ -11,7 +11,7 @@
 
 <MatAppBar Fixed="true">
     <MatAppBarRow Style="@GetAppBarColorStyle()">
-        @*<MatAppBarSection>
+        <MatAppBarSection>
             @if (IsHome())
             {
             <DashboardSelector></DashboardSelector>
@@ -19,7 +19,7 @@
             <MatAppBarTitle>
                 @GetTitle()
             </MatAppBarTitle>
-        </MatAppBarSection>*@
+        </MatAppBarSection>
         <MatAppBarSection Align="@MatAppBarSectionAlign.End">
             <UserProfile />
             <Login />

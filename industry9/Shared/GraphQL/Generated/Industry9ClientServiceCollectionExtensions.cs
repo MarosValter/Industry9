@@ -46,8 +46,22 @@ namespace industry9.Shared
                     sp.GetRequiredService<IClientOptions>().GetResultParsers(_clientName)));
 
             IOperationClientBuilder builder = serviceCollection.AddOperationClientOptions(_clientName)
-                .AddResultParser(serializers => new GetDashboardResultParser(serializers))
+                .AddValueSerializer(() => new WidgetTypeValueSerializer())
+                .AddValueSerializer(() => new DataSourceTypeValueSerializer())
+                .AddValueSerializer(() => new DashboardInputSerializer())
+                .AddValueSerializer(() => new LabelDataInputSerializer())
+                .AddValueSerializer(() => new WidgetInputSerializer())
+                .AddValueSerializer(() => new ColumnMappingDataInputSerializer())
+                .AddValueSerializer(() => new DataSourceDefinitionInputSerializer())
                 .AddResultParser(serializers => new GetDashboardsResultParser(serializers))
+                .AddResultParser(serializers => new GetDashboardResultParser(serializers))
+                .AddResultParser(serializers => new GetWidgetsResultParser(serializers))
+                .AddResultParser(serializers => new GetWidgetResultParser(serializers))
+                .AddResultParser(serializers => new GetDataSourceDefinitionsResultParser(serializers))
+                .AddResultParser(serializers => new GetDataSourceDefinitionResultParser(serializers))
+                .AddResultParser(serializers => new UpsertDashboardResultParser(serializers))
+                .AddResultParser(serializers => new UpsertWidgetResultParser(serializers))
+                .AddResultParser(serializers => new UpsertDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new OnDataReceivedResultParser(serializers))
                 .AddOperationFormatter(serializers => new JsonOperationFormatter(serializers))
                 .AddHttpOperationPipeline(b => b.UseHttpDefaultPipeline());

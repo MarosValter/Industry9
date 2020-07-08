@@ -1,7 +1,12 @@
-﻿namespace industry9.Shared.Store.Base
+﻿using System.Threading.Tasks;
+using Fluxor;
+
+namespace industry9.Shared.Store.Base
 {
-    public interface IHistoryFeature
+    public interface IHistoryFeature : IFeature
     {
         int HistoryLength { get; }
+
+        void PersistChanges();
     }
 }

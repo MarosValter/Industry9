@@ -6,8 +6,8 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial interface ILabelData
+    public partial interface IGetWidget
     {
-        string Name { get; }
+        global::industry9.Shared.IWidgetDetail Widget { get; }
     }
 }

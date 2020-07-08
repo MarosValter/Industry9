@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo;
 using Fluxor;
@@ -15,6 +16,7 @@ using HotChocolate.AspNetCore;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using industry9.Common.Enums;
+using industry9.Common.GraphQL;
 using industry9.Common.Structs;
 using industry9.DataModel.UI.Data;
 using industry9.DataModel.UI.Documents;
@@ -22,6 +24,9 @@ using industry9.DataModel.UI.Repositories.Dashboard;
 using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.DataModel.UI.Serializers;
+using industry9.DataModel.UI.Services;
+using industry9.DataSource.GraphQL;
+using industry9.DataSource.PropertiesData;
 using industry9.GraphQL.UI.Dashboard;
 using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
@@ -41,6 +46,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using WidgetType = industry9.GraphQL.UI.Widget.WidgetType;
 
 namespace industry9.Server
 {
@@ -65,6 +71,9 @@ namespace industry9.Server
             BsonSerializer.RegisterSerializer(new SizeSerializer());
             BsonSerializer.RegisterSerializer(new PositionSerializer());
 
+            BsonClassMap.RegisterClassMap<RandomDataSourceProperties>();
+            BsonClassMap.RegisterClassMap<DataQueryDataSourceProperties>();
+
             services.AddSingleton<IMongoClient>(new MongoClient(MongoConnectionString));
             services.AddSingleton(s => s.GetRequiredService<IMongoClient>().GetDatabase("industry9"));
 
@@ -79,25 +88,33 @@ namespace industry9.Server
             services.AddScoped<IWidgetRepository, WidgetRepository>();
             services.AddScoped<IDataSourceDefinitionRepository, DataSourceDefinitionRepository>();
 
+            services.AddTransient<ISchemaExtender, DataSourceSchemaExtender>();
+            services.AddSingleton<IDataSourcePropertiesService, DataSourcePropertiesService>();
+
             // this enables you to use DataLoader in your resolvers.
             services.AddDataLoaderRegistry();
             //services.AddGraphQLSubscriptions();
             services.AddInMemorySubscriptionProvider();
 
             services.AddGraphQL(sp =>
-                SchemaBuilder.New()
+            {
+                var propService = sp.GetService<IDataSourcePropertiesService>();
+                propService.ScanForProperties(new [] {typeof(RandomDataSourceProperties).Assembly});
+                var extenders = sp.GetServices<ISchemaExtender>();
+                var builder = SchemaBuilder.New()
                     .AddServices(sp)
                     .BindClrType<Color, ColorType>()
                     .BindClrType<Position, PositionType>()
                     .BindClrType<Size, SizeType>()
                     .BindClrType<DateTime, DateTimeType>()
-
                     .AddQueryType(d => d.Name("Query"))
                     .AddType<DashboardQueries>()
                     .AddType<WidgetQueries>()
+                    .AddType<DataSourceDefinitionQueries>()
                     .AddMutationType(d => d.Name("Mutation"))
                     .AddType<DashboardMutations>()
                     .AddType<WidgetMutations>()
+                    .AddType<DataSourceDefinitionMutations>()
                     .AddSubscriptionType(d => d.Name("Subscription"))
                     .AddType<DataSubscriptions>()
 
@@ -105,6 +122,7 @@ namespace industry9.Server
                     .AddType<DashboardType>()
                     .AddType<WidgetType>()
                     .AddType<DataSourceDefinitionType>()
+                    //.AddType<IDataSourceProperties>()
                     .AddType<LabelData>()
                     .AddType<SensorData>()
                     .AddType<ColumnMappingData>()
@@ -116,6 +134,7 @@ namespace industry9.Server
                     .AddType<DashboardInputType>()
                     .AddType<WidgetInputType>()
                     .AddType<DataSourceDefinitionInputType>()
+                    //.AddInputObjectType<IDataSourceProperties>()
                     .AddInputObjectType<LabelData>()
                     .AddInputObjectType<ColumnMappingData>()
                     //.AddInputObjectType<TimeSettings>()
@@ -123,9 +142,23 @@ namespace industry9.Server
                     //.AddInputObjectType<AbsoluteTimeSettings>()
 
                     // Enums
-                    .AddEnumType<RelativeTimeMode>()
-                    .Create()
-                );
+                    .AddEnumType<RelativeTimeMode>();
+
+                //foreach (var extender in extenders)
+                //{
+                //    extender.Extend(builder);
+                //}
+
+                foreach (var type in propService.Types)
+                {
+                    builder.AddType(type);
+
+                    var t = typeof(InputObjectType<>).MakeGenericType(type);
+                    var o = Activator.CreateInstance(t);
+                    builder.AddType((INamedType)o);
+                }
+                return builder.Create();
+            });
 
             //Add Policies / Claims / Authorization - https://stormpath.com/blog/tutorial-policy-based-authorization-asp-net-core
             services.AddAuthorization(options =>

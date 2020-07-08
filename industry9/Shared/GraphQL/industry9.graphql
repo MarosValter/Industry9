@@ -7,12 +7,18 @@ schema {
 type Query {
   dashboard(id: String): Dashboard
   dashboards: [Dashboard]
+  dataSourceDefinition(id: String): DataSourceDefinition
+  dataSourceDefinitions: [DataSourceDefinition]
   widget(id: String): Widget
+  widgets: [Widget]
 }
 
 type Mutation {
   addWidgetsToDashboard(dashboardId: String widgetIds: [String]): Boolean!
+  assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
+  assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
   createDashboard(dashboard: DashboardInput): Dashboard
+  createDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): DataSourceDefinition
   createWidget(widget: WidgetInput): Widget
 }
 
@@ -21,7 +27,6 @@ type Subscription {
 }
 
 input LabelDataInput {
-  color: Color
   name: String
 }
 
@@ -42,6 +47,15 @@ enum RelativeTimeMode {
   LASTYEAR
 }
 
+input DataQueryDataSourcePropertiesInput {
+  query: String
+}
+
+input RandomDataSourcePropertiesInput {
+  max: Int!
+  min: Int!
+}
+
 scalar Color
 
 scalar Position
@@ -54,7 +68,7 @@ scalar DateTime
 type Dashboard {
   authorId: String
   created: DateTime!
-  id: String
+  id: String!
   labels: [LabelData]
   name: String
   widgets: [Widget]
@@ -63,24 +77,18 @@ type Dashboard {
 type Widget {
   columnMappings: [ColumnMappingData]
   created: DateTime!
-  dataSources: [Widget]
-  id: String
+  dataSources: [DataSourceDefinition]
+  id: String!
   labels: [LabelData]
   name: String
-  position: Position!
-  size: Size!
+  type: WidgetType!
 }
 
 type DataSourceDefinition {
   created: DateTime!
-  id: String
+  id: String!
   inputs: [String]
   type: DataSourceType!
-}
-
-type SensorData {
-  name: String
-  value: Float!
 }
 
 input DashboardInput {
@@ -92,24 +100,30 @@ input DashboardInput {
 input WidgetInput {
   columnMappings: [ColumnMappingDataInput] = [  ]
   dashboardId: String
+  dataSourceIds: [String] = [  ]
   labels: [LabelDataInput] = [  ]
   name: String!
-  position: Position!
-  size: Size!
 }
 
 input DataSourceDefinitionInput {
-  created: DateTime!
-  id: String
-  inputs: [String]
+  inputs: [String] = [  ]
   type: DataSourceType!
 }
 
-scalar Any
+type SensorData {
+  name: String
+  value: Float!
+}
 
 type LabelData {
-  color: Color
   name: String
+}
+
+enum WidgetType {
+  LINECHART
+  BARCHART
+  PIECHART
+  TABLE
 }
 
 type ColumnMappingData {
@@ -120,7 +134,6 @@ type ColumnMappingData {
 }
 
 enum DataSourceType {
+  RANDOM
   DATAQUERY
-  PREDICTION
-  CSV
 }
