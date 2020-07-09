@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using industry9.DataModel.UI.Documents;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -42,6 +41,14 @@ namespace industry9.DataModel.UI.Repositories
             return Collection.InsertOneAsync(document, null, cancellationToken);
         }
 
+        public Task UpsertDocumentAsync(TDocument document, CancellationToken cancellationToken = default)
+        {
+            var filter = Builders<TDocument>.Filter.Eq(d => d.Id, document.Id);
+            return string.IsNullOrEmpty(document.Id)
+                ? Collection.InsertOneAsync(document, null, cancellationToken)
+                : Collection.ReplaceOneAsync(filter, document, new ReplaceOptions(), cancellationToken);
+        }
+
         public Task<UpdateResult> UpdateDocumentAsync(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> update, CancellationToken cancellationToken = default)
         {
             return Collection.UpdateOneAsync(filter, update, null, cancellationToken);
@@ -50,6 +57,12 @@ namespace industry9.DataModel.UI.Repositories
         public Task<DeleteResult> DeleteDocumentAsync(FilterDefinition<TDocument> filter, CancellationToken cancellationToken = default)
         {
             return Collection.DeleteOneAsync(filter, cancellationToken);
+        }
+
+        public Task<DeleteResult> DeleteDocumentAsync(string id, CancellationToken cancellationToken = default)
+        {
+            var filter = Builders<TDocument>.Filter.Eq(d => d.Id, id);
+            return DeleteDocumentAsync(filter, cancellationToken);
         }
     }
 }

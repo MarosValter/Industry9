@@ -3,7 +3,6 @@ using HotChocolate;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
-using industry9.DataModel.UI.Repositories.Dashboard;
 using industry9.DataModel.UI.Repositories.Widget;
 
 namespace industry9.GraphQL.UI.Widget
@@ -11,23 +10,18 @@ namespace industry9.GraphQL.UI.Widget
     [ExtendObjectType(Name = "Mutation")]
     public class WidgetMutations
     {
-        public async Task<WidgetDocument> CreateWidget(WidgetInputDocument widget,
-            [Service] IWidgetRepository widgetRepository, [Service] IDashboardRepository dashboardRepository, IResolverContext ctx)
+        public async Task<string> UpsertWidget(WidgetInputDocument widget,
+            [Service] IWidgetRepository widgetRepository, IResolverContext ctx)
         {
-            await widgetRepository.CreateDocumentAsync(widget);
+            await widgetRepository.UpsertDocumentAsync(widget, ctx.RequestAborted);
+            return widget.Id;
+        }
 
-            //var args = context.Argument<IDictionary<string, object>>("widget");
-            //if (args.TryGetValue("dashboardId", out var id) && id is string dashboardId)
-            if (!string.IsNullOrEmpty(widget.DashboardId))
-            {
-                var addResult = await dashboardRepository.AddWidgetsToDashboard(widget.DashboardId, new []{ widget.Id }, ctx.RequestAborted);
-                if (!addResult.IsAcknowledged)
-                {
-                    // TODO
-                }
-            }
-
-            return widget;
+        public async Task<bool> DeleteWidget(string id,
+            [Service] IWidgetRepository widgetRepository, IResolverContext ctx)
+        {
+            var result = await widgetRepository.DeleteDocumentAsync(id, ctx.RequestAborted);
+            return result.IsAcknowledged;
         }
     }
 }

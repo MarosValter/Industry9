@@ -2,7 +2,7 @@
 
 namespace industry9.Shared.Store.States
 {
-    public class DashboardDetailState : IHistoryState
+    public class HomepageState : IHistoryState
     {
         public bool IsLoading { get; }
         public bool EditMode { get; }
@@ -10,7 +10,7 @@ namespace industry9.Shared.Store.States
 
         public bool CanUndo { get; }
 
-        public DashboardDetailState(bool isLoading, bool editMode, IDashboardDetail dashboard, bool canUndo = false)
+        public HomepageState(bool isLoading, bool editMode, IDashboardDetail dashboard, bool canUndo = false)
         {
             IsLoading = isLoading;
             EditMode = editMode;

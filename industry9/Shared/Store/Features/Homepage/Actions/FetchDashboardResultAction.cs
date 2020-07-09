@@ -1,4 +1,4 @@
-﻿namespace industry9.Shared.Store.Features.Dashboard.Actions
+﻿namespace industry9.Shared.Store.Features.Homepage.Actions
 {
     public class FetchDashboardResultAction
     {

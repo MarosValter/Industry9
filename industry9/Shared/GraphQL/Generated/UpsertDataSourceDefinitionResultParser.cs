@@ -27,36 +27,25 @@ namespace industry9.Shared
 
         protected override IUpsertDataSourceDefinition ParserData(JsonElement data)
         {
-            return new UpsertDataSourceDefinition
+            return new UpsertDataSourceDefinition1
             (
-                ParseUpsertDataSourceDefinitionCreateDataSourceDefinition(data, "createDataSourceDefinition")
+                DeserializeNullableString(data, "upsertDataSourceDefinition")
             );
 
         }
 
-        private global::industry9.Shared.IDataSourceDefinitionId ParseUpsertDataSourceDefinitionCreateDataSourceDefinition(
-            JsonElement parent,
-            string field)
+        private string DeserializeNullableString(JsonElement obj, string fieldName)
         {
-            if (!parent.TryGetProperty(field, out JsonElement obj))
+            if (!obj.TryGetProperty(fieldName, out JsonElement value))
             {
                 return null;
             }
 
-            if (obj.ValueKind == JsonValueKind.Null)
+            if (value.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
 
-            return new DataSourceDefinitionId
-            (
-                DeserializeString(obj, "id")
-            );
-        }
-
-        private string DeserializeString(JsonElement obj, string fieldName)
-        {
-            JsonElement value = obj.GetProperty(fieldName);
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
     }

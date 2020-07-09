@@ -8,6 +8,6 @@ namespace industry9.Shared
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
     public partial interface IUpsertDataSourceDefinition
     {
-        global::industry9.Shared.IDataSourceDefinitionId CreateDataSourceDefinition { get; }
+        string UpsertDataSourceDefinition { get; }
     }
 }

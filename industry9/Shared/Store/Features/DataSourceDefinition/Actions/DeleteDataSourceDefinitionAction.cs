@@ -2,7 +2,7 @@
 {
     public class DeleteDataSourceDefinitionAction
     {
-        public string Id { get; set; }
+        public string Id { get; }
 
         public DeleteDataSourceDefinitionAction(string id)
         {

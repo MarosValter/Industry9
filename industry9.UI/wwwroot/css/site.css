@@ -224,6 +224,7 @@ app {
 }
 
 .page-footer {
+    z-index: 10;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -789,19 +790,19 @@ ul.breadcrumb {
 .btn-edit-primary {
     position: fixed !important;
     right: 3rem;
-    bottom: 3rem;
+    bottom: calc(3rem + 35px);
 }
 
 .btn-edit-secondary {
     position: fixed !important;
     right: 7.4rem;
-    bottom: 3rem;
+    bottom: calc(3rem + 35px);
 }
 
 .btn-edit-ternary {
     position: fixed !important;
     right: 3rem;
-    bottom: 7.4rem;
+    bottom: calc(7.4rem + 35px);
 }
 
 .mat-card-header {

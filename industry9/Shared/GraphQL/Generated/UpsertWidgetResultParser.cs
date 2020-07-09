@@ -27,36 +27,25 @@ namespace industry9.Shared
 
         protected override IUpsertWidget ParserData(JsonElement data)
         {
-            return new UpsertWidget
+            return new UpsertWidget1
             (
-                ParseUpsertWidgetCreateWidget(data, "createWidget")
+                DeserializeNullableString(data, "upsertWidget")
             );
 
         }
 
-        private global::industry9.Shared.IWidgetId ParseUpsertWidgetCreateWidget(
-            JsonElement parent,
-            string field)
+        private string DeserializeNullableString(JsonElement obj, string fieldName)
         {
-            if (!parent.TryGetProperty(field, out JsonElement obj))
+            if (!obj.TryGetProperty(fieldName, out JsonElement value))
             {
                 return null;
             }
 
-            if (obj.ValueKind == JsonValueKind.Null)
+            if (value.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
 
-            return new WidgetId
-            (
-                DeserializeString(obj, "id")
-            );
-        }
-
-        private string DeserializeString(JsonElement obj, string fieldName)
-        {
-            JsonElement value = obj.GetProperty(fieldName);
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
     }

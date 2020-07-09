@@ -38,21 +38,27 @@ query getDataSourceDefinition($id: String!) {
 
 
 mutation upsertDashboard($dashboard: DashboardInput!) {
-  createDashboard(dashboard: $dashboard) {
-    ...DashboardId
-  }
+  upsertDashboard(dashboard: $dashboard)
+}
+
+mutation deleteDashboard($id: String!) {
+  deleteDashboard(id: $id)
 }
 
 mutation upsertWidget($widget: WidgetInput!) {
-  createWidget(widget: $widget) {
-    ...WidgetId
-  }
+  upsertWidget(widget: $widget)
+}
+
+mutation deleteWidget($id: String!) {
+  deleteWidget(id: $id)
 }
 
 mutation upsertDataSourceDefinition($definition: DataSourceDefinitionInput!) {
-  createDataSourceDefinition(dataSourceDefinition: $definition) {
-    ...DataSourceDefinitionId
-  }
+  upsertDataSourceDefinition(dataSourceDefinition: $definition)
+}
+
+mutation deleteDataSourceDefinition($id: String!) {
+  deleteDataSourceDefinition(id: $id)
 }
 
 
@@ -63,10 +69,11 @@ subscription onDataReceived($widgetId: String!) {
 	}
 }
 
-
+"""
 fragment DashboardId on Dashboard {
 	id
 }
+"""
 
 fragment DashboardLite on Dashboard {
 	id,
@@ -120,9 +127,11 @@ fragment WidgetDetail on Widget {
 }
 
 
+"""
 fragment DataSourceDefinitionId on DataSourceDefinition {
 	id
 }
+"""
 
 fragment DataSourceDefinitionLite on DataSourceDefinition {
 	id,

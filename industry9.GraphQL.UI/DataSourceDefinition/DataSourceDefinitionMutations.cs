@@ -11,11 +11,18 @@ namespace industry9.GraphQL.UI.DataSourceDefinition
     [ExtendObjectType(Name = "Mutation")]
     public class DataSourceDefinitionMutations
     {
-        public async Task<DataSourceDefinitionDocument> CreateDataSourceDefinition(DataSourceDefinitionDocument dataSourceDefinition,
+        public async Task<string> UpsertDataSourceDefinition(DataSourceDefinitionDocument dataSourceDefinition,
             [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository, IResolverContext ctx)
         {
-            await dataSourceDefinitionRepository.CreateDocumentAsync(dataSourceDefinition, ctx.RequestAborted);
-            return dataSourceDefinition;
+            await dataSourceDefinitionRepository.UpsertDocumentAsync(dataSourceDefinition, ctx.RequestAborted);
+            return dataSourceDefinition.Id;
+        }
+
+        public async Task<bool> DeleteDataSourceDefinition(string id,
+            [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository, IResolverContext ctx)
+        {
+            var result = await dataSourceDefinitionRepository.DeleteDocumentAsync(id, ctx.RequestAborted);
+            return result.IsAcknowledged;
         }
 
         public Task<bool> AssignRandomPropertiesToDataSource(string dataSourceId, RandomDataSourceProperties properties,

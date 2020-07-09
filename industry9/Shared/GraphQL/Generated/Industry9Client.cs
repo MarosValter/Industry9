@@ -189,6 +189,32 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteDashboard>> DeleteDashboardAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new DeleteDashboardOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteDashboard>> DeleteDashboardAsync(
+            DeleteDashboardOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertWidget>> UpsertWidgetAsync(
             global::StrawberryShake.Optional<global::industry9.Shared.WidgetInput> widget = default,
             global::System.Threading.CancellationToken cancellationToken = default)
@@ -215,6 +241,32 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteWidget>> DeleteWidgetAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new DeleteWidgetOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteWidget>> DeleteWidgetAsync(
+            DeleteWidgetOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             global::StrawberryShake.Optional<global::industry9.Shared.DataSourceDefinitionInput> definition = default,
             global::System.Threading.CancellationToken cancellationToken = default)
@@ -231,6 +283,32 @@ namespace industry9.Shared
 
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             UpsertDataSourceDefinitionOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteDataSourceDefinition>> DeleteDataSourceDefinitionAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new DeleteDataSourceDefinitionOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IDeleteDataSourceDefinition>> DeleteDataSourceDefinitionAsync(
+            DeleteDataSourceDefinitionOperation operation,
             global::System.Threading.CancellationToken cancellationToken = default)
         {
             if (operation is null)

@@ -2,6 +2,7 @@
 {
     public enum DataSourceType
     {
+        Unknown,
         Random,
         DataQuery
     }

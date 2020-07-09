@@ -60,8 +60,11 @@ namespace industry9.Shared
                 .AddResultParser(serializers => new GetDataSourceDefinitionsResultParser(serializers))
                 .AddResultParser(serializers => new GetDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new UpsertDashboardResultParser(serializers))
+                .AddResultParser(serializers => new DeleteDashboardResultParser(serializers))
                 .AddResultParser(serializers => new UpsertWidgetResultParser(serializers))
+                .AddResultParser(serializers => new DeleteWidgetResultParser(serializers))
                 .AddResultParser(serializers => new UpsertDataSourceDefinitionResultParser(serializers))
+                .AddResultParser(serializers => new DeleteDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new OnDataReceivedResultParser(serializers))
                 .AddOperationFormatter(serializers => new JsonOperationFormatter(serializers))
                 .AddHttpOperationPipeline(b => b.UseHttpDefaultPipeline());

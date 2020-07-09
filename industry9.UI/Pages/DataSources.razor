@@ -34,14 +34,14 @@
     void EditDefinition(string id)
     {
         _isEdit = true;
-        Dispatcher.Dispatch(new UpdateDataSourceDefinitionAction(id));
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(id));
         _isDialogOpen = true;
     }
 
     void AddDefinition()
     {
         _isEdit = false;
-        Dispatcher.Dispatch(new InsertDataSourceDefinitionAction());
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(null));
         _isDialogOpen = true;
     }
 }

@@ -6,15 +6,15 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class UpsertWidget
+    public partial class UpsertWidget1
         : IUpsertWidget
     {
-        public UpsertWidget(
-            global::industry9.Shared.IWidgetId createWidget)
+        public UpsertWidget1(
+            string upsertWidget)
         {
-            CreateWidget = createWidget;
+            UpsertWidget = upsertWidget;
         }
 
-        public global::industry9.Shared.IWidgetId CreateWidget { get; }
+        public string UpsertWidget { get; }
     }
 }

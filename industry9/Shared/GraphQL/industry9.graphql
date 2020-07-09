@@ -17,9 +17,12 @@ type Mutation {
   addWidgetsToDashboard(dashboardId: String widgetIds: [String]): Boolean!
   assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
   assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
-  createDashboard(dashboard: DashboardInput): Dashboard
-  createDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): DataSourceDefinition
-  createWidget(widget: WidgetInput): Widget
+  deleteDashboard(id: String): Boolean!
+  deleteDataSourceDefinition(id: String): Boolean!
+  deleteWidget(id: String): Boolean!
+  upsertDashboard(dashboard: DashboardInput): String
+  upsertDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): String
+  upsertWidget(widget: WidgetInput): String
 }
 
 type Subscription {
@@ -88,6 +91,7 @@ type DataSourceDefinition {
   created: DateTime!
   id: String!
   inputs: [String]
+  name: String
   type: DataSourceType!
 }
 
@@ -107,6 +111,7 @@ input WidgetInput {
 
 input DataSourceDefinitionInput {
   inputs: [String] = [  ]
+  name: String
   type: DataSourceType!
 }
 
@@ -134,6 +139,7 @@ type ColumnMappingData {
 }
 
 enum DataSourceType {
+  UNKNOWN
   RANDOM
   DATAQUERY
 }

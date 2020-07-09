@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Shared.Store.Base;
+using industry9.Shared.Store.Base.Actions;
 using Microsoft.Extensions.Logging;
 
 namespace industry9.Shared.Middleware

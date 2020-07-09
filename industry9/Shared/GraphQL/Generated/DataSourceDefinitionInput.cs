@@ -10,6 +10,8 @@ namespace industry9.Shared
     {
         public Optional<IReadOnlyList<string>> Inputs { get; set; }
 
+        public Optional<string> Name { get; set; }
+
         public Optional<DataSourceType> Type { get; set; }
     }
 }

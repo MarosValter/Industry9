@@ -1,4 +1,4 @@
-﻿namespace industry9.Shared.Store.Base
+﻿namespace industry9.Shared.Store.Base.Actions
 {
     public class UndoAction
     {

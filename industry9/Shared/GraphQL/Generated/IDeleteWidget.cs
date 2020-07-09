@@ -6,8 +6,8 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial interface IDataSourceDefinitionId
+    public partial interface IDeleteWidget
     {
-        string Id { get; }
+        bool DeleteWidget { get; }
     }
 }

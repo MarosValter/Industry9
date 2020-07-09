@@ -27,36 +27,25 @@ namespace industry9.Shared
 
         protected override IUpsertDashboard ParserData(JsonElement data)
         {
-            return new UpsertDashboard
+            return new UpsertDashboard1
             (
-                ParseUpsertDashboardCreateDashboard(data, "createDashboard")
+                DeserializeNullableString(data, "upsertDashboard")
             );
 
         }
 
-        private global::industry9.Shared.IDashboardId ParseUpsertDashboardCreateDashboard(
-            JsonElement parent,
-            string field)
+        private string DeserializeNullableString(JsonElement obj, string fieldName)
         {
-            if (!parent.TryGetProperty(field, out JsonElement obj))
+            if (!obj.TryGetProperty(fieldName, out JsonElement value))
             {
                 return null;
             }
 
-            if (obj.ValueKind == JsonValueKind.Null)
+            if (value.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
 
-            return new DashboardId
-            (
-                DeserializeString(obj, "id")
-            );
-        }
-
-        private string DeserializeString(JsonElement obj, string fieldName)
-        {
-            JsonElement value = obj.GetProperty(fieldName);
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
     }

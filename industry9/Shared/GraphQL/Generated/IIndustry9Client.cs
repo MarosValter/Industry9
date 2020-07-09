@@ -63,6 +63,14 @@ namespace industry9.Shared
             UpsertDashboardOperation operation,
             CancellationToken cancellationToken = default);
 
+        Task<IOperationResult<global::industry9.Shared.IDeleteDashboard>> DeleteDashboardAsync(
+            Optional<string> id = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IDeleteDashboard>> DeleteDashboardAsync(
+            DeleteDashboardOperation operation,
+            CancellationToken cancellationToken = default);
+
         Task<IOperationResult<global::industry9.Shared.IUpsertWidget>> UpsertWidgetAsync(
             Optional<global::industry9.Shared.WidgetInput> widget = default,
             CancellationToken cancellationToken = default);
@@ -71,12 +79,28 @@ namespace industry9.Shared
             UpsertWidgetOperation operation,
             CancellationToken cancellationToken = default);
 
+        Task<IOperationResult<global::industry9.Shared.IDeleteWidget>> DeleteWidgetAsync(
+            Optional<string> id = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IDeleteWidget>> DeleteWidgetAsync(
+            DeleteWidgetOperation operation,
+            CancellationToken cancellationToken = default);
+
         Task<IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             Optional<global::industry9.Shared.DataSourceDefinitionInput> definition = default,
             CancellationToken cancellationToken = default);
 
         Task<IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             UpsertDataSourceDefinitionOperation operation,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IDeleteDataSourceDefinition>> DeleteDataSourceDefinitionAsync(
+            Optional<string> id = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IDeleteDataSourceDefinition>> DeleteDataSourceDefinitionAsync(
+            DeleteDataSourceDefinitionOperation operation,
             CancellationToken cancellationToken = default);
 
         global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(

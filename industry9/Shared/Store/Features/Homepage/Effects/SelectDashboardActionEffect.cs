@@ -2,10 +2,10 @@
 using Fluxor;
 using industry9.Shared.Navigation;
 using industry9.Shared.Store.Features.AppBar.Actions;
-using industry9.Shared.Store.Features.Dashboard.Actions;
+using industry9.Shared.Store.Features.Homepage.Actions;
 using industry9.Shared.Store.Features.UserProfile.Actions;
 
-namespace industry9.Shared.Store.Features.Dashboard.Effects
+namespace industry9.Shared.Store.Features.Homepage.Effects
 {
     public class SelectDashboardActionEffect : Effect<SelectDashboardAction>
     {
@@ -21,8 +21,14 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
         protected override async Task HandleAsync(SelectDashboardAction action, IDispatcher dispatcher)
         {
             var result = await _client.GetDashboardAsync(action.Dashboard.Id);
-            dispatcher.Dispatch(new SetAppBarAction(result.Data.Dashboard.Name, null));
-            dispatcher.Dispatch(new FetchDashboardResultAction(result.Data.Dashboard));
+
+            if (!result.HasErrors && result.Data != null)
+            {
+                dispatcher.Dispatch(new SetAppBarAction(result.Data.Dashboard.Name, null));
+                dispatcher.Dispatch(new FetchDashboardResultAction(result.Data.Dashboard));
+            }
+
+            //TODO dispatch confirm/fail message action
         }
     }
 }

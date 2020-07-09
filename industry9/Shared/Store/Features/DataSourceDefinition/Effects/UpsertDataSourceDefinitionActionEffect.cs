@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Fluxor;
+using industry9.Common.Enums;
+using industry9.Shared.Store.Base;
 using industry9.Shared.Store.Features.DataSourceDefinition.Actions;
-using StrawberryShake;
 
 namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
 {
@@ -24,19 +23,26 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
                 return;
             }
 
-            var input = new DataSourceDefinitionInput
-            {
-                Type = action.DataSourceDefinition.Type,
-                Inputs = new Optional<IReadOnlyList<string>>(action.DataSourceDefinition.Inputs)
-            };
-
+            var input = CreateInput(action.DataSourceDefinition);
             var result = await _client.UpsertDataSourceDefinitionAsync(input);
+
             if (!result.HasErrors)
             {
                 dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
             }
 
-            Console.WriteLine("Errors: {0}", JsonSerializer.Serialize(result.Errors));
+            result.DispatchToast(dispatcher, "DataSource definition", string.IsNullOrEmpty(action.DataSourceDefinition.Id) ? CRUDOperation.Create : CRUDOperation.Update);
+        }
+
+        private DataSourceDefinitionInput CreateInput(IDataSourceDefinitionDetail definition)
+        {
+            var input = new DataSourceDefinitionInput
+            {
+                Type = definition.Type,
+                Inputs = definition.Inputs.ToList()
+            };
+
+            return input;
         }
     }
 }

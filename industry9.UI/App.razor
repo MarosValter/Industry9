@@ -1,4 +1,8 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using industry9.Shared.Store.States
+@implements IDisposable
+@inject NavigationManager NavigationManager
+@inject IMatToaster Toaster
+@inject IState<NotificationState> NotificationState
 
 <Fluxor.Blazor.Web.StoreInitializer />
 <Router AppAssembly="typeof(App).Assembly">
@@ -31,3 +35,27 @@
     </NotFound>
 </Router>
 <MatToastContainer />
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NotificationState.StateChanged += NotificationStateChanged;
+    }
+
+    public void Dispose()
+    {
+        NotificationState.StateChanged -= NotificationStateChanged;
+    }
+
+    private void NotificationStateChanged(object sender, NotificationState e)
+    {
+        var notification = e.LastNotification;
+        if (Enum.TryParse(notification.Type.ToString(), out MatToastType type))
+        {
+            Toaster.Add(notification.Message, type, notification.Title);
+        }
+    }
+
+}

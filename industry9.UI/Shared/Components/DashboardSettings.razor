@@ -129,6 +129,18 @@
 
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        DashboardName = Dashboard?.Name;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        DashboardName = Dashboard?.Name;
+    }
+
     private RenderFragment RenderPermissionList(IEnumerable<Permission> permissions) =>
     @<MatList>
         @foreach (var permission in permissions ?? Enumerable.Empty<Permission>())

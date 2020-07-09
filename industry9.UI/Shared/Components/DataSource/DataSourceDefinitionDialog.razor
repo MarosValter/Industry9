@@ -26,11 +26,6 @@
     [Parameter]
     public bool IsEdit { get; set; }
 
-    async Task OnIsOpenChanged(bool isOpen)
-    {
-        await Close(isOpen);
-    }
-
     async Task Close(bool save)
     {
         IsOpen = false;

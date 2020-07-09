@@ -8,6 +8,6 @@ namespace industry9.Shared
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
     public partial interface IUpsertDashboard
     {
-        global::industry9.Shared.IDashboardId CreateDashboard { get; }
+        string UpsertDashboard { get; }
     }
 }

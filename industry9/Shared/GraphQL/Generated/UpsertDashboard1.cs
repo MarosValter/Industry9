@@ -6,15 +6,15 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class UpsertDashboard
+    public partial class UpsertDashboard1
         : IUpsertDashboard
     {
-        public UpsertDashboard(
-            global::industry9.Shared.IDashboardId createDashboard)
+        public UpsertDashboard1(
+            string upsertDashboard)
         {
-            CreateDashboard = createDashboard;
+            UpsertDashboard = upsertDashboard;
         }
 
-        public global::industry9.Shared.IDashboardId CreateDashboard { get; }
+        public string UpsertDashboard { get; }
     }
 }

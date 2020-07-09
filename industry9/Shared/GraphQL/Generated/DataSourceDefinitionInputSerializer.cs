@@ -53,6 +53,11 @@ namespace industry9.Shared
                 map.Add("inputs", SerializeNullableListOfNullableString(input.Inputs.Value));
             }
 
+            if (input.Name.HasValue)
+            {
+                map.Add("name", SerializeNullableString(input.Name.Value));
+            }
+
             if (input.Type.HasValue)
             {
                 map.Add("type", SerializeNullableDataSourceType(input.Type.Value));
