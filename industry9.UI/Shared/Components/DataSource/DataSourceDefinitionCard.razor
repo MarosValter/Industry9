@@ -1,0 +1,44 @@
+﻿
+<MatCard class="dsd-card">
+    <div class="mat-card-header dsd-header" style="background-color: @GetColor(DataSourceDefinition.Type)">
+        <MatCardActions>
+            <MatH6>
+                @DataSourceDefinition.Type.ToString()
+            </MatH6>
+            <MatCardActionIcons>
+                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(DataSourceDefinition.Id))"></MatIconButton>
+            </MatCardActionIcons>
+        </MatCardActions>
+    </div>
+    <MatCardContent>
+        <MatCardMedia Wide="true" ImageUrl="@GetImage(DataSourceDefinition.Type)"></MatCardMedia>
+    </MatCardContent>
+    <div class="mat-card-footer dsd-footer">
+        <MatOverline>Created: @DataSourceDefinition.Created.ToString("dd. MM. yyyy")</MatOverline>
+    </div>
+</MatCard>
+
+@code {
+
+    [Parameter]
+    public IDataSourceDefinitionLite DataSourceDefinition { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnConfigure { get; set; }
+
+    string GetColor(DataSourceType type)
+    {
+        return type switch
+        {
+            DataSourceType.Random => "blueviolet",
+            DataSourceType.Dataquery => "orange",
+            _ => string.Empty
+        };
+    }
+
+    string GetImage(DataSourceType type)
+    {
+        return "TODO";
+    }
+
+}

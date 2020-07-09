@@ -9,7 +9,7 @@ using industry9.Shared.Authorization.Implementation;
 using industry9.Shared.GraphQL.Serializers;
 using industry9.Shared.Middleware;
 using industry9.Shared.Navigation;
-using industry9.Shared.Store.UserProfile;
+using industry9.Shared.Store.States;
 using industry9.UI;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;

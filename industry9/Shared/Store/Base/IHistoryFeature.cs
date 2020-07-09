@@ -5,8 +5,8 @@ namespace industry9.Shared.Store.Base
 {
     public interface IHistoryFeature : IFeature
     {
-        int HistoryLength { get; }
+        //int HistoryLength { get; }
 
-        void PersistChanges();
+        //void PersistChanges();
     }
 }

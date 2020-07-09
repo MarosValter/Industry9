@@ -36,7 +36,6 @@ using industry9.Server.Data;
 using industry9.Server.Identity;
 using industry9.Server.Services;
 using industry9.Shared.Authorization;
-using industry9.Shared.Store.UserProfile;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http;

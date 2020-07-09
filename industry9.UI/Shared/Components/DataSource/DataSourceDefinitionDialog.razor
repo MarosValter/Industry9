@@ -1,0 +1,44 @@
+﻿@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
+@using industry9.Shared.Store.States
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<DataSourceDefinitionState> DefinitionState
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <MatDialogTitle>@(IsEdit ? "Edit" : "Create") DataSource definition</MatDialogTitle>
+    <MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => Close(false))">Cancel</MatButton>
+            <MatButton OnClick="@(e => Close(true))">OK</MatButton>
+        </MatDialogActions>
+    </MatDialogContent>
+</MatDialog>
+
+@code {
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public bool IsEdit { get; set; }
+
+    async Task OnIsOpenChanged(bool isOpen)
+    {
+        await Close(isOpen);
+    }
+
+    async Task Close(bool save)
+    {
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(false);
+        if (save)
+        {
+            Dispatcher.Dispatch(new UpsertDataSourceDefinitionResultAction(DefinitionState.Value.EditedDefinition, true));
+        }
+    }
+
+}

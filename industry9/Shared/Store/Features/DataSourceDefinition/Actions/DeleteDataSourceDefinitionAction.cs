@@ -1,4 +1,4 @@
-﻿namespace industry9.Shared.Store.DataSourceDefinition
+﻿namespace industry9.Shared.Store.Features.DataSourceDefinition.Actions
 {
     public class DeleteDataSourceDefinitionAction
     {

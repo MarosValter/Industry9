@@ -131,9 +131,9 @@ namespace industry9.Shared.Middleware
                 features.Add(feature);
                 if (editAction.SaveChanges)
                 {
-                    // TODO persist changes
-                    var f = (IHistoryFeature) historyFeature;
-                    f.PersistChanges();
+                    // TODO persist changes via effect
+                    //var f = (IHistoryFeature) historyFeature;
+                    //f.PersistChanges();
                 }
                 else
                 {

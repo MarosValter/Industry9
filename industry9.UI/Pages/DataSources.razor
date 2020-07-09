@@ -1,6 +1,47 @@
 ﻿@page "/data-sources"
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
+@using industry9.Shared.Store.States
+
+@inject IDispatcher Dispatcher
+@inject IState<DataSourceDefinitionState> State
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        @foreach (var definition in State.Value.Definitions ?? Enumerable.Empty<IDataSourceDefinitionLite>())
+        {
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                <DataSourceDefinitionCard @key="definition" DataSourceDefinition="@definition" OnConfigure="@EditDefinition"></DataSourceDefinitionCard>
+            </div>
+        }
+    </div>
+</div>
+
+<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddDefinition"></MatFAB>
+
+<DataSourceDefinitionDialog @bind-IsOpen="@_isDialogOpen" IsEdit="@_isEdit"></DataSourceDefinitionDialog>
 
 @code {
+    bool _isDialogOpen;
+    bool _isEdit;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
+    }
+
+    void EditDefinition(string id)
+    {
+        _isEdit = true;
+        Dispatcher.Dispatch(new UpdateDataSourceDefinitionAction(id));
+        _isDialogOpen = true;
+    }
+
+    void AddDefinition()
+    {
+        _isEdit = false;
+        Dispatcher.Dispatch(new InsertDataSourceDefinitionAction());
+        _isDialogOpen = true;
+    }
 }

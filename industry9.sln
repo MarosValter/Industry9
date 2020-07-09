@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "industry9.GraphQL.UI", "ind
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "industry9.UI", "industry9.UI\industry9.UI.csproj", "{7565C7E9-DAF4-4DA7-A900-273ADE1EB36F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "industry9.DataSource", "industry9.DataSource\industry9.DataSource.csproj", "{1802C720-4656-4B80-9C34-84C2F12B21E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "industry9.DataSource", "industry9.DataSource\industry9.DataSource.csproj", "{1802C720-4656-4B80-9C34-84C2F12B21E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "industry9.Database", "industry9.Database\industry9.Database.csproj", "{A1403CB1-5678-4BDD-B1DD-BF557B14C839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "industry9.Database", "industry9.Database\industry9.Database.csproj", "{A1403CB1-5678-4BDD-B1DD-BF557B14C839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿@using industry9.Shared.Store.Dashboard
+﻿@using industry9.Shared.Store.Features.Dashboard.Actions
 @inject IDispatcher Dispatcher
 
 @if (Labels?.Any() == true || EditMode)
@@ -39,14 +39,12 @@
 
     void RemoveLabel(string label)
     {
-        Console.WriteLine($"REMOVE LABEL: {label}");
         Dispatcher.Dispatch(new RemoveLabelAction(label));
     }
 
     void OkClick()
     {
         _isDialogOpen = false;
-        Console.WriteLine($"ADD LABEL: {NewLabelName}");
         if (!string.IsNullOrEmpty(NewLabelName))
         {
             Dispatcher.Dispatch(new AddLabelAction(new Label(NewLabelName)));
