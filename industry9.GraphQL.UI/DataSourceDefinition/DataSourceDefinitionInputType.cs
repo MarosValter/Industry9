@@ -10,7 +10,7 @@ namespace industry9.GraphQL.UI.DataSourceDefinition
         {
             descriptor.Name("DataSourceDefinitionInput");
             descriptor.BindFieldsExplicitly();
-            descriptor.Field(d => d.Name);
+            descriptor.Field(d => d.Name).Type<NonNullType<StringType>>();
             descriptor.Field(d => d.Type);
             descriptor.Field(d => d.Inputs).DefaultValue(Enumerable.Empty<string>().ToList());
         }

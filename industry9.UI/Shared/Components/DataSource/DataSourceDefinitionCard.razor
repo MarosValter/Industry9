@@ -7,6 +7,7 @@
             </MatH6>
             <MatCardActionIcons>
                 <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(DataSourceDefinition.Id))"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(DataSourceDefinition.Id))"></MatIconButton>
             </MatCardActionIcons>
         </MatCardActions>
     </div>
@@ -26,6 +27,9 @@
     [Parameter]
     public EventCallback<string> OnConfigure { get; set; }
 
+    [Parameter]
+    public EventCallback<string> OnDelete { get; set; }
+
     string GetColor(DataSourceType type)
     {
         return type switch
@@ -40,5 +44,4 @@
     {
         return "TODO";
     }
-
 }

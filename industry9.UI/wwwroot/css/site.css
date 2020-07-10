@@ -815,3 +815,15 @@ ul.breadcrumb {
     border-radius: 0 0 4px 4px;
     background-color: #ebebeb;
 }
+
+.mat-tab-group-content {
+    margin-top: 2rem;
+}
+
+.mdc-dialog .form-group > div {
+    display: grid;
+}
+
+.mdc-dialog .form-group > label {
+    display: block;
+}

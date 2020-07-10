@@ -111,7 +111,7 @@ input WidgetInput {
 
 input DataSourceDefinitionInput {
   inputs: [String] = [  ]
-  name: String
+  name: String!
   type: DataSourceType!
 }
 

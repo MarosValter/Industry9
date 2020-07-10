@@ -11,15 +11,19 @@ namespace industry9.Shared
     {
         public DataSourceDefinitionLite(
             string id, 
+            string name, 
             System.DateTimeOffset created, 
             DataSourceType type)
         {
             Id = id;
+            Name = name;
             Created = created;
             Type = type;
         }
 
         public string Id { get; }
+
+        public string Name { get; }
 
         public System.DateTimeOffset Created { get; }
 

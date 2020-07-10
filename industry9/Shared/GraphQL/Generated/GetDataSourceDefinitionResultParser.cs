@@ -55,6 +55,7 @@ namespace industry9.Shared
             return new DataSourceDefinitionDetail
             (
                 DeserializeString(obj, "id"),
+                DeserializeNullableString(obj, "name"),
                 DeserializeDateTime(obj, "created"),
                 DeserializeDataSourceType(obj, "type"),
                 DeserializeNullableListOfNullableString(obj, "inputs")
@@ -64,6 +65,21 @@ namespace industry9.Shared
         private string DeserializeString(JsonElement obj, string fieldName)
         {
             JsonElement value = obj.GetProperty(fieldName);
+            return (string)_stringSerializer.Deserialize(value.GetString());
+        }
+
+        private string DeserializeNullableString(JsonElement obj, string fieldName)
+        {
+            if (!obj.TryGetProperty(fieldName, out JsonElement value))
+            {
+                return null;
+            }
+
+            if (value.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
 

@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Common.Enums;
-using industry9.Shared.Store.Base;
+using industry9.Shared.Dto.DataSourceDefinition;
+using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.DataSourceDefinition.Actions;
 
 namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
@@ -34,10 +35,11 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             result.DispatchToast(dispatcher, "DataSource definition", string.IsNullOrEmpty(action.DataSourceDefinition.Id) ? CRUDOperation.Create : CRUDOperation.Update);
         }
 
-        private DataSourceDefinitionInput CreateInput(IDataSourceDefinitionDetail definition)
+        private DataSourceDefinitionInput CreateInput(DataSourceDefinitionData definition)
         {
             var input = new DataSourceDefinitionInput
             {
+                Name = definition.Name,
                 Type = definition.Type,
                 Inputs = definition.Inputs.ToList()
             };

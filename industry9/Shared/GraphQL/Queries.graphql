@@ -135,12 +135,14 @@ fragment DataSourceDefinitionId on DataSourceDefinition {
 
 fragment DataSourceDefinitionLite on DataSourceDefinition {
 	id,
+	name,
 	created,
 	type
 }
 
 fragment DataSourceDefinitionDetail on DataSourceDefinition {
 	id,
+	name,
 	created,
 	type,
 	inputs

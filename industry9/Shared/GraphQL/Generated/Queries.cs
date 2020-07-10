@@ -21,38 +21,38 @@ namespace industry9.Shared
         };
         private readonly byte[] _hash = new byte[]
         {
-            53,
-            99,
-            99,
-            98,
-            57,
+            101,
             49,
-            55,
+            98,
+            97,
+            48,
+            100,
+            56,
+            97,
+            54,
+            49,
+            49,
+            97,
             57,
+            53,
+            55,
+            100,
+            52,
             100,
             102,
-            100,
+            102,
+            55,
+            99,
+            56,
+            48,
             49,
-            101,
-            51,
-            54,
-            53,
-            53,
-            50,
-            53,
-            53,
-            53,
-            54,
-            49,
-            54,
-            51,
-            54,
+            55,
             53,
             49,
-            57,
-            57,
-            100,
-            55
+            53,
+            56,
+            97,
+            100
         };
         private readonly byte[] _content = new byte[]
         {
@@ -1854,6 +1854,11 @@ namespace industry9.Shared
             105,
             100,
             32,
+            110,
+            97,
+            109,
+            101,
+            32,
             99,
             114,
             101,
@@ -1944,6 +1949,11 @@ namespace industry9.Shared
             32,
             105,
             100,
+            32,
+            110,
+            97,
+            109,
+            101,
             32,
             99,
             114,
@@ -2241,12 +2251,14 @@ namespace industry9.Shared
             
             fragment DataSourceDefinitionLite on DataSourceDefinition {
               id
+              name
               created
               type
             }
             
             fragment DataSourceDefinitionDetail on DataSourceDefinition {
               id
+              name
               created
               type
               inputs

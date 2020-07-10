@@ -11,17 +11,21 @@ namespace industry9.Shared
     {
         public DataSourceDefinitionDetail(
             string id, 
+            string name, 
             System.DateTimeOffset created, 
             DataSourceType type, 
             IReadOnlyList<string> inputs)
         {
             Id = id;
+            Name = name;
             Created = created;
             Type = type;
             Inputs = inputs;
         }
 
         public string Id { get; }
+
+        public string Name { get; }
 
         public System.DateTimeOffset Created { get; }
 

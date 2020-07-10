@@ -2,6 +2,8 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @using industry9.Shared.Store.Features.DataSourceDefinition.Actions
 @using industry9.Shared.Store.States
+@using industry9.Shared.Dto.DataSourceDefinition
+@using industry9.Common.Enums
 
 @inject IDispatcher Dispatcher
 @inject IState<DataSourceDefinitionState> State
@@ -11,7 +13,7 @@
         @foreach (var definition in State.Value.Definitions ?? Enumerable.Empty<IDataSourceDefinitionLite>())
         {
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                <DataSourceDefinitionCard @key="definition" DataSourceDefinition="@definition" OnConfigure="@EditDefinition"></DataSourceDefinitionCard>
+                <DataSourceDefinitionCard @key="definition" DataSourceDefinition="@definition" OnConfigure="@EditDefinition" OnDelete="@DeleteDefinition"></DataSourceDefinitionCard>
             </div>
         }
     </div>
@@ -19,11 +21,13 @@
 
 <MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddDefinition"></MatFAB>
 
-<DataSourceDefinitionDialog @bind-IsOpen="@_isDialogOpen" IsEdit="@_isEdit"></DataSourceDefinitionDialog>
+<DataSourceDefinitionDialog EditedObject="@EditedObject" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DataSourceDefinitionDialog>
 
 @code {
     bool _isDialogOpen;
-    bool _isEdit;
+    CRUDOperation _operation;
+
+    public DataSourceDefinitionData EditedObject => Map(State.Value.EditedObject);
 
     protected override void OnInitialized()
     {
@@ -31,17 +35,38 @@
         Dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
     }
 
+    void AddDefinition()
+    {
+        _operation = CRUDOperation.Create;
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(null));
+        _isDialogOpen = true;
+    }
+
     void EditDefinition(string id)
     {
-        _isEdit = true;
+        _operation = CRUDOperation.Update;
         Dispatcher.Dispatch(new InitDataSourceDefinitionAction(id));
         _isDialogOpen = true;
     }
 
-    void AddDefinition()
+    void DeleteDefinition(string id)
     {
-        _isEdit = false;
-        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(null));
+        _operation = CRUDOperation.Delete;
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(id));
         _isDialogOpen = true;
+    }
+
+    DataSourceDefinitionData Map(IDataSourceDefinitionDetail detail)
+    {
+        var result = new DataSourceDefinitionData();
+
+        if (detail != null)
+        {
+            result.Id = detail.Id;
+            result.Type = detail.Type;
+            result.Inputs = detail.Inputs.ToList();
+        }
+
+        return result;
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using Fluxor;
 using industry9.Common.Enums;
+using industry9.Shared.Store.Base;
 using industry9.Shared.Store.Base.Actions;
 using StrawberryShake;
 
-namespace industry9.Shared.Store.Base
+namespace industry9.Shared.Store.Extensions
 {
     public static class OperationResultExtensions
     {

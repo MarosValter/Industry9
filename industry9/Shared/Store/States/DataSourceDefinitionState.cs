@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using industry9.Shared.Store.Base;
 
 namespace industry9.Shared.Store.States
 {
-    public class DataSourceDefinitionState
+    public class DataSourceDefinitionState : IEditableState<IDataSourceDefinitionDetail>
     {
         public IEnumerable<IDataSourceDefinitionLite> Definitions { get; }
-        public IDataSourceDefinitionDetail EditedDefinition { get; }
+        public IDataSourceDefinitionDetail EditedObject { get; }
 
-        public DataSourceDefinitionState(IEnumerable<IDataSourceDefinitionLite> definitions, IDataSourceDefinitionDetail editedDefinition)
+        public DataSourceDefinitionState(IEnumerable<IDataSourceDefinitionLite> definitions, IDataSourceDefinitionDetail editedObject)
         {
             Definitions = definitions;
-            EditedDefinition = editedDefinition;
+            EditedObject = editedObject;
         }
     }
 }

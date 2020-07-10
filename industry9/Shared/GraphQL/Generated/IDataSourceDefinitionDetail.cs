@@ -10,6 +10,8 @@ namespace industry9.Shared
     {
         string Id { get; }
 
+        string Name { get; }
+
         System.DateTimeOffset Created { get; }
 
         DataSourceType Type { get; }
