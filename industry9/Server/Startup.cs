@@ -29,6 +29,7 @@ using industry9.DataSource.PropertiesData;
 using industry9.GraphQL.UI.Dashboard;
 using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
+using industry9.GraphQL.UI.DataSourceDefinition.Properties;
 using industry9.GraphQL.UI.Scalars;
 using industry9.GraphQL.UI.Widget;
 using industry9.Server.Data;
@@ -108,10 +109,12 @@ namespace industry9.Server
                     .AddType<DashboardQueries>()
                     .AddType<WidgetQueries>()
                     .AddType<DataSourceDefinitionQueries>()
+                    .AddType<DataSourcePropertiesQueries>()
                     .AddMutationType(d => d.Name("Mutation"))
                     .AddType<DashboardMutations>()
                     .AddType<WidgetMutations>()
                     .AddType<DataSourceDefinitionMutations>()
+                    .AddType<DataSourcePropertiesMutations>()
                     .AddSubscriptionType(d => d.Name("Subscription"))
                     .AddType<DataSubscriptions>()
 

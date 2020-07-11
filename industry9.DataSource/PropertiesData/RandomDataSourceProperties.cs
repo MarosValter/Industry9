@@ -8,7 +8,7 @@ namespace industry9.DataSource.PropertiesData
     [DataSourceProperties(DataSourceType.Random)]
     public class RandomDataSourceProperties : IDataSourceProperties
     {
-        public string DefinitionId { get; set; }
+        //public string DefinitionId { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
     }

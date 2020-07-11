@@ -30,22 +30,22 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
 
             if (!result.HasErrors)
             {
-                await AssignProperties(action.DataSourceDefinition);
+                await AssignProperties(result.Data?.UpsertDataSourceDefinition, action.DataSourceDefinition.Type, action.DataSourceDefinition.Properties);
                 dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
             }
 
             result.DispatchToast(dispatcher, "DataSource definition", string.IsNullOrEmpty(action.DataSourceDefinition.Id) ? CRUDOperation.Create : CRUDOperation.Update);
         }
 
-        private async Task<bool> AssignProperties(DataSourceDefinitionData definition)
+        private async Task<bool> AssignProperties(string id, DataSourceType type, IDataSourcePropertiesData properties)
         {
-            var result = definition.Type switch
+            var result = type switch
             {
-                DataSourceType.Random => (await _client.AssignRandomDataSourcePropertiesAsync(definition.Id,
-                    CreatePropertiesInput(definition.Properties as RandomDataSourcePropertiesData))).Data
+                DataSourceType.Random => (await _client.AssignRandomDataSourcePropertiesAsync(id,
+                    CreatePropertiesInput(properties as RandomDataSourcePropertiesData))).Data
                 ?.AssignRandomPropertiesToDataSource ?? false,
-                DataSourceType.Dataquery => (await _client.AssignQueryDataSourcePropertiesAsync(definition.Id,
-                    CreatePropertiesInput(definition.Properties as QueryDataSourcePropertiesData))).Data
+                DataSourceType.Dataquery => (await _client.AssignQueryDataSourcePropertiesAsync(id,
+                    CreatePropertiesInput(properties as QueryDataSourcePropertiesData))).Data
                 ?.AssignDataQueryPropertiesToDataSource ?? false,
                 _ => false
             };
@@ -53,6 +53,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             return result;
         }
 
+        // TODO automapper
         private static DataSourceDefinitionInput CreateInput(DataSourceDefinitionData definition)
         {
             var input = new DataSourceDefinitionInput
@@ -66,6 +67,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             return input;
         }
 
+        // TODO automapper
         private static RandomDataSourcePropertiesInput CreatePropertiesInput(RandomDataSourcePropertiesData properties)
         {
             return new RandomDataSourcePropertiesInput
@@ -75,6 +77,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             };
         }
 
+        // TODO automapper
         private static DataQueryDataSourcePropertiesInput CreatePropertiesInput(QueryDataSourcePropertiesData properties)
         {
             return new DataQueryDataSourcePropertiesInput

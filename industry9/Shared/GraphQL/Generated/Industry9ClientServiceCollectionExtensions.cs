@@ -61,6 +61,8 @@ namespace industry9.Shared
                 .AddResultParser(serializers => new GetWidgetResultParser(serializers))
                 .AddResultParser(serializers => new GetDataSourceDefinitionsResultParser(serializers))
                 .AddResultParser(serializers => new GetDataSourceDefinitionResultParser(serializers))
+                .AddResultParser(serializers => new FetchRandomDataSourcePropertiesResultParser(serializers))
+                .AddResultParser(serializers => new FetchQueryDataSourcePropertiesResultParser(serializers))
                 .AddResultParser(serializers => new UpsertDashboardResultParser(serializers))
                 .AddResultParser(serializers => new DeleteDashboardResultParser(serializers))
                 .AddResultParser(serializers => new UpsertWidgetResultParser(serializers))

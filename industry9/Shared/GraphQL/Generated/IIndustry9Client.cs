@@ -55,6 +55,22 @@ namespace industry9.Shared
             GetDataSourceDefinitionOperation operation,
             CancellationToken cancellationToken = default);
 
+        Task<IOperationResult<global::industry9.Shared.IFetchRandomDataSourceProperties>> FetchRandomDataSourcePropertiesAsync(
+            Optional<string> id = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IFetchRandomDataSourceProperties>> FetchRandomDataSourcePropertiesAsync(
+            FetchRandomDataSourcePropertiesOperation operation,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IFetchQueryDataSourceProperties>> FetchQueryDataSourcePropertiesAsync(
+            Optional<string> id = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IFetchQueryDataSourceProperties>> FetchQueryDataSourcePropertiesAsync(
+            FetchQueryDataSourcePropertiesOperation operation,
+            CancellationToken cancellationToken = default);
+
         Task<IOperationResult<global::industry9.Shared.IUpsertDashboard>> UpsertDashboardAsync(
             Optional<global::industry9.Shared.DashboardInput> dashboard = default,
             CancellationToken cancellationToken = default);

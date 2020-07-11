@@ -7,7 +7,7 @@ namespace industry9.DataSource.PropertiesData
     [DataSourceProperties(DataSourceType.DataQuery)]
     public class DataQueryDataSourceProperties : IDataSourceProperties
     {
-        public string DefinitionId { get; set; }
+        //public string DefinitionId { get; set; }
         public string Query { get; set; }
     }
 }

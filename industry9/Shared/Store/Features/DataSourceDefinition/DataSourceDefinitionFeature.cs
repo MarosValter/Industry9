@@ -8,6 +8,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition
     {
         public override string GetName() => "DataSourceDefinitions";
 
-        protected override DataSourceDefinitionState GetInitialState() => new DataSourceDefinitionState(Enumerable.Empty<IDataSourceDefinitionLite>(), null);
+        protected override DataSourceDefinitionState GetInitialState()
+            => new DataSourceDefinitionState(Enumerable.Empty<IDataSourceDefinitionLite>(), null, null);
     }
 }

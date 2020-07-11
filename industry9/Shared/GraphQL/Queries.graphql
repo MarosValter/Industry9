@@ -37,6 +37,20 @@ query getDataSourceDefinition($id: String!) {
 }
 
 
+query fetchRandomDataSourceProperties($id: String!) {
+	fetchRandomPropertiesFromDataSource(dataSourceId: $id) {
+		min,
+		max
+	}
+}
+
+query fetchQueryDataSourceProperties($id: String!) {
+	fetchDataQueryPropertiesFromDataSource(dataSourceId: $id) {
+		query
+	}
+}
+
+
 mutation upsertDashboard($dashboard: DashboardInput!) {
   upsertDashboard(dashboard: $dashboard)
 }

@@ -163,6 +163,58 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IFetchRandomDataSourceProperties>> FetchRandomDataSourcePropertiesAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new FetchRandomDataSourcePropertiesOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IFetchRandomDataSourceProperties>> FetchRandomDataSourcePropertiesAsync(
+            FetchRandomDataSourcePropertiesOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IFetchQueryDataSourceProperties>> FetchQueryDataSourcePropertiesAsync(
+            global::StrawberryShake.Optional<string> id = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (id.HasValue && id.Value is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return _executor.ExecuteAsync(
+                new FetchQueryDataSourcePropertiesOperation { Id = id },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IFetchQueryDataSourceProperties>> FetchQueryDataSourcePropertiesAsync(
+            FetchQueryDataSourcePropertiesOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDashboard>> UpsertDashboardAsync(
             global::StrawberryShake.Optional<global::industry9.Shared.DashboardInput> dashboard = default,
             global::System.Threading.CancellationToken cancellationToken = default)

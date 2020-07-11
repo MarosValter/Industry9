@@ -2,6 +2,6 @@
 {
     public interface IDataSourceProperties
     {
-        string DefinitionId { get; set; }
+        //string DefinitionId { get; set; }
     }
 }

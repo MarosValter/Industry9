@@ -10,6 +10,7 @@
 //            base.Configure(descriptor);
 
 //            descriptor.Name("RandomDataSourceProperties");
+//            descriptor.Implements<>()
 //        }
 //    }
 //}

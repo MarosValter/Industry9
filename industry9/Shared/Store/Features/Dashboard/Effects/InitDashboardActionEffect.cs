@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Fluxor;
-using industry9.Shared.Store.Base;
 using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.Dashboard.Actions;
 
