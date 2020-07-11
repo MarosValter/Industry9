@@ -96,6 +96,7 @@ type DataSourceDefinition {
 }
 
 input DashboardInput {
+  id: String
   labels: [LabelDataInput] = [  ]
   name: String!
   widgetIds: [String] = [  ]
@@ -105,11 +106,13 @@ input WidgetInput {
   columnMappings: [ColumnMappingDataInput] = [  ]
   dashboardId: String
   dataSourceIds: [String] = [  ]
+  id: String
   labels: [LabelDataInput] = [  ]
   name: String!
 }
 
 input DataSourceDefinitionInput {
+  id: String
   inputs: [String] = [  ]
   name: String!
   type: DataSourceType!

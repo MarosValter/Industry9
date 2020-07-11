@@ -61,6 +61,14 @@ mutation deleteDataSourceDefinition($id: String!) {
   deleteDataSourceDefinition(id: $id)
 }
 
+mutation assignRandomDataSourceProperties($definitionId: String!, $properties: RandomDataSourcePropertiesInput!) {
+	assignRandomPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
+}
+
+mutation assignQueryDataSourceProperties($definitionId: String!, $properties: DataQueryDataSourcePropertiesInput!) {
+	assignDataQueryPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
+}
+
 
 subscription onDataReceived($widgetId: String!) {
 	onDataReceived(widgetId: $widgetId) {

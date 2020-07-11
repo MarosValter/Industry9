@@ -53,6 +53,8 @@ namespace industry9.Shared
                 .AddValueSerializer(() => new WidgetInputSerializer())
                 .AddValueSerializer(() => new ColumnMappingDataInputSerializer())
                 .AddValueSerializer(() => new DataSourceDefinitionInputSerializer())
+                .AddValueSerializer(() => new RandomDataSourcePropertiesInputSerializer())
+                .AddValueSerializer(() => new DataQueryDataSourcePropertiesInputSerializer())
                 .AddResultParser(serializers => new GetDashboardsResultParser(serializers))
                 .AddResultParser(serializers => new GetDashboardResultParser(serializers))
                 .AddResultParser(serializers => new GetWidgetsResultParser(serializers))
@@ -65,6 +67,8 @@ namespace industry9.Shared
                 .AddResultParser(serializers => new DeleteWidgetResultParser(serializers))
                 .AddResultParser(serializers => new UpsertDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new DeleteDataSourceDefinitionResultParser(serializers))
+                .AddResultParser(serializers => new AssignRandomDataSourcePropertiesResultParser(serializers))
+                .AddResultParser(serializers => new AssignQueryDataSourcePropertiesResultParser(serializers))
                 .AddResultParser(serializers => new OnDataReceivedResultParser(serializers))
                 .AddOperationFormatter(serializers => new JsonOperationFormatter(serializers))
                 .AddHttpOperationPipeline(b => b.UseHttpDefaultPipeline());

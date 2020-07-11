@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Fluxor;
 using industry9.Common.Enums;
 using industry9.Shared.Dto.DataSourceDefinition;
+using industry9.Shared.Dto.DataSourceDefinition.Properties;
 using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.DataSourceDefinition.Actions;
 
@@ -29,22 +30,57 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
 
             if (!result.HasErrors)
             {
+                await AssignProperties(action.DataSourceDefinition);
                 dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
             }
 
             result.DispatchToast(dispatcher, "DataSource definition", string.IsNullOrEmpty(action.DataSourceDefinition.Id) ? CRUDOperation.Create : CRUDOperation.Update);
         }
 
-        private DataSourceDefinitionInput CreateInput(DataSourceDefinitionData definition)
+        private async Task<bool> AssignProperties(DataSourceDefinitionData definition)
+        {
+            var result = definition.Type switch
+            {
+                DataSourceType.Random => (await _client.AssignRandomDataSourcePropertiesAsync(definition.Id,
+                    CreatePropertiesInput(definition.Properties as RandomDataSourcePropertiesData))).Data
+                ?.AssignRandomPropertiesToDataSource ?? false,
+                DataSourceType.Dataquery => (await _client.AssignQueryDataSourcePropertiesAsync(definition.Id,
+                    CreatePropertiesInput(definition.Properties as QueryDataSourcePropertiesData))).Data
+                ?.AssignDataQueryPropertiesToDataSource ?? false,
+                _ => false
+            };
+
+            return result;
+        }
+
+        private static DataSourceDefinitionInput CreateInput(DataSourceDefinitionData definition)
         {
             var input = new DataSourceDefinitionInput
             {
+                Id = definition.Id,
                 Name = definition.Name,
                 Type = definition.Type,
                 Inputs = definition.Inputs.ToList()
             };
 
             return input;
+        }
+
+        private static RandomDataSourcePropertiesInput CreatePropertiesInput(RandomDataSourcePropertiesData properties)
+        {
+            return new RandomDataSourcePropertiesInput
+            {
+                Min = properties.Min,
+                Max = properties.Max
+            };
+        }
+
+        private static DataQueryDataSourcePropertiesInput CreatePropertiesInput(QueryDataSourcePropertiesData properties)
+        {
+            return new DataQueryDataSourcePropertiesInput
+            {
+                Query = properties.Query
+            };
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using industry9.Shared.Dto.DataSourceDefinition.Properties;
 
 namespace industry9.Shared.Dto.DataSourceDefinition
 {
@@ -18,6 +19,8 @@ namespace industry9.Shared.Dto.DataSourceDefinition
         public DataSourceType Type { get; set; }
 
         public IList<string> Inputs { get; set; }
+
+        public IDataSourcePropertiesData Properties { get; set; }
 
         public DataSourceDefinitionData()
         {

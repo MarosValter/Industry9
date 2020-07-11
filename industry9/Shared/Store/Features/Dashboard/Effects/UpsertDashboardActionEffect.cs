@@ -39,6 +39,7 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
         {
             var input = new DashboardInput
             {
+                Id = dashboard.Id,
                 Name = dashboard.Name,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
                 WidgetIds = dashboard.Widgets.Select(x => x.Id).ToList()

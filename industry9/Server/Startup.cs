@@ -25,7 +25,6 @@ using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.DataModel.UI.Serializers;
 using industry9.DataModel.UI.Services;
-using industry9.DataSource.GraphQL;
 using industry9.DataSource.PropertiesData;
 using industry9.GraphQL.UI.Dashboard;
 using industry9.GraphQL.UI.Data;
@@ -87,7 +86,7 @@ namespace industry9.Server
             services.AddScoped<IWidgetRepository, WidgetRepository>();
             services.AddScoped<IDataSourceDefinitionRepository, DataSourceDefinitionRepository>();
 
-            services.AddTransient<ISchemaExtender, DataSourceSchemaExtender>();
+            //services.AddTransient<ISchemaExtender, DataSourceSchemaExtender>();
             services.AddSingleton<IDataSourcePropertiesService, DataSourcePropertiesService>();
 
             // this enables you to use DataLoader in your resolvers.
@@ -99,7 +98,6 @@ namespace industry9.Server
             {
                 var propService = sp.GetService<IDataSourcePropertiesService>();
                 propService.ScanForProperties(new [] {typeof(RandomDataSourceProperties).Assembly});
-                var extenders = sp.GetServices<ISchemaExtender>();
                 var builder = SchemaBuilder.New()
                     .AddServices(sp)
                     .BindClrType<Color, ColorType>()

@@ -1,6 +1,7 @@
 ﻿@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
 @using industry9.Shared.Dto.DataSourceDefinition
 @using industry9.Common.Enums
+@using industry9.Shared.Dto.DataSourceDefinition.Properties
 @using DataSourceType = industry9.Shared.DataSourceType
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -29,8 +30,16 @@
                             </div>
                         </fieldset>
                     </MatTab>
-                    <MatTab Label="Properties">
-
+                    <MatTab Label="Properties" disabled="@(EditedObject.Type == DataSourceType.Unknown)">
+                        @switch(EditedObject.Type)
+                        {
+                            case DataSourceType.Random:
+                                <RandomDataSourceProperties @bind-Properties="@EditedObject.Properties"></RandomDataSourceProperties>
+                                break;
+                            case DataSourceType.Dataquery:
+                                <QueryDataSourceProperties @bind-Properties="@EditedObject.Properties"></QueryDataSourceProperties>
+                                break;
+                        }
                     </MatTab>
                 </MatTabGroup>
                 <MatDialogActions>

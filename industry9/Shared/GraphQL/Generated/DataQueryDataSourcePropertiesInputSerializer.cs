@@ -6,18 +6,17 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class DataSourceDefinitionInputSerializer
+    public partial class DataQueryDataSourcePropertiesInputSerializer
         : IInputSerializer
     {
         private bool _needsInitialization = true;
         private IValueSerializer _stringSerializer;
-        private IValueSerializer _dataSourceTypeSerializer;
 
-        public string Name { get; } = "DataSourceDefinitionInput";
+        public string Name { get; } = "DataQueryDataSourcePropertiesInput";
 
         public ValueKind Kind { get; } = ValueKind.InputObject;
 
-        public Type ClrType => typeof(DataSourceDefinitionInput);
+        public Type ClrType => typeof(DataQueryDataSourcePropertiesInput);
 
         public Type SerializationType => typeof(IReadOnlyDictionary<string, object>);
 
@@ -28,7 +27,6 @@ namespace industry9.Shared
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
             _stringSerializer = serializerResolver.Get("String");
-            _dataSourceTypeSerializer = serializerResolver.Get("DataSourceType");
             _needsInitialization = false;
         }
 
@@ -45,27 +43,12 @@ namespace industry9.Shared
                 return null;
             }
 
-            var input = (DataSourceDefinitionInput)value;
+            var input = (DataQueryDataSourcePropertiesInput)value;
             var map = new Dictionary<string, object>();
 
-            if (input.Id.HasValue)
+            if (input.Query.HasValue)
             {
-                map.Add("id", SerializeNullableString(input.Id.Value));
-            }
-
-            if (input.Inputs.HasValue)
-            {
-                map.Add("inputs", SerializeNullableListOfNullableString(input.Inputs.Value));
-            }
-
-            if (input.Name.HasValue)
-            {
-                map.Add("name", SerializeNullableString(input.Name.Value));
-            }
-
-            if (input.Type.HasValue)
-            {
-                map.Add("type", SerializeNullableDataSourceType(input.Type.Value));
+                map.Add("query", SerializeNullableString(input.Query.Value));
             }
 
             return map;
@@ -80,27 +63,6 @@ namespace industry9.Shared
 
 
             return _stringSerializer.Serialize(value);
-        }
-
-        private object SerializeNullableListOfNullableString(object value)
-        {
-            if (value is null)
-            {
-                return null;
-            }
-
-
-            IList source = (IList)value;
-            object[] result = new object[source.Count];
-            for(int i = 0; i < source.Count; i++)
-            {
-                result[i] = SerializeNullableString(source[i]);
-            }
-            return result;
-        }
-        private object SerializeNullableDataSourceType(object value)
-        {
-            return _dataSourceTypeSerializer.Serialize(value);
         }
 
         public object Deserialize(object value)

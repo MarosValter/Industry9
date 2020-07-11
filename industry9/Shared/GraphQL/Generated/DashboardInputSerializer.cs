@@ -10,8 +10,8 @@ namespace industry9.Shared
         : IInputSerializer
     {
         private bool _needsInitialization = true;
-        private IValueSerializer _labelDataInputSerializer;
         private IValueSerializer _stringSerializer;
+        private IValueSerializer _labelDataInputSerializer;
 
         public string Name { get; } = "DashboardInput";
 
@@ -27,8 +27,8 @@ namespace industry9.Shared
             {
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
-            _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
             _stringSerializer = serializerResolver.Get("String");
+            _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
             _needsInitialization = false;
         }
 
@@ -48,6 +48,11 @@ namespace industry9.Shared
             var input = (DashboardInput)value;
             var map = new Dictionary<string, object>();
 
+            if (input.Id.HasValue)
+            {
+                map.Add("id", SerializeNullableString(input.Id.Value));
+            }
+
             if (input.Labels.HasValue)
             {
                 map.Add("labels", SerializeNullableListOfNullableLabelDataInput(input.Labels.Value));
@@ -66,6 +71,16 @@ namespace industry9.Shared
             return map;
         }
 
+        private object SerializeNullableString(object value)
+        {
+            if (value is null)
+            {
+                return null;
+            }
+
+
+            return _stringSerializer.Serialize(value);
+        }
         private object SerializeNullableLabelDataInput(object value)
         {
             if (value is null)
@@ -92,10 +107,6 @@ namespace industry9.Shared
                 result[i] = SerializeNullableLabelDataInput(source[i]);
             }
             return result;
-        }
-        private object SerializeNullableString(object value)
-        {
-            return _stringSerializer.Serialize(value);
         }
 
         private object SerializeNullableListOfNullableString(object value)

@@ -14,6 +14,8 @@ namespace industry9.Shared
 
         public Optional<IReadOnlyList<string>> DataSourceIds { get; set; }
 
+        public Optional<string> Id { get; set; }
+
         public Optional<global::System.Collections.Generic.List<global::industry9.Shared.LabelDataInput>> Labels { get; set; }
 
         public Optional<string> Name { get; set; }

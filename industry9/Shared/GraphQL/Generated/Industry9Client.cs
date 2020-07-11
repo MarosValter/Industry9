@@ -319,6 +319,78 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAssignRandomDataSourceProperties>> AssignRandomDataSourcePropertiesAsync(
+            global::StrawberryShake.Optional<string> definitionId = default,
+            global::StrawberryShake.Optional<global::industry9.Shared.RandomDataSourcePropertiesInput> properties = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (definitionId.HasValue && definitionId.Value is null)
+            {
+                throw new ArgumentNullException(nameof(definitionId));
+            }
+
+            if (properties.HasValue && properties.Value is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            return _executor.ExecuteAsync(
+                new AssignRandomDataSourcePropertiesOperation
+                {
+                    DefinitionId = definitionId, 
+                    Properties = properties
+                },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAssignRandomDataSourceProperties>> AssignRandomDataSourcePropertiesAsync(
+            AssignRandomDataSourcePropertiesOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAssignQueryDataSourceProperties>> AssignQueryDataSourcePropertiesAsync(
+            global::StrawberryShake.Optional<string> definitionId = default,
+            global::StrawberryShake.Optional<global::industry9.Shared.DataQueryDataSourcePropertiesInput> properties = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (definitionId.HasValue && definitionId.Value is null)
+            {
+                throw new ArgumentNullException(nameof(definitionId));
+            }
+
+            if (properties.HasValue && properties.Value is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            return _executor.ExecuteAsync(
+                new AssignQueryDataSourcePropertiesOperation
+                {
+                    DefinitionId = definitionId, 
+                    Properties = properties
+                },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAssignQueryDataSourceProperties>> AssignQueryDataSourcePropertiesAsync(
+            AssignQueryDataSourcePropertiesOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
             global::StrawberryShake.Optional<string> widgetId = default,
             global::System.Threading.CancellationToken cancellationToken = default)

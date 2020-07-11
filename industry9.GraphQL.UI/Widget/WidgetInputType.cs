@@ -10,6 +10,7 @@ namespace industry9.GraphQL.UI.Widget
         {
             descriptor.Name("WidgetInput");
             descriptor.BindFieldsExplicitly();
+            descriptor.Field(d => d.Id);
             descriptor.Field(d => d.Name).Type<NonNullType<StringType>>();
             //descriptor.Field(d => d.Position);
             //descriptor.Field(d => d.Size);

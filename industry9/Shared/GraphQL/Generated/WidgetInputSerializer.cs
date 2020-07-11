@@ -65,6 +65,11 @@ namespace industry9.Shared
                 map.Add("dataSourceIds", SerializeNullableListOfNullableString(input.DataSourceIds.Value));
             }
 
+            if (input.Id.HasValue)
+            {
+                map.Add("id", SerializeNullableString(input.Id.Value));
+            }
+
             if (input.Labels.HasValue)
             {
                 map.Add("labels", SerializeNullableListOfNullableLabelDataInput(input.Labels.Value));

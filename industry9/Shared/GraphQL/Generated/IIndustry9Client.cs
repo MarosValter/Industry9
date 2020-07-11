@@ -103,6 +103,24 @@ namespace industry9.Shared
             DeleteDataSourceDefinitionOperation operation,
             CancellationToken cancellationToken = default);
 
+        Task<IOperationResult<global::industry9.Shared.IAssignRandomDataSourceProperties>> AssignRandomDataSourcePropertiesAsync(
+            Optional<string> definitionId = default,
+            Optional<global::industry9.Shared.RandomDataSourcePropertiesInput> properties = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IAssignRandomDataSourceProperties>> AssignRandomDataSourcePropertiesAsync(
+            AssignRandomDataSourcePropertiesOperation operation,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IAssignQueryDataSourceProperties>> AssignQueryDataSourcePropertiesAsync(
+            Optional<string> definitionId = default,
+            Optional<global::industry9.Shared.DataQueryDataSourcePropertiesInput> properties = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IAssignQueryDataSourceProperties>> AssignQueryDataSourcePropertiesAsync(
+            AssignQueryDataSourcePropertiesOperation operation,
+            CancellationToken cancellationToken = default);
+
         global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
             Optional<string> widgetId = default,
             CancellationToken cancellationToken = default);
