@@ -827,3 +827,19 @@ ul.breadcrumb {
 .mdc-dialog .form-group > label {
     display: block;
 }
+
+.exported-columns-container {
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-between;
+}
+
+    .exported-columns-container > div {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .exported-columns-container > label {
+        margin-left: 5px;
+        margin-right: 5px;
+    }

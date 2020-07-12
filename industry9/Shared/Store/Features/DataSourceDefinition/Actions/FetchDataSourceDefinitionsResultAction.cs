@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace industry9.Shared.Store.Features.DataSourceDefinition.Actions
 {
@@ -8,7 +9,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Actions
 
         public FetchDataSourceDefinitionsResultAction(IEnumerable<IDataSourceDefinitionLite> definitions)
         {
-            Definitions = definitions;
+            Definitions = definitions ?? Enumerable.Empty<IDataSourceDefinitionLite>();
         }
     }
 }

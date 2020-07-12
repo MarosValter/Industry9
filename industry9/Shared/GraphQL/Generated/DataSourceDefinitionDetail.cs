@@ -14,13 +14,15 @@ namespace industry9.Shared
             string name, 
             System.DateTimeOffset created, 
             DataSourceType type, 
-            IReadOnlyList<string> inputs)
+            IReadOnlyList<string> inputs, 
+            global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IExportedColumn> columns)
         {
             Id = id;
             Name = name;
             Created = created;
             Type = type;
             Inputs = inputs;
+            Columns = columns;
         }
 
         public string Id { get; }
@@ -32,5 +34,7 @@ namespace industry9.Shared
         public DataSourceType Type { get; }
 
         public IReadOnlyList<string> Inputs { get; }
+
+        public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IExportedColumn> Columns { get; }
     }
 }

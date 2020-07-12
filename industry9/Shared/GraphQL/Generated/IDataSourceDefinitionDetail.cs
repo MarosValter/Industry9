@@ -17,5 +17,7 @@ namespace industry9.Shared
         DataSourceType Type { get; }
 
         IReadOnlyList<string> Inputs { get; }
+
+        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IExportedColumn> Columns { get; }
     }
 }

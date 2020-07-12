@@ -1,7 +1,6 @@
 ﻿@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
 @using industry9.Shared.Dto.DataSourceDefinition
 @using industry9.Common.Enums
-@using industry9.Shared.Dto.DataSourceDefinition.Properties
 @using DataSourceType = industry9.Shared.DataSourceType
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -19,7 +18,7 @@
                     <MatTab Label="General">
                         <fieldset>
                             <div class="form-group">
-                                <MatSelectItem Label="Select type" @bind-Value="@EditedObject.Type" Items="@_types" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
+                                <MatSelectItem Label="Select type" @bind-Value="@EditedObject.Type" Items="@Types" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
                                     <ItemTemplate Context="dataSourceType">
                                         <span style="color: @GetColor(dataSourceType)">@Enum.GetName(typeof(DataSourceType), dataSourceType)</span>
                                     </ItemTemplate>
@@ -40,6 +39,9 @@
                                 <QueryDataSourceProperties @bind-Properties="@EditedObject.Properties"></QueryDataSourceProperties>
                                 break;
                         }
+                    </MatTab>
+                    <MatTab Label="Columns">
+                        <ExportedColumns Columns="@EditedObject.Columns"></ExportedColumns>
                     </MatTab>
                 </MatTabGroup>
                 <MatDialogActions>
@@ -73,7 +75,7 @@
 
     string Title => $"{Operation} DataSource definition{(Operation == CRUDOperation.Delete ? " ?" : "")}";
 
-    readonly DataSourceType[] _types =
+    static readonly DataSourceType[] Types =
         Enum.GetValues(typeof(DataSourceType))
             .Cast<DataSourceType>()
             .Where(x => x != DataSourceType.Unknown)

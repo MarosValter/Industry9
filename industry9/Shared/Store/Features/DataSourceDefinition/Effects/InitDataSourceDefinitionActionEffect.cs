@@ -49,7 +49,8 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
                 Created = definition.Created.DateTime,
                 Name = definition.Name,
                 Type = definition.Type,
-                Inputs = definition.Inputs.ToList()
+                Inputs = definition.Inputs.ToList(),
+                Columns = definition.Columns.Select(MapColumn).ToList()
             };
         }
 
@@ -68,7 +69,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             }
         }
 
-        private IDataSourcePropertiesData MapProperties(IRandomDataSourceProperties properties)
+        private static IDataSourcePropertiesData MapProperties(IRandomDataSourceProperties properties)
         {
             if (properties == null)
             {
@@ -82,7 +83,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             };
         }
 
-        private IDataSourcePropertiesData MapProperties(IDataQueryDataSourceProperties properties)
+        private static IDataSourcePropertiesData MapProperties(IDataQueryDataSourceProperties properties)
         {
             if (properties == null)
             {
@@ -92,6 +93,16 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             return new QueryDataSourcePropertiesData
             {
                 Query = properties.Query
+            };
+        }
+
+        //TODO automapper
+        private static ExportedColumnData MapColumn(IExportedColumn column)
+        {
+            return new ExportedColumnData
+            {
+                Name = column.Name,
+                ValueType = column.ValueType
             };
         }
     }

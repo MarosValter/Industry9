@@ -9,5 +9,6 @@ namespace industry9.DataModel.UI.Documents
         public DataSourceType Type { get; set; }
         public IReadOnlyList<string> Inputs { get; set; }
         public IDataSourceProperties Properties { get; set; }
+        public IReadOnlyList<ExportedColumnData> Columns { get; set; }
     }
 }

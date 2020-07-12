@@ -42,6 +42,11 @@ input ColumnMappingDataInput {
   sourceColumn: String
 }
 
+input ExportedColumnDataInput {
+  name: String
+  valueType: ColumnValueType!
+}
+
 enum RelativeTimeMode {
   LIVE
   TODAY
@@ -90,6 +95,7 @@ type Widget {
 }
 
 type DataSourceDefinition {
+  columns: [ExportedColumnData]
   created: DateTime!
   id: String!
   inputs: [String]
@@ -114,6 +120,7 @@ input WidgetInput {
 }
 
 input DataSourceDefinitionInput {
+  columns: [ExportedColumnDataInput] = [  ]
   id: String
   inputs: [String] = [  ]
   name: String!
@@ -127,6 +134,14 @@ type SensorData {
 
 type LabelData {
   name: String
+}
+
+enum ColumnValueType {
+  UNKNOWN
+  STRING
+  NUMBER
+  DATETIME
+  BOOLEAN
 }
 
 enum WidgetType {
@@ -147,6 +162,11 @@ enum DataSourceType {
   UNKNOWN
   RANDOM
   DATAQUERY
+}
+
+type ExportedColumnData {
+  name: String
+  valueType: ColumnValueType!
 }
 
 type RandomDataSourceProperties {

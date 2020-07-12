@@ -11,7 +11,7 @@
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
-        @foreach (var definition in State.Value.Definitions ?? Enumerable.Empty<IDataSourceDefinitionLite>())
+        @foreach (var definition in State.Value.Definitions)
         {
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
                 <DataSourceDefinitionCard @key="definition" DataSourceDefinition="@definition" OnConfigure="@EditDefinition" OnDelete="@DeleteDefinition"></DataSourceDefinitionCard>
@@ -71,8 +71,18 @@
             result.Type = detail.Type;
             result.Inputs = detail.Inputs.ToList();
             result.Properties = properties;
+            result.Columns = detail.Columns.Select(MapColumn).ToList();
         }
 
         return result;
+    }
+
+    static ExportedColumnData MapColumn(IExportedColumn column)
+    {
+        return new ExportedColumnData
+        {
+            Name = column.Name,
+            ValueType = column.ValueType
+        };
     }
 }

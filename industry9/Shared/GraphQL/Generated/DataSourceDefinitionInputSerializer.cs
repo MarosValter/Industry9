@@ -10,6 +10,7 @@ namespace industry9.Shared
         : IInputSerializer
     {
         private bool _needsInitialization = true;
+        private IValueSerializer _exportedColumnDataInputSerializer;
         private IValueSerializer _stringSerializer;
         private IValueSerializer _dataSourceTypeSerializer;
 
@@ -27,6 +28,7 @@ namespace industry9.Shared
             {
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
+            _exportedColumnDataInputSerializer = serializerResolver.Get("ExportedColumnDataInput");
             _stringSerializer = serializerResolver.Get("String");
             _dataSourceTypeSerializer = serializerResolver.Get("DataSourceType");
             _needsInitialization = false;
@@ -47,6 +49,11 @@ namespace industry9.Shared
 
             var input = (DataSourceDefinitionInput)value;
             var map = new Dictionary<string, object>();
+
+            if (input.Columns.HasValue)
+            {
+                map.Add("columns", SerializeNullableListOfNullableExportedColumnDataInput(input.Columns.Value));
+            }
 
             if (input.Id.HasValue)
             {
@@ -71,6 +78,33 @@ namespace industry9.Shared
             return map;
         }
 
+        private object SerializeNullableExportedColumnDataInput(object value)
+        {
+            if (value is null)
+            {
+                return null;
+            }
+
+
+            return _exportedColumnDataInputSerializer.Serialize(value);
+        }
+
+        private object SerializeNullableListOfNullableExportedColumnDataInput(object value)
+        {
+            if (value is null)
+            {
+                return null;
+            }
+
+
+            IList source = (IList)value;
+            object[] result = new object[source.Count];
+            for(int i = 0; i < source.Count; i++)
+            {
+                result[i] = SerializeNullableExportedColumnDataInput(source[i]);
+            }
+            return result;
+        }
         private object SerializeNullableString(object value)
         {
             if (value is null)

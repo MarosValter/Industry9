@@ -53,7 +53,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             return result;
         }
 
-        // TODO automapper
+        //TODO automapper
         private static DataSourceDefinitionInput CreateInput(DataSourceDefinitionData definition)
         {
             var input = new DataSourceDefinitionInput
@@ -61,13 +61,24 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
                 Id = definition.Id,
                 Name = definition.Name,
                 Type = definition.Type,
-                Inputs = definition.Inputs.ToList()
+                Inputs = definition.Inputs.ToList(),
+                Columns = definition.Columns.Select(MapColumn).ToList()
             };
 
             return input;
         }
 
-        // TODO automapper
+        //TODO automapper
+        private static ExportedColumnDataInput MapColumn(ExportedColumnData column)
+        {
+            return new ExportedColumnDataInput
+            {
+                Name = column.Name,
+                ValueType = column.ValueType
+            };
+        }
+
+        //TODO automapper
         private static RandomDataSourcePropertiesInput CreatePropertiesInput(RandomDataSourcePropertiesData properties)
         {
             return new RandomDataSourcePropertiesInput
@@ -77,7 +88,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             };
         }
 
-        // TODO automapper
+        //TODO automapper
         private static DataQueryDataSourcePropertiesInput CreatePropertiesInput(QueryDataSourcePropertiesData properties)
         {
             return new DataQueryDataSourcePropertiesInput

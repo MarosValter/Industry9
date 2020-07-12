@@ -22,10 +22,13 @@ namespace industry9.Shared.Dto.DataSourceDefinition
 
         public IDataSourcePropertiesData Properties { get; set; }
 
+        public IList<ExportedColumnData> Columns { get; set; }
+
         public DataSourceDefinitionData()
         {
             Created = DateTime.Now;
             Inputs = Enumerable.Empty<string>().ToList();
+            Columns = Enumerable.Empty<ExportedColumnData>().ToList();
         }
     }
 }

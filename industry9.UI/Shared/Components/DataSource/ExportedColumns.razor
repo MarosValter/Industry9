@@ -1,0 +1,40 @@
+﻿@using industry9.Shared.Dto.DataSourceDefinition
+
+<fieldset>
+    @foreach (var (column, i) in Columns.Select((column, i) => (column, i)))
+    {
+        <div class="form-group exported-columns-container">
+            <MatIconButton Icon="@MatIconNames.Clear" OnClick="@(e => RemoveColumn(i))"></MatIconButton>
+            <MatSelectItem Label="Select type" @bind-Value="@column.ValueType" Items="@Types" Outlined="true">
+                <ItemTemplate>
+                    <span>@Enum.GetName(typeof(ColumnValueType), context)</span>
+                </ItemTemplate>
+            </MatSelectItem>
+            <MatTextField Label="Name" @bind-Value="@column.Name" Outlined="true"></MatTextField>
+        </div>
+    }
+</fieldset>
+<div class="form-group">
+    <MatIconButton Icon="@MatIconNames.Add_circle_outline" OnClick="@AddColumn" Raised="true"></MatIconButton>
+</div>
+
+@code {
+    [Parameter]
+    public IList<ExportedColumnData> Columns { get; set; }
+
+    static readonly ColumnValueType[] Types =
+        Enum.GetValues(typeof(ColumnValueType))
+            .Cast<ColumnValueType>()
+            .Where(x => x != ColumnValueType.Unknown)
+            .ToArray();
+
+    void AddColumn()
+    {
+        Columns.Add(new ExportedColumnData());
+    }
+
+    void RemoveColumn(int index)
+    {
+        Columns.RemoveAt(index);
+    }
+}
