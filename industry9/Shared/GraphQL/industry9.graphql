@@ -117,6 +117,7 @@ input WidgetInput {
   id: String
   labels: [LabelDataInput] = [  ]
   name: String!
+  type: WidgetType!
 }
 
 input DataSourceDefinitionInput {
@@ -137,7 +138,6 @@ type LabelData {
 }
 
 enum ColumnValueType {
-  UNKNOWN
   STRING
   NUMBER
   DATETIME
@@ -159,7 +159,6 @@ type ColumnMappingData {
 }
 
 enum DataSourceType {
-  UNKNOWN
   RANDOM
   DATAQUERY
 }

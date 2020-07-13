@@ -25,7 +25,7 @@
     static readonly ColumnValueType[] Types =
         Enum.GetValues(typeof(ColumnValueType))
             .Cast<ColumnValueType>()
-            .Where(x => x != ColumnValueType.Unknown)
+            //.Where(x => x != ColumnValueType.Unknown)
             .ToArray();
 
     void AddColumn()

@@ -19,5 +19,7 @@ namespace industry9.Shared
         public Optional<global::System.Collections.Generic.List<global::industry9.Shared.LabelDataInput>> Labels { get; set; }
 
         public Optional<string> Name { get; set; }
+
+        public Optional<WidgetType> Type { get; set; }
     }
 }

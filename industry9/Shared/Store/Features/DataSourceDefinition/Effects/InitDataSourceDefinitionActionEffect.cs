@@ -40,20 +40,6 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             }
         }
 
-        // TODO automapper
-        private DataSourceDefinitionData Map(IDataSourceDefinitionDetail definition)
-        {
-            return new DataSourceDefinitionData
-            {
-                Id = definition.Id,
-                Created = definition.Created.DateTime,
-                Name = definition.Name,
-                Type = definition.Type,
-                Inputs = definition.Inputs.ToList(),
-                Columns = definition.Columns.Select(MapColumn).ToList()
-            };
-        }
-
         private async Task<IDataSourcePropertiesData> FetchProperties(string id, DataSourceType type)
         {
             switch (type)
@@ -69,6 +55,21 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             }
         }
 
+        //TODO automapper
+        private static DataSourceDefinitionData Map(IDataSourceDefinitionDetail definition)
+        {
+            return new DataSourceDefinitionData
+            {
+                Id = definition.Id,
+                Created = definition.Created.DateTime,
+                Name = definition.Name,
+                Type = definition.Type,
+                Inputs = definition.Inputs.ToList(),
+                Columns = definition.Columns.Select(MapColumn).ToList()
+            };
+        }
+
+        //TODO automapper
         private static IDataSourcePropertiesData MapProperties(IRandomDataSourceProperties properties)
         {
             if (properties == null)
@@ -83,6 +84,7 @@ namespace industry9.Shared.Store.Features.DataSourceDefinition.Effects
             };
         }
 
+        //TODO automapper
         private static IDataSourcePropertiesData MapProperties(IDataQueryDataSourceProperties properties)
         {
             if (properties == null)

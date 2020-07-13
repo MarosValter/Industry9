@@ -1,0 +1,35 @@
+﻿
+<MatCard class="dsd-card">
+    <div class="mat-card-header dsd-header" style="background-color: @GetColor(Widget.Type)">
+        <MatCardActions>
+            <MatH6>@Widget.Name</MatH6>
+            <MatCardActionIcons>
+                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(Widget.Id))"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(Widget.Id))"></MatIconButton>
+            </MatCardActionIcons>
+        </MatCardActions>
+    </div>
+    <MatCardContent>
+        <MatCardMedia Wide="true"></MatCardMedia>
+    </MatCardContent>
+    <div class="mat-card-footer dsd-footer">
+        <MatOverline>Created: @Widget.Created.ToString("dd. MM. yyyy")</MatOverline>
+    </div>
+</MatCard>
+
+@code {
+    [Parameter]
+    public IWidgetLite Widget { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnConfigure { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDelete { get; set; }
+
+    static string GetColor(WidgetType type)
+    {
+        return "";
+    }
+
+}

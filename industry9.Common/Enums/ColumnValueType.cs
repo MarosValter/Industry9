@@ -2,7 +2,7 @@
 {
     public enum ColumnValueType
     {
-        Unknown,
+        //Unknown,
         String,
         Number,
         DateTime,

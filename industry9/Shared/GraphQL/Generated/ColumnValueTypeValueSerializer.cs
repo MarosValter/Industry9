@@ -28,8 +28,6 @@ namespace industry9.Shared
 
             switch(enumValue)
             {
-                case ColumnValueType.Unknown:
-                    return "UNKNOWN";
                 case ColumnValueType.String:
                     return "STRING";
                 case ColumnValueType.Number:
@@ -54,8 +52,6 @@ namespace industry9.Shared
 
             switch(stringValue)
             {
-                case "UNKNOWN":
-                    return ColumnValueType.Unknown;
                 case "STRING":
                     return ColumnValueType.String;
                 case "NUMBER":

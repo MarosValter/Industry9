@@ -1,8 +1,8 @@
-﻿@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
 @using industry9.Shared.Dto.DataSourceDefinition
 @using industry9.Common.Enums
 @using DataSourceType = industry9.Shared.DataSourceType
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
 
@@ -29,7 +29,7 @@
                             </div>
                         </fieldset>
                     </MatTab>
-                    <MatTab Label="Properties" disabled="@(EditedObject.Type == DataSourceType.Unknown)">
+                    <MatTab Label="Properties">
                         @switch(EditedObject.Type)
                         {
                             case DataSourceType.Random:
@@ -78,7 +78,7 @@
     static readonly DataSourceType[] Types =
         Enum.GetValues(typeof(DataSourceType))
             .Cast<DataSourceType>()
-            .Where(x => x != DataSourceType.Unknown)
+            //.Where(x => x != DataSourceType.Unknown)
             .ToArray();
 
     string GetColor(DataSourceType type)

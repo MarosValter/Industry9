@@ -1,8 +1,87 @@
 ﻿@page "/widgets"
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using industry9.Shared.Store.States
+@using industry9.Common.Enums
+@using industry9.Shared.Dto.Widget
+@using industry9.Shared.Store.Features.Widget.Actions
 
-<MatH1>Widgets</MatH1>
+@inject IDispatcher Dispatcher
+@inject IState<WidgetState> State
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        @foreach (var widget in State.Value.Widgets)
+        {
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+            <WidgetCard @key="@widget" Widget="@widget" OnConfigure="@EditDefinition" OnDelete="@DeleteDefinition"></WidgetCard>
+        </div>
+        }
+    </div>
+</div>
+
+<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddDefinition"></MatFAB>
+
+<WidgetDialog EditedObject="@EditedObject" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></WidgetDialog>
 
 @code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
 
+    public WidgetData EditedObject => Map(State.Value.EditedObject);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchWidgetsAction());
+    }
+
+    void AddDefinition()
+    {
+        _operation = CRUDOperation.Create;
+        Dispatcher.Dispatch(new InitWidgetAction(null));
+        _isDialogOpen = true;
+    }
+
+    void EditDefinition(string id)
+    {
+        _operation = CRUDOperation.Update;
+        Dispatcher.Dispatch(new InitWidgetAction(id));
+        _isDialogOpen = true;
+    }
+
+    void DeleteDefinition(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        Dispatcher.Dispatch(new InitWidgetAction(id));
+        _isDialogOpen = true;
+    }
+
+    //TODO automapper
+    static WidgetData Map(IWidgetDetail detail)
+    {
+        var result = new WidgetData();
+
+        if (detail != null)
+        {
+            result.Id = detail.Id;
+            result.Name = detail.Name;
+            result.Type = detail.Type;
+            result.Labels = detail.Labels.ToList();
+            result.ColumnMappings = detail.ColumnMappings.Select(MapColumn).ToList();
+        }
+
+        return result;
+    }
+
+    //TODO automapper
+    static ColumnMappingData MapColumn(IColumnMapping column)
+    {
+        return new ColumnMappingData
+        {
+            Name = column.Name,
+            Format = column.Format,
+            DataSourceId = column.DataSourceId,
+            SourceColumn = column.SourceColumn
+        };
+    }
 }

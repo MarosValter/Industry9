@@ -28,8 +28,6 @@ namespace industry9.Shared
 
             switch(enumValue)
             {
-                case DataSourceType.Unknown:
-                    return "UNKNOWN";
                 case DataSourceType.Random:
                     return "RANDOM";
                 case DataSourceType.Dataquery:
@@ -50,8 +48,6 @@ namespace industry9.Shared
 
             switch(stringValue)
             {
-                case "UNKNOWN":
-                    return DataSourceType.Unknown;
                 case "RANDOM":
                     return DataSourceType.Random;
                 case "DATAQUERY":

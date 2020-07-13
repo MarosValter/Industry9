@@ -13,6 +13,7 @@ namespace industry9.Shared
         private IValueSerializer _columnMappingDataInputSerializer;
         private IValueSerializer _stringSerializer;
         private IValueSerializer _labelDataInputSerializer;
+        private IValueSerializer _widgetTypeSerializer;
 
         public string Name { get; } = "WidgetInput";
 
@@ -31,6 +32,7 @@ namespace industry9.Shared
             _columnMappingDataInputSerializer = serializerResolver.Get("ColumnMappingDataInput");
             _stringSerializer = serializerResolver.Get("String");
             _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
+            _widgetTypeSerializer = serializerResolver.Get("WidgetType");
             _needsInitialization = false;
         }
 
@@ -78,6 +80,11 @@ namespace industry9.Shared
             if (input.Name.HasValue)
             {
                 map.Add("name", SerializeNullableString(input.Name.Value));
+            }
+
+            if (input.Type.HasValue)
+            {
+                map.Add("type", SerializeNullableWidgetType(input.Type.Value));
             }
 
             return map;
@@ -163,6 +170,10 @@ namespace industry9.Shared
                 result[i] = SerializeNullableLabelDataInput(source[i]);
             }
             return result;
+        }
+        private object SerializeNullableWidgetType(object value)
+        {
+            return _widgetTypeSerializer.Serialize(value);
         }
 
         public object Deserialize(object value)
