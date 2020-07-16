@@ -4,9 +4,9 @@ using industry9.DataModel.UI.Documents;
 
 namespace industry9.GraphQL.UI.Widget
 {
-    public class WidgetInputType : InputObjectType<WidgetInputDocument>
+    public class WidgetInputType : InputObjectType<WidgetDocument>
     {
-        protected override void Configure(IInputObjectTypeDescriptor<WidgetInputDocument> descriptor)
+        protected override void Configure(IInputObjectTypeDescriptor<WidgetDocument> descriptor)
         {
             descriptor.Name("WidgetInput");
             descriptor.BindFieldsExplicitly();
@@ -17,8 +17,6 @@ namespace industry9.GraphQL.UI.Widget
             //descriptor.Field(d => d.Size);
             descriptor.Field(d => d.Labels).DefaultValue(Enumerable.Empty<LabelData>().ToList());
             descriptor.Field(d => d.ColumnMappings).DefaultValue(Enumerable.Empty<ColumnMappingData>().ToList());
-            descriptor.Field(d => d.DataSourceIds).DefaultValue(Enumerable.Empty<string>().ToList());
-            descriptor.Field(d => d.DashboardId);
         }
     }
 }

@@ -44,8 +44,7 @@ namespace industry9.Shared.Store.Features.Widget.Effects
                 Name = widget.Name,
                 Type = widget.Type,
                 Labels = widget.Labels.Select(MapLabel).ToList(),
-                ColumnMappings = widget.ColumnMappings.Select(MapColumn).ToList(),
-                DataSourceIds = widget.DataSourceIds.ToList()
+                ColumnMappings = widget.ColumnMappings.Select(MapColumn).ToList()
             };
 
             return input;

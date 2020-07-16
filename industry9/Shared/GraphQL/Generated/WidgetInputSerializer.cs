@@ -57,16 +57,6 @@ namespace industry9.Shared
                 map.Add("columnMappings", SerializeNullableListOfNullableColumnMappingDataInput(input.ColumnMappings.Value));
             }
 
-            if (input.DashboardId.HasValue)
-            {
-                map.Add("dashboardId", SerializeNullableString(input.DashboardId.Value));
-            }
-
-            if (input.DataSourceIds.HasValue)
-            {
-                map.Add("dataSourceIds", SerializeNullableListOfNullableString(input.DataSourceIds.Value));
-            }
-
             if (input.Id.HasValue)
             {
                 map.Add("id", SerializeNullableString(input.Id.Value));
@@ -126,23 +116,6 @@ namespace industry9.Shared
 
 
             return _stringSerializer.Serialize(value);
-        }
-
-        private object SerializeNullableListOfNullableString(object value)
-        {
-            if (value is null)
-            {
-                return null;
-            }
-
-
-            IList source = (IList)value;
-            object[] result = new object[source.Count];
-            for(int i = 0; i < source.Count; i++)
-            {
-                result[i] = SerializeNullableString(source[i]);
-            }
-            return result;
         }
         private object SerializeNullableLabelDataInput(object value)
         {

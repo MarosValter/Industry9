@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using industry9.Common.Enums;
 using industry9.Common.Structs;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace industry9.DataModel.UI.Documents
@@ -13,7 +12,6 @@ namespace industry9.DataModel.UI.Documents
             Labels = new List<LabelData>();
             ColumnMappings = new List<ColumnMappingData>();
             DataSources = new List<DataSourceDefinitionDocument>();
-            DataSourceIds = new List<string>();
         }
 
         public string Name { get; set; }
@@ -30,8 +28,5 @@ namespace industry9.DataModel.UI.Documents
 
         [BsonIgnore]
         public IReadOnlyList<DataSourceDefinitionDocument> DataSources { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        public IReadOnlyList<string> DataSourceIds { get; set; }
     }
 }

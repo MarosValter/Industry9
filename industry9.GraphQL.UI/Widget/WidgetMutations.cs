@@ -10,7 +10,7 @@ namespace industry9.GraphQL.UI.Widget
     [ExtendObjectType(Name = "Mutation")]
     public class WidgetMutations
     {
-        public async Task<string> UpsertWidget(WidgetInputDocument widget,
+        public async Task<string> UpsertWidget(WidgetDocument widget,
             [Service] IWidgetRepository widgetRepository, IResolverContext ctx)
         {
             await widgetRepository.UpsertDocumentAsync(widget, ctx.RequestAborted);

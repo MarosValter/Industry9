@@ -1,4 +1,5 @@
-﻿using HotChocolate.Resolvers;
+﻿using System.Linq;
+using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.DataSourceDefinition;
@@ -21,10 +22,8 @@ namespace industry9.GraphQL.UI.Widget
                     var repository = ctx.Service<IDataSourceDefinitionRepository>();
                     var dataLoader =
                         ctx.BatchDataLoader<string, DataSourceDefinitionDocument>("DataSourcesById", repository.GetDocuments);
-                    return await dataLoader.LoadAsync(ctx.Parent<WidgetDocument>().DataSourceIds, ctx.RequestAborted);
+                    return await dataLoader.LoadAsync(ctx.Parent<WidgetDocument>().ColumnMappings.Select(x => x.DataSourceId).ToList(), ctx.RequestAborted);
                 });
-
-            descriptor.Field(d => d.DataSourceIds).Ignore();
         }
     }
 }

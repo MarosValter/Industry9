@@ -16,18 +16,15 @@ namespace industry9.Shared.Dto.Widget
         [Required]
         public WidgetType Type { get; set; }
 
-        public IList<ILabel> Labels { get; set; }
+        public List<ILabel> Labels { get; set; }
 
         public List<ColumnMappingData> ColumnMappings { get; set; }
-
-        public IList<string> DataSourceIds { get; set; }
 
         public WidgetData()
         {
             Created = DateTime.Now;
             Labels = new List<ILabel>();
             ColumnMappings = new List<ColumnMappingData>();
-            DataSourceIds = new List<string>();
         }
     }
 }

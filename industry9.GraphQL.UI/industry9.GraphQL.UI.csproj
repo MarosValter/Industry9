@@ -14,8 +14,4 @@
     <PackageReference Include="HotChocolate.Subscriptions" Version="11.0.0-preview.129" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataSourceDefinition\Columns\" />
-  </ItemGroup>
-
 </Project>

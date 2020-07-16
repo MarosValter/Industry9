@@ -112,8 +112,6 @@ input DashboardInput {
 
 input WidgetInput {
   columnMappings: [ColumnMappingDataInput] = [  ]
-  dashboardId: String
-  dataSourceIds: [String] = [  ]
   id: String
   labels: [LabelDataInput] = [  ]
   name: String!
