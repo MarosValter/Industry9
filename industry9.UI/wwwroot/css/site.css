@@ -843,3 +843,7 @@ ul.breadcrumb {
         margin-left: 5px;
         margin-right: 5px;
     }
+
+.expansion-add-btn {
+    margin-left: 24px;
+}

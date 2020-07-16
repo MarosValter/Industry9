@@ -159,7 +159,10 @@ fragment DataSourceDefinitionLite on DataSourceDefinition {
 	id,
 	name,
 	created,
-	type
+	type,
+	columns {
+		...ExportedColumn
+	}
 }
 
 fragment DataSourceDefinitionDetail on DataSourceDefinition {

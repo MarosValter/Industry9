@@ -1,0 +1,173 @@
+﻿@using industry9.Shared.Store.States
+@using industry9.Shared.Dto.Widget
+@using industry9.Shared.Store.Features.DataSourceDefinition.Actions
+
+@inject IState<DataSourceDefinitionState> DataSourceState
+@inject IDispatcher Dispatcher
+
+<MatAccordion Multi="true">
+    @foreach (var (dataSource, i) in DataSources.Select((dataSource, i) => (dataSource, i)))
+    {
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>
+                    <MatIconButton Icon="@MatIconNames.Clear" OnClick="@(e => RemoveDefinition(i))"></MatIconButton>
+                </MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader>
+                    @dataSource.Name
+                </MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                @foreach (var availableColumn in dataSource.AvailableColumns)
+                {
+                    <fieldset>
+                        <div class="form-group exported-columns-container @(availableColumn.Enabled ? "" : "disabled")">
+                            <MatCheckbox TValue="bool" Value="availableColumn.Enabled" ValueExpression="@(() => availableColumn.Enabled)" ValueChanged="@(e => EnabledChanged(e, availableColumn))"></MatCheckbox>
+                            @*<MatTextField Label="Type" Value="@availableColumn.ValueType" Disabled="true" Outlined="true"></MatTextField>*@
+                            <MatTextField Label="Source" @bind-Value="@availableColumn.Mapping.SourceColumn" Disabled="true" Outlined="true"></MatTextField>
+                            <MatTextField Label="Name" @bind-Value="@availableColumn.Mapping.Name" Outlined="true" Required="availableColumn.Enabled"></MatTextField>
+                            <MatTextField Label="Format" @bind-Value="@availableColumn.Mapping.Format" Outlined="true"></MatTextField>
+                        </div>
+                    </fieldset>
+                }
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    }
+</MatAccordion>
+
+<MatIconButton Class="expansion-add-btn" OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Add_circle_outline" />
+<MatMenu @ref="@_menu">
+    <MatList>
+        @foreach (var definition in DataSourceState.Value.Definitions)
+        {
+            <MatListItem @key="definition" OnClick="@(e => AddDefinition(definition.Id))">@definition.Name</MatListItem>
+        }
+    </MatList>
+</MatMenu>
+
+@code {
+    private BaseMatIconButton _button;
+    private BaseMatMenu _menu;
+
+    private IList<ColumnMappingData> _originalMappings;
+
+    [CascadingParameter]
+    protected EditContext EditContext { get; set; }
+
+    [Parameter]
+    public List<ColumnMappingData> ColumnMappings { get; set; }
+
+    private IList<DataSourceInfo> DataSources { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _originalMappings = ColumnMappings.ToList();
+
+        DataSources = ColumnMappings
+            .GroupBy(c => c.DataSourceId)
+            .ToList()
+            .Join(DataSourceState.Value.Definitions,
+                c => c.Key,
+                d => d.Id,
+                (columnGroup, dataSource) =>
+                    new DataSourceInfo(dataSource, columnGroup.ToList()))
+            .ToList();
+    }
+
+    private async Task OnMenuOpen(MouseEventArgs e)
+    {
+        await _menu.OpenAsync(_button.Ref);
+    }
+
+    private void AddDefinition(string id)
+    {
+        var definition = DataSourceState.Value.Definitions.First(x => x.Id == id);
+        var mappings = _originalMappings.Where(x => x.DataSourceId == id).ToList();
+        DataSources.Add(new DataSourceInfo(definition, mappings));
+        ColumnMappings.AddRange(mappings);
+    }
+
+    private void RemoveDefinition(int index)
+    {
+        var dataSource = DataSources.ElementAt(index);
+        DataSources.Remove(dataSource);
+        ColumnMappings.RemoveAll(x => dataSource.AvailableColumns.Any(y => y.Enabled && y.Mapping.Equals(x)));
+    }
+
+    private void AddColumnMapping(AvailableColumnInfo column)
+    {
+        ColumnMappings.Add(column.Mapping);
+    }
+
+    private void RemoveColumnMapping(AvailableColumnInfo column)
+    {
+        ColumnMappings.Remove(column.Mapping);
+    }
+
+    private void EnabledChanged(bool value, AvailableColumnInfo column)
+    {
+        column.Enabled = value;
+        if (value)
+        {
+            AddColumnMapping(column);
+        }
+        else
+        {
+            RemoveColumnMapping(column);
+        }
+    }
+
+    private class DataSourceInfo
+    {
+        public string Name { get; }
+        public DataSourceType Type { get; }
+
+        public IReadOnlyList<AvailableColumnInfo> AvailableColumns { get; }
+
+        public DataSourceInfo(IDataSourceDefinitionLite dataSource, IList<ColumnMappingData> columns)
+        {
+            Name = dataSource.Name;
+            Type = dataSource.Type;
+            AvailableColumns = dataSource.Columns.Select(x => MapColumn(x, columns, dataSource.Id)).ToList();
+        }
+    }
+
+    private class AvailableColumnInfo
+    {
+        public bool Enabled { get; set; }
+
+        public ColumnValueType ValueType { get; set; }
+
+        public ColumnMappingData Mapping { get; }
+
+        public AvailableColumnInfo(ColumnMappingData mapping)
+        {
+            Enabled = !string.IsNullOrEmpty(mapping.Name); // because name is required
+            Mapping = mapping;
+        }
+    }
+
+    //TODO automapper
+    private static AvailableColumnInfo MapColumn(
+        IExportedColumn column,
+        IEnumerable<ColumnMappingData> columnMappings,
+        string dataSourceId)
+    {
+        var mapping = columnMappings.FirstOrDefault(x =>
+            x.DataSourceId == dataSourceId && x.SourceColumn == column.Name)
+                      ?? new ColumnMappingData
+                      {
+                          DataSourceId = dataSourceId,
+                          SourceColumn = column.Name,
+                      };
+
+        return new AvailableColumnInfo(mapping);
+    }
+}

@@ -1,53 +1,54 @@
 ﻿@using industry9.Common.Enums
 @using industry9.Shared.Dto.Widget
 @using industry9.Shared.Store.Features.Widget.Actions
+@using industry9.Shared.Store.States
 @using WidgetType = industry9.Shared.WidgetType
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
 
-    <MatDialog @bind-IsOpen="@IsOpen">
-        <MatDialogTitle>@Title</MatDialogTitle>
-        <MatDialogContent>
-            @if (Operation == CRUDOperation.Create || Operation == CRUDOperation.Update)
-            {
-                <EditForm Model="@EditedObject" OnValidSubmit="@Submit">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <MatTabGroup>
-                        <MatTab Label="General">
-                            <fieldset>
-                                <div class="form-group">
-                                    <MatSelectItem Label="Select type" @bind-Value="@EditedObject.Type" Items="@Types" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
-                                        <ItemTemplate Context="dataSourceType">
-                                            <span>@Enum.GetName(typeof(WidgetType), dataSourceType)</span>
-                                        </ItemTemplate>
-                                    </MatSelectItem>
-                                </div>
-                                <div class="form-group">
-                                    <MatTextField Label="Name" @bind-Value="@EditedObject.Name" Outlined="true"></MatTextField>
-                                </div>
-                            </fieldset>
-                        </MatTab>
-                        <MatTab Label="DataSources">
-
-                        </MatTab>
-                    </MatTabGroup>
-                    <MatDialogActions>
-                        <MatButton OnClick="Close">Cancel</MatButton>
-                        <MatButton Type="submit" Raised="true">OK</MatButton>
-                    </MatDialogActions>
-                </EditForm>
-            }
-            else
-            {
+<MatDialog @bind-IsOpen="@IsOpen">
+    <MatDialogTitle>@Title</MatDialogTitle>
+    <MatDialogContent>
+        @if (Operation == CRUDOperation.Create || Operation == CRUDOperation.Update)
+        {
+            <EditForm Model="@EditedObject" OnValidSubmit="@Submit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <MatTabGroup>
+                    <MatTab Label="General">
+                        <fieldset>
+                            <div class="form-group">
+                                <MatSelectItem Label="Select type" @bind-Value="@EditedObject.Type" Items="@Types" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
+                                    <ItemTemplate Context="dataSourceType">
+                                        <span>@Enum.GetName(typeof(WidgetType), dataSourceType)</span>
+                                    </ItemTemplate>
+                                </MatSelectItem>
+                            </div>
+                            <div class="form-group">
+                                <MatTextField Label="Name" @bind-Value="@EditedObject.Name" Outlined="true"></MatTextField>
+                            </div>
+                        </fieldset>
+                    </MatTab>
+                    <MatTab Label="DataSources">
+                        <DataSourceConfiguration ColumnMappings="@EditedObject.ColumnMappings"></DataSourceConfiguration>
+                    </MatTab>
+                </MatTabGroup>
                 <MatDialogActions>
                     <MatButton OnClick="Close">Cancel</MatButton>
-                    <MatButton OnClick="Delete" Raised="true">OK</MatButton>
+                    <MatButton Type="submit" Raised="true">OK</MatButton>
                 </MatDialogActions>
-            }
-        </MatDialogContent>
-    </MatDialog>
+            </EditForm>
+        }
+        else
+        {
+            <MatDialogActions>
+                <MatButton OnClick="Close">Cancel</MatButton>
+                <MatButton OnClick="Delete" Raised="true">OK</MatButton>
+            </MatDialogActions>
+        }
+    </MatDialogContent>
+</MatDialog>
 
 @code {
     [Parameter]

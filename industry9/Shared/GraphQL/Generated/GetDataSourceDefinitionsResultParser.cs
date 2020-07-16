@@ -17,6 +17,7 @@ namespace industry9.Shared
         private readonly IValueSerializer _stringSerializer;
         private readonly IValueSerializer _dateTimeSerializer;
         private readonly IValueSerializer _dataSourceTypeSerializer;
+        private readonly IValueSerializer _columnValueTypeSerializer;
 
         public GetDataSourceDefinitionsResultParser(IValueSerializerCollection serializerResolver)
         {
@@ -27,6 +28,7 @@ namespace industry9.Shared
             _stringSerializer = serializerResolver.Get("String");
             _dateTimeSerializer = serializerResolver.Get("DateTime");
             _dataSourceTypeSerializer = serializerResolver.Get("DataSourceType");
+            _columnValueTypeSerializer = serializerResolver.Get("ColumnValueType");
         }
 
         protected override IGetDataSourceDefinitions ParserData(JsonElement data)
@@ -62,7 +64,38 @@ namespace industry9.Shared
                     DeserializeString(element, "id"),
                     DeserializeNullableString(element, "name"),
                     DeserializeDateTime(element, "created"),
-                    DeserializeDataSourceType(element, "type")
+                    DeserializeDataSourceType(element, "type"),
+                    ParseGetDataSourceDefinitionsDataSourceDefinitionsColumns(element, "columns")
+                );
+
+            }
+
+            return list;
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IExportedColumn> ParseGetDataSourceDefinitionsDataSourceDefinitionsColumns(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::industry9.Shared.IExportedColumn[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new ExportedColumn
+                (
+                    DeserializeNullableString(element, "name"),
+                    DeserializeColumnValueType(element, "valueType")
                 );
 
             }
@@ -101,6 +134,11 @@ namespace industry9.Shared
         {
             JsonElement value = obj.GetProperty(fieldName);
             return (DataSourceType)_dataSourceTypeSerializer.Deserialize(value.GetString());
+        }
+        private ColumnValueType DeserializeColumnValueType(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (ColumnValueType)_columnValueTypeSerializer.Deserialize(value.GetString());
         }
     }
 }

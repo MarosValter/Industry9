@@ -15,5 +15,7 @@ namespace industry9.Shared
         System.DateTimeOffset Created { get; }
 
         DataSourceType Type { get; }
+
+        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IExportedColumn> Columns { get; }
     }
 }

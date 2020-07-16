@@ -18,7 +18,7 @@ namespace industry9.Shared.Dto.Widget
 
         public IList<ILabel> Labels { get; set; }
 
-        public IList<ColumnMappingData> ColumnMappings { get; set; }
+        public List<ColumnMappingData> ColumnMappings { get; set; }
 
         public IList<string> DataSourceIds { get; set; }
 
