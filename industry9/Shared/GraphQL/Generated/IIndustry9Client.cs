@@ -138,7 +138,7 @@ namespace industry9.Shared
             CancellationToken cancellationToken = default);
 
         global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
-            Optional<string> widgetId = default,
+            Optional<string> dataSourceId = default,
             CancellationToken cancellationToken = default);
 
         global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(

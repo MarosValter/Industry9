@@ -24,6 +24,26 @@ namespace industry9.Server.Controllers
 
         [HttpPost]
         [Route("[action]")]
+        public async Task PublishData(SensorData data, CancellationToken cancellationToken = default)
+        {
+            await Publish(new EventData
+            {
+                Name = "onDataReceived",
+                Value = data,
+                Arguments = new[]
+                {
+                    new EventData.EventArgument
+                    {
+                        Name = "dataSourceId",
+                        Value = data.DataSourceId
+                    }
+                }
+            }, cancellationToken);
+        }
+
+
+        [HttpPost]
+        [Route("[action]")]
         public async Task Publish(EventData data, CancellationToken cancellationToken = default)
         {
             var arguments = data.Arguments.Select(kv => new ArgumentNode(kv.Name, kv.Value));

@@ -84,10 +84,12 @@ mutation assignQueryDataSourceProperties($definitionId: String!, $properties: Da
 }
 
 
-subscription onDataReceived($widgetId: String!) {
-	onDataReceived(widgetId: $widgetId) {
+subscription onDataReceived($dataSourceId: String!) {
+	onDataReceived(dataSourceId: $dataSourceId) {
 		name,
-		value
+		value,
+		dataSourceId,
+		timestamp
 	}
 }
 

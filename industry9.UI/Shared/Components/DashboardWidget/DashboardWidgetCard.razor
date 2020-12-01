@@ -1,0 +1,53 @@
+﻿@using industry9.Shared.Store.States
+@using industry9.UI.Shared.Components.Widget.Table
+@using industry9.Shared.Store.Features.WidgetSource.Actions
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<WidgetSourceState> WidgetState
+
+<MatCard class="dsd-card">
+    <div class="mat-card-header dsd-header" style="background-color: @GetColor(WidgetState.Value.Widget.Type)">
+        <MatCardActions>
+            <MatH6>@WidgetState.Value.Widget.Name</MatH6>
+            <MatCardActionIcons>
+                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(WidgetState.Value.Widget.Id))"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(WidgetState.Value.Widget.Id))"></MatIconButton>
+            </MatCardActionIcons>
+        </MatCardActions>
+    </div>
+    <MatCardContent>
+        <TableWidget Data="@WidgetState.Value.Data" ColumnMappings="@WidgetState.Value.Widget.ColumnMappings"></TableWidget>
+    </MatCardContent>
+    <div class="mat-card-footer dsd-footer">
+        <MatOverline>Created: @WidgetState.Value.Widget.Created.ToString("dd. MM. yyyy")</MatOverline>
+    </div>
+</MatCard>
+
+@code {
+    [Parameter]
+    public IWidgetLite Widget { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnConfigure { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDelete { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new InitWidgetSourceAction(Widget.Id, true));
+    }
+
+    static string GetColor(WidgetType type)
+    {
+        return "";
+    }
+
+    void ReloadData()
+    {
+        Dispatcher.Dispatch(new ReloadWidgetAction(Widget.Id));
+    }
+}

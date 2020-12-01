@@ -444,16 +444,16 @@ namespace industry9.Shared
         }
 
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IResponseStream<global::industry9.Shared.IOnDataReceived>> OnDataReceivedAsync(
-            global::StrawberryShake.Optional<string> widgetId = default,
+            global::StrawberryShake.Optional<string> dataSourceId = default,
             global::System.Threading.CancellationToken cancellationToken = default)
         {
-            if (widgetId.HasValue && widgetId.Value is null)
+            if (dataSourceId.HasValue && dataSourceId.Value is null)
             {
-                throw new ArgumentNullException(nameof(widgetId));
+                throw new ArgumentNullException(nameof(dataSourceId));
             }
 
             return _streamExecutor.ExecuteAsync(
-                new OnDataReceivedOperation { WidgetId = widgetId },
+                new OnDataReceivedOperation { DataSourceId = dataSourceId },
                 cancellationToken);
         }
 

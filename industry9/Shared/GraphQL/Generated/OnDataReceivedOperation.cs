@@ -17,15 +17,15 @@ namespace industry9.Shared
 
         public Type ResultType => typeof(IOnDataReceived);
 
-        public Optional<string> WidgetId { get; set; }
+        public Optional<string> DataSourceId { get; set; }
 
         public IReadOnlyList<VariableValue> GetVariableValues()
         {
             var variables = new List<VariableValue>();
 
-            if (WidgetId.HasValue)
+            if (DataSourceId.HasValue)
             {
-                variables.Add(new VariableValue("widgetId", "String", WidgetId.Value));
+                variables.Add(new VariableValue("dataSourceId", "String", DataSourceId.Value));
             }
 
             return variables;

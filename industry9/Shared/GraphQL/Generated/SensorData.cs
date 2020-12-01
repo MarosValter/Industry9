@@ -11,14 +11,22 @@ namespace industry9.Shared
     {
         public SensorData(
             string name, 
-            double value)
+            double value, 
+            string dataSourceId, 
+            System.DateTimeOffset timestamp)
         {
             Name = name;
             Value = value;
+            DataSourceId = dataSourceId;
+            Timestamp = timestamp;
         }
 
         public string Name { get; }
 
         public double Value { get; }
+
+        public string DataSourceId { get; }
+
+        public System.DateTimeOffset Timestamp { get; }
     }
 }

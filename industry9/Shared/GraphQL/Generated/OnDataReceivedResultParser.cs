@@ -16,6 +16,7 @@ namespace industry9.Shared
     {
         private readonly IValueSerializer _stringSerializer;
         private readonly IValueSerializer _floatSerializer;
+        private readonly IValueSerializer _dateTimeSerializer;
 
         public OnDataReceivedResultParser(IValueSerializerCollection serializerResolver)
         {
@@ -25,6 +26,7 @@ namespace industry9.Shared
             }
             _stringSerializer = serializerResolver.Get("String");
             _floatSerializer = serializerResolver.Get("Float");
+            _dateTimeSerializer = serializerResolver.Get("DateTime");
         }
 
         protected override IOnDataReceived ParserData(JsonElement data)
@@ -52,23 +54,16 @@ namespace industry9.Shared
 
             return new SensorData
             (
-                DeserializeNullableString(obj, "name"),
-                DeserializeFloat(obj, "value")
+                DeserializeString(obj, "name"),
+                DeserializeFloat(obj, "value"),
+                DeserializeString(obj, "dataSourceId"),
+                DeserializeDateTime(obj, "timestamp")
             );
         }
 
-        private string DeserializeNullableString(JsonElement obj, string fieldName)
+        private string DeserializeString(JsonElement obj, string fieldName)
         {
-            if (!obj.TryGetProperty(fieldName, out JsonElement value))
-            {
-                return null;
-            }
-
-            if (value.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-
+            JsonElement value = obj.GetProperty(fieldName);
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
 
@@ -76,6 +71,12 @@ namespace industry9.Shared
         {
             JsonElement value = obj.GetProperty(fieldName);
             return (double)_floatSerializer.Deserialize(value.GetDouble());
+        }
+
+        private System.DateTimeOffset DeserializeDateTime(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (System.DateTimeOffset)_dateTimeSerializer.Deserialize(value.GetString());
         }
     }
 }

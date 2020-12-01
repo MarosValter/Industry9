@@ -11,5 +11,9 @@ namespace industry9.Shared
         string Name { get; }
 
         double Value { get; }
+
+        string DataSourceId { get; }
+
+        System.DateTimeOffset Timestamp { get; }
     }
 }

@@ -1,0 +1,47 @@
+﻿@using industry9.Common.Enums
+@using industry9.Shared.Dto.Widget
+@using industry9.Shared.Store.Features.Widget.Actions
+@using WidgetType = industry9.Shared.WidgetType
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public CRUDOperation Operation { get; set; }
+
+    [Parameter]
+    public WidgetData EditedObject { get; set; }
+
+    string Title => $"{Operation} Widget{(Operation == CRUDOperation.Delete ? " ?" : "")}";
+
+    static readonly WidgetType[] Types =
+        Enum.GetValues(typeof(WidgetType))
+            .Cast<WidgetType>()
+    //.Where(x => x != WidgetType.)
+            .ToArray();
+
+    async Task Submit(EditContext context)
+    {
+        await Close();
+        Dispatcher.Dispatch(new UpsertWidgetResultAction(EditedObject, true));
+    }
+
+    async Task Delete()
+    {
+        await Close();
+        Dispatcher.Dispatch(new DeleteWidgetAction(EditedObject.Id));
+    }
+
+    async Task Close()
+    {
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(false);
+    }
+}
