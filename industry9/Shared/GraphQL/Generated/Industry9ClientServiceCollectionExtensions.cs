@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using industry9.Shared.GraphQL.Serializers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StrawberryShake;
@@ -51,12 +52,17 @@ namespace industry9.Shared
                 .AddValueSerializer(() => new ColumnValueTypeValueSerializer())
                 .AddValueSerializer(() => new DashboardInputSerializer())
                 .AddValueSerializer(() => new LabelDataInputSerializer())
+                .AddValueSerializer(() => new DashboardWidgetDataInputSerializer())
                 .AddValueSerializer(() => new WidgetInputSerializer())
                 .AddValueSerializer(() => new ColumnMappingDataInputSerializer())
                 .AddValueSerializer(() => new DataSourceDefinitionInputSerializer())
                 .AddValueSerializer(() => new ExportedColumnDataInputSerializer())
                 .AddValueSerializer(() => new RandomDataSourcePropertiesInputSerializer())
                 .AddValueSerializer(() => new DataQueryDataSourcePropertiesInputSerializer())
+
+                .AddValueSerializer(() => new PositionValueSerializer())
+                .AddValueSerializer(() => new SizeValueSerializer())
+
                 .AddResultParser(serializers => new GetDashboardsResultParser(serializers))
                 .AddResultParser(serializers => new GetDashboardResultParser(serializers))
                 .AddResultParser(serializers => new GetWidgetsResultParser(serializers))

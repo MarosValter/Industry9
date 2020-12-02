@@ -13,6 +13,7 @@ namespace industry9.Shared
 
         public UserProfileData UserProfile { get; set; }
 
+
         public AppState(IUserProfileApi userProfileApi)
         {
             _userProfileApi = userProfileApi;

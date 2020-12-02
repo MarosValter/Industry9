@@ -54,16 +54,25 @@ namespace industry9.Shared
 
             return new SensorData
             (
-                DeserializeString(obj, "name"),
+                DeserializeNullableString(obj, "name"),
                 DeserializeFloat(obj, "value"),
-                DeserializeString(obj, "dataSourceId"),
+                DeserializeNullableString(obj, "dataSourceId"),
                 DeserializeDateTime(obj, "timestamp")
             );
         }
 
-        private string DeserializeString(JsonElement obj, string fieldName)
+        private string DeserializeNullableString(JsonElement obj, string fieldName)
         {
-            JsonElement value = obj.GetProperty(fieldName);
+            if (!obj.TryGetProperty(fieldName, out JsonElement value))
+            {
+                return null;
+            }
+
+            if (value.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
 

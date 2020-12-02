@@ -1,0 +1,192 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Query {
+  dashboard(id: String): Dashboard
+  dashboards: [Dashboard]
+  dataSourceDefinition(id: String): DataSourceDefinition
+  dataSourceDefinitions: [DataSourceDefinition]
+  fetchDataQueryPropertiesFromDataSource(dataSourceId: String): DataQueryDataSourceProperties
+  fetchRandomPropertiesFromDataSource(dataSourceId: String): RandomDataSourceProperties
+  widget(id: String): Widget
+  widgets: [Widget]
+}
+
+type Mutation {
+  addWidgetsToDashboard(dashboardId: String widgets: [DashboardWidgetDataInput]): Boolean!
+  assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
+  assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
+  deleteDashboard(id: String): Boolean!
+  deleteDataSourceDefinition(id: String): Boolean!
+  deleteWidget(id: String): Boolean!
+  upsertDashboard(dashboard: DashboardInput): String
+  upsertDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): String
+  upsertWidget(widget: WidgetInput): String
+}
+
+type Subscription {
+  onDataReceived(dataSourceId: String): SensorData
+}
+
+input LabelDataInput {
+  name: String
+}
+
+input ColumnMappingDataInput {
+  dataSourceId: String
+  format: String
+  name: String
+  sourceColumn: String
+}
+
+input ExportedColumnDataInput {
+  name: String
+  valueType: ColumnValueType!
+}
+
+input DashboardWidgetDataInput {
+  position: Position!
+  size: Size!
+  widget: WidgetInput
+  widgetId: String
+}
+
+enum RelativeTimeMode {
+  LIVE
+  TODAY
+  YESTERDAY
+  LASTNSECONDS
+  LASTNMINUTES
+  LASTNHOURS
+  LASTYEAR
+}
+
+input DataQueryDataSourcePropertiesInput {
+  query: String
+}
+
+input RandomDataSourcePropertiesInput {
+  max: Int!
+  min: Int!
+}
+
+scalar Color
+
+scalar Position
+
+scalar Size
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type Dashboard {
+  authorId: String
+  created: DateTime!
+  id: String!
+  labels: [LabelData]
+  name: String
+  widgets: [DashboardWidgetData]
+}
+
+type Widget {
+  columnMappings: [ColumnMappingData]
+  created: DateTime!
+  dataSources: [DataSourceDefinition]
+  id: String!
+  labels: [LabelData]
+  name: String
+  type: WidgetType!
+}
+
+type DataSourceDefinition {
+  columns: [ExportedColumnData]
+  created: DateTime!
+  id: String!
+  inputs: [String]
+  name: String
+  type: DataSourceType!
+}
+
+input DashboardInput {
+  id: String
+  labels: [LabelDataInput] = [  ]
+  name: String!
+  widgets: [DashboardWidgetDataInput] = [  ]
+}
+
+input WidgetInput {
+  columnMappings: [ColumnMappingDataInput] = [  ]
+  id: String
+  labels: [LabelDataInput] = [  ]
+  name: String!
+  type: WidgetType!
+}
+
+input DataSourceDefinitionInput {
+  columns: [ExportedColumnDataInput] = [  ]
+  id: String
+  inputs: [String] = [  ]
+  name: String!
+  type: DataSourceType!
+}
+
+type SensorData {
+  dataSourceId: String
+  name: String
+  timestamp: DateTime!
+  value: Float!
+}
+
+type DashboardWidgetData {
+  position: Position!
+  size: Size!
+  widget: Widget
+  widgetId: String
+}
+
+enum ColumnValueType {
+  STRING
+  NUMBER
+  DATETIME
+  BOOLEAN
+}
+
+type LabelData {
+  name: String
+}
+
+enum WidgetType {
+  LINECHART
+  BARCHART
+  PIECHART
+  TABLE
+}
+
+type ColumnMappingData {
+  dataSourceId: String
+  format: String
+  name: String
+  sourceColumn: String
+}
+
+enum DataSourceType {
+  RANDOM
+  DATAQUERY
+}
+
+type ExportedColumnData {
+  name: String
+  valueType: ColumnValueType!
+}
+
+type RandomDataSourceProperties {
+  max: Int!
+  min: Int!
+}
+
+type DataQueryDataSourceProperties {
+  query: String
+}

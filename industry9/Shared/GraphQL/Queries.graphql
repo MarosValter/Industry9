@@ -118,7 +118,7 @@ fragment DashboardDetail on Dashboard {
 		...Label
 	},
 	widgets {
-		...WidgetId
+		...DashboardWidget
 	}
 }
 
@@ -193,4 +193,13 @@ fragment ColumnMapping on ColumnMappingData {
 fragment ExportedColumn on ExportedColumnData {
 	name,
 	valueType
+}
+
+fragment DashboardWidget on DashboardWidgetData {
+	widgetId,
+	widget {
+		...WidgetId
+	},
+	size,
+	position
 }

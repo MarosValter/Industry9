@@ -18,6 +18,6 @@ namespace industry9.Shared
 
         global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> Labels { get; }
 
-        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidgetId> Widgets { get; }
+        global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardWidget> Widgets { get; }
     }
 }

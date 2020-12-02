@@ -12,6 +12,7 @@ namespace industry9.Shared
         private bool _needsInitialization = true;
         private IValueSerializer _stringSerializer;
         private IValueSerializer _labelDataInputSerializer;
+        private IValueSerializer _dashboardWidgetDataInputSerializer;
 
         public string Name { get; } = "DashboardInput";
 
@@ -29,6 +30,7 @@ namespace industry9.Shared
             }
             _stringSerializer = serializerResolver.Get("String");
             _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
+            _dashboardWidgetDataInputSerializer = serializerResolver.Get("DashboardWidgetDataInput");
             _needsInitialization = false;
         }
 
@@ -63,9 +65,9 @@ namespace industry9.Shared
                 map.Add("name", SerializeNullableString(input.Name.Value));
             }
 
-            if (input.WidgetIds.HasValue)
+            if (input.Widgets.HasValue)
             {
-                map.Add("widgetIds", SerializeNullableListOfNullableString(input.WidgetIds.Value));
+                map.Add("widgets", SerializeNullableListOfNullableDashboardWidgetDataInput(input.Widgets.Value));
             }
 
             return map;
@@ -108,8 +110,18 @@ namespace industry9.Shared
             }
             return result;
         }
+        private object SerializeNullableDashboardWidgetDataInput(object value)
+        {
+            if (value is null)
+            {
+                return null;
+            }
 
-        private object SerializeNullableListOfNullableString(object value)
+
+            return _dashboardWidgetDataInputSerializer.Serialize(value);
+        }
+
+        private object SerializeNullableListOfNullableDashboardWidgetDataInput(object value)
         {
             if (value is null)
             {
@@ -121,7 +133,7 @@ namespace industry9.Shared
             object[] result = new object[source.Count];
             for(int i = 0; i < source.Count; i++)
             {
-                result[i] = SerializeNullableString(source[i]);
+                result[i] = SerializeNullableDashboardWidgetDataInput(source[i]);
             }
             return result;
         }

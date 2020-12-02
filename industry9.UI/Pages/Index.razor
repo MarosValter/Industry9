@@ -18,7 +18,7 @@
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
-        @foreach (var widget in DashboardState.Value.Dashboard?.Widgets ?? Enumerable.Empty<IWidgetId>())
+        @foreach (var widget in DashboardState.Value.Dashboard?.Widgets ?? Enumerable.Empty<IDashboardWidget>())
         {
         <div class="mat-layout-grid-cell">
 

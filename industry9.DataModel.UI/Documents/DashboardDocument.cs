@@ -9,7 +9,7 @@ namespace industry9.DataModel.UI.Documents
         public DashboardDocument()
         {
             Labels = new List<LabelData>();
-            WidgetIds = new List<string>();
+            Widgets = new List<DashboardWidgetData>();
         }
 
         public string Name { get; set; }
@@ -21,10 +21,6 @@ namespace industry9.DataModel.UI.Documents
 
         public IReadOnlyCollection<LabelData> Labels { get; set; }
 
-        [BsonIgnore]
-        public IReadOnlyCollection<WidgetDocument> Widgets { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        public IReadOnlyCollection<string> WidgetIds { get; set; }
+        public IReadOnlyCollection<DashboardWidgetData> Widgets { get; set; }
     }
 }

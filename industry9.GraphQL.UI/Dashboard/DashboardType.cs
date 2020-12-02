@@ -1,4 +1,5 @@
-﻿using HotChocolate.Resolvers;
+﻿using System.Linq;
+using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Widget;
@@ -15,16 +16,25 @@ namespace industry9.GraphQL.UI.Dashboard
 
             descriptor.Name("Dashboard");
             descriptor.Field(d => d.Widgets)
-                .Type<ListType<WidgetType>>()
                 .Resolver(async ctx =>
                 {
+                    var dashboardWidgets = ctx.Parent<DashboardDocument>().Widgets;
+                    var dashboardWidgetIds = dashboardWidgets.Select(x => x.WidgetId).Distinct().ToList();
                     var repository = ctx.Service<IWidgetRepository>();
                     var dataLoader =
                         ctx.BatchDataLoader<string, WidgetDocument>("WidgetsById", repository.GetDocuments);
-                    return await dataLoader.LoadAsync(ctx.Parent<DashboardDocument>().WidgetIds, ctx.RequestAborted);
-                });
+                    var widgets = await dataLoader.LoadAsync(dashboardWidgetIds, ctx.RequestAborted);
+                    foreach (var dashboardWidget in dashboardWidgets)
+                    {
+                        var widget = widgets.FirstOrDefault(x => x.Id == dashboardWidget.WidgetId);
+                        if (widget != null)
+                        {
+                            dashboardWidget.Widget = widget;
+                        }
+                    }
 
-            descriptor.Field(d => d.WidgetIds).Ignore();
+                    return dashboardWidgets;
+                });
         }
     }
 }

@@ -13,8 +13,6 @@ namespace industry9.GraphQL.UI.Widget
             descriptor.Field(d => d.Id);
             descriptor.Field(d => d.Name).Type<NonNullType<StringType>>();
             descriptor.Field(d => d.Type);
-            //descriptor.Field(d => d.Position);
-            //descriptor.Field(d => d.Size);
             descriptor.Field(d => d.Labels).DefaultValue(Enumerable.Empty<LabelData>().ToList());
             descriptor.Field(d => d.ColumnMappings).DefaultValue(Enumerable.Empty<ColumnMappingData>().ToList());
         }

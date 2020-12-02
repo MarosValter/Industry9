@@ -15,7 +15,7 @@ namespace industry9.Shared
             string authorId, 
             System.DateTimeOffset created, 
             global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> labels, 
-            global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidgetId> widgets)
+            global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardWidget> widgets)
         {
             Id = id;
             Name = name;
@@ -35,6 +35,6 @@ namespace industry9.Shared
 
         public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> Labels { get; }
 
-        public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IWidgetId> Widgets { get; }
+        public global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IDashboardWidget> Widgets { get; }
     }
 }

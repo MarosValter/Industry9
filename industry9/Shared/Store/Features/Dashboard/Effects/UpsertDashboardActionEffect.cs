@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Common.Enums;
-using industry9.Shared.Store.Base;
 using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.Dashboard.Actions;
 
@@ -42,7 +41,12 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 Id = dashboard.Id,
                 Name = dashboard.Name,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
-                WidgetIds = dashboard.Widgets.Select(x => x.Id).ToList()
+                Widgets = dashboard.Widgets.Select(x => new DashboardWidgetDataInput
+                {
+                    WidgetId = x.WidgetId,
+                    Position = x.Position,
+                    Size = x.Size
+                }).ToList()
             };
 
             return input;

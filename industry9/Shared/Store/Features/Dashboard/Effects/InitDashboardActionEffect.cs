@@ -22,7 +22,7 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
             {
                 dispatcher.Dispatch(new UpsertDashboardResultAction(
                     new DashboardDetail(null, null, null, DateTimeOffset.Now,
-                        Enumerable.Empty<ILabel>().ToList(), Enumerable.Empty<IWidgetId>().ToList())));
+                        Enumerable.Empty<ILabel>().ToList(), Enumerable.Empty<IDashboardWidget>().ToList())));
                 return;
             }
 

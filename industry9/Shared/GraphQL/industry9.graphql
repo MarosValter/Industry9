@@ -16,7 +16,7 @@ type Query {
 }
 
 type Mutation {
-  addWidgetsToDashboard(dashboardId: String widgetIds: [String]): Boolean!
+  addWidgetsToDashboard(dashboardId: String widgets: [DashboardWidgetDataInput]): Boolean!
   assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
   assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
   deleteDashboard(id: String): Boolean!
@@ -45,6 +45,13 @@ input ColumnMappingDataInput {
 input ExportedColumnDataInput {
   name: String
   valueType: ColumnValueType!
+}
+
+input DashboardWidgetDataInput {
+  position: Position!
+  size: Size!
+  widget: WidgetInput
+  widgetId: String
 }
 
 enum RelativeTimeMode {
@@ -81,7 +88,7 @@ type Dashboard {
   id: String!
   labels: [LabelData]
   name: String
-  widgets: [Widget]
+  widgets: [DashboardWidgetData]
 }
 
 type Widget {
@@ -107,7 +114,7 @@ input DashboardInput {
   id: String
   labels: [LabelDataInput] = [  ]
   name: String!
-  widgetIds: [String] = [  ]
+  widgets: [DashboardWidgetDataInput] = [  ]
 }
 
 input WidgetInput {
@@ -127,14 +134,17 @@ input DataSourceDefinitionInput {
 }
 
 type SensorData {
-  name: String!
-  value: Float!
-  dataSourceId: String!
+  dataSourceId: String
+  name: String
   timestamp: DateTime!
+  value: Float!
 }
 
-type LabelData {
-  name: String
+type DashboardWidgetData {
+  position: Position!
+  size: Size!
+  widget: Widget
+  widgetId: String
 }
 
 enum ColumnValueType {
@@ -142,6 +152,10 @@ enum ColumnValueType {
   NUMBER
   DATETIME
   BOOLEAN
+}
+
+type LabelData {
+  name: String
 }
 
 enum WidgetType {

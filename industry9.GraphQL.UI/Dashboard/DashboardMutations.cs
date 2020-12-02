@@ -25,10 +25,10 @@ namespace industry9.GraphQL.UI.Dashboard
             return result.IsAcknowledged;
         }
 
-        public async Task<bool> AddWidgetsToDashboard(string dashboardId, IReadOnlyCollection<string> widgetIds,
+        public async Task<bool> AddWidgetsToDashboard(string dashboardId, IReadOnlyCollection<DashboardWidgetData> widgets,
             [Service] IDashboardRepository dashboardRepository, IResolverContext ctx)
         {
-            var result = await dashboardRepository.AddWidgetsToDashboard(dashboardId, widgetIds, ctx.RequestAborted);
+            var result = await dashboardRepository.AddWidgetsToDashboard(dashboardId, widgets, ctx.RequestAborted);
             return result.IsAcknowledged;
         }
     }
