@@ -85,38 +85,14 @@
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
-
-            <div class="mat-layout-grid px-0">
-                <div class="mat-layout-grid-inner">
-                    @foreach (var (widget, i) in _widgets.Select((x, i) => (x, i)))
-                    {
-                        if (i == 0)
-                        {
-                            for (var j = 0; j < (widget.Position.Y - 1) * ColumnCount + widget.Position.X - 1; ++j)
-                            {
-                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
-                                    <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
-                                </div>
-                            }
-                        }
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount*widget.Size.Width)">
-                            <DashboardWidgetCard @key="widget" Widget="@widget.Widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
-                        </div>
-                        for (var j = 0; j < ColumnCount - widget.Position.X - widget.Size.Width + 1 - (_widgets.Count - 1 > i && _widgets[i + 1].Position.Y == widget.Position.Y ? ColumnCount - _widgets[i + 1].Position.X + 1 : 0); ++j)
-                        {
-                            <div class="TEST mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
-                                <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
-                            </div>
-                        }
-                    }
-                    @for (var i = 0; i < ColumnCount * Math.Max(1, 3 - Dashboard.Widgets.Select(x => x.Position.Y + x.Size.Height - 1).OrderBy(x => x).FirstOrDefault()); ++i)
-                    {
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
-                            <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
-                        </div>
-                    }
-                </div>
-            </div>
+            <DashboardLayoutComponent Class="px-0" ColumnCount="@ColumnCount" Items="@_widgets" TValue="DashboardWidgetData">
+                <ItemTemplate>
+                    <DashboardWidgetCard @key="@context" Widget="@context.Widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
+                </ItemTemplate>
+                <EmptyItemTemplate>
+                    <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
+                </EmptyItemTemplate>
+            </DashboardLayoutComponent>
         </MatTab>
     </MatTabGroup>
 
@@ -128,6 +104,7 @@
     CRUDOperation _operation;
     DashboardWidgetData _editedObject = new DashboardWidgetData();
     IList<DashboardWidgetData> _widgets;
+    private int _columnCount = 4;
 
     [Parameter]
     public bool EditMode { get; set; }
@@ -137,7 +114,25 @@
 
     public bool Public { get; set; }
 
-    public int ColumnCount { get; set; } = 4;
+    public int ColumnCount
+    {
+        get => _columnCount;
+        set
+        {
+            if (value == 5)
+            {
+                if (_columnCount < 5)
+                {
+                    ++value;
+                }
+                else if (_columnCount > 5)
+                {
+                    --value;
+                }
+            }
+            _columnCount = value;
+        }
+    }
 
     protected override void OnParametersSet()
     {

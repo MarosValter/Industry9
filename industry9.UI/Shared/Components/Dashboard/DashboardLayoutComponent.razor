@@ -1,0 +1,42 @@
+﻿@typeparam TValue
+
+<div class="mat-layout-grid @Class">
+    <div class="mat-layout-grid-inner">
+        @foreach (var (widget, i) in Items.Select((x, i) => (x, i)))
+        {
+            if (i == 0)
+            {
+                for (var j = 0; j < (widget.Position.Y - 1) * ColumnCount + widget.Position.X - 1; ++j)
+                {
+                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                        @if (EmptyItemTemplate != null)
+                        {
+                            @EmptyItemTemplate
+                        }
+                    </div>
+                }
+            }
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount*widget.Size.Width)">
+                @ItemTemplate(widget)
+            </div>
+            for (var j = 0; j < ColumnCount - widget.Position.X - widget.Size.Width + 1 - (Items.Count - 1 > i && Items[i + 1].Position.Y == widget.Position.Y ? ColumnCount - Items[i + 1].Position.X + 1 : 0); ++j)
+            {
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                    @if (EmptyItemTemplate != null)
+                    {
+                        @EmptyItemTemplate
+                    }
+                </div>
+            }
+        }
+        @for (var i = 0; i < ColumnCount * Math.Max(1, 3 - Items.Select(x => x.Position.Y + x.Size.Height - 1).OrderBy(x => x).FirstOrDefault()); ++i)
+        {
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                @if (EmptyItemTemplate != null)
+                {
+                    @EmptyItemTemplate
+                }
+            </div>
+        }
+    </div>
+</div>

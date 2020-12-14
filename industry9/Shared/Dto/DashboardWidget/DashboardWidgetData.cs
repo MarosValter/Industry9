@@ -3,7 +3,7 @@ using industry9.Shared.Dto.Widget;
 
 namespace industry9.Shared.Dto.DashboardWidget
 {
-    public class DashboardWidgetData
+    public class DashboardWidgetData : ILayoutElement
     {
         public string DashboardId { get; set; }
 

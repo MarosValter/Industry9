@@ -4,6 +4,7 @@
 @using industry9.Shared.Store.Features.Dashboard.Actions
 @using industry9.Shared.Store.States
 @using industry9.Shared.Dto.DashboardWidget
+@using System.Text.Json
 
 @*@attribute [Authorize]*@
 
@@ -14,19 +15,14 @@
 @if (!DashboardState.Value.EditMode)
 {
     <LabelBar Labels="@DashboardState.Value.Dashboard.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
-    @*@_labelBar*@
 }
 
-<div class="mat-layout-grid">
-    <div class="mat-layout-grid-inner">
-        @foreach (var widget in DashboardState.Value.Dashboard.Widgets)
-        {
-            <div class="mat-layout-grid-cell">
-
-            </div>
-        }
-    </div>
-</div>
+<DashboardLayoutComponent Class="px-0" ColumnCount="4" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
+    <ItemTemplate>
+        <DashboardWidgetCard @key="@context" Widget="@context.Widget"></DashboardWidgetCard>
+    </ItemTemplate>
+    <EmptyItemTemplate></EmptyItemTemplate>
+</DashboardLayoutComponent>
 
 @if (DashboardState.Value.EditMode)
 {
@@ -40,13 +36,29 @@ else if (!string.IsNullOrEmpty(DashboardState.Value.Dashboard.Id))
 }
 
 @code {
-    @*RenderFragment _labelBar;
+    //IList<DashboardWidgetData> _widgets = new List<DashboardWidgetData>();
 
-        protected override Task OnInitializedAsync()
-        {
-            _labelBar =@<LabelBar Labels="@DashboardState.Value.SelectedDashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>;
-            return base.OnInitializedAsync();
-        }*@
+    //protected override void OnInitialized()
+    //{
+    //    base.OnInitialized();
+    //    DashboardState.StateChanged += DashboardStateOnStateChanged;
+    //}
+
+
+    //protected override void Dispose(bool disposing)
+    //{
+    //    base.Dispose(disposing);
+    //    if (disposing)
+    //    {
+    //        DashboardState.StateChanged -= DashboardStateOnStateChanged;
+    //    }
+    //}
+
+    //private void DashboardStateOnStateChanged(object sender, HomepageState e)
+    //{
+    //    _widgets = DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList();
+    //    Console.WriteLine(JsonSerializer.Serialize(_widgets));
+    //}
 
     private void ToggleEditMode(bool enabled, bool saveChanges)
     {
@@ -57,10 +69,4 @@ else if (!string.IsNullOrEmpty(DashboardState.Value.Dashboard.Id))
     {
         Dispatcher.Dispatch(new UndoAction("Dashboard"));
     }
-
-    // TODO argument should be IWidgetLite probably, to be able to access size & position
-    //private string GetWidgetCellSpan(IWidgetId widget)
-    //{
-    //    return "";
-    //}
 }
