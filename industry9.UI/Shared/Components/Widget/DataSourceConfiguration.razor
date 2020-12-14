@@ -8,7 +8,7 @@
 <MatAccordion Multi="true">
     @foreach (var (dataSource, i) in DataSources.Select((dataSource, i) => (dataSource, i)))
     {
-        <MatExpansionPanel>
+        <MatExpansionPanel Expanded="true">
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>
                     <MatIconButton Icon="@MatIconNames.Clear" OnClick="@(e => RemoveDefinition(i))"></MatIconButton>

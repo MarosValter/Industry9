@@ -1,7 +1,6 @@
 ﻿@using industry9.Common.Enums
 @using industry9.Shared.Dto.Widget
 @using industry9.Shared.Store.Features.Widget.Actions
-@using industry9.Shared.Store.States
 @using WidgetType = industry9.Shared.WidgetType
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -35,7 +34,7 @@
                     </MatTab>
                 </MatTabGroup>
                 <MatDialogActions>
-                    <MatButton OnClick="Close">Cancel</MatButton>
+                    <MatButton Type="button" OnClick="Close">Cancel</MatButton>
                     <MatButton Type="submit" Raised="true">OK</MatButton>
                 </MatDialogActions>
             </EditForm>

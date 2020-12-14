@@ -16,26 +16,35 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <fieldset>
-                    <div class="form-group">
-                        <MatSelectValue Label="Select widget" @bind-Value="@EditedObject.WidgetId" ValueSelector="@(w => w.Id)" Items="@State.Value.Widgets.Where(x => !UsedWidgets.Contains(x.Id)).ToList()" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
-                            <ItemTemplate Context="widget">
-                                <span>@(widget.Name)</span>
-                            </ItemTemplate>
-                        </MatSelectValue>
+                    @if (State.Value.Widgets.Any())
+                    {
+                        <div class="form-group">
+                            <MatSelectValue Label="Select widget" @bind-Value="@EditedObject.WidgetId" ValueSelector="@(w => w.Id)" Items="@State.Value.Widgets.Where(x => Operation == CRUDOperation.Update || !UsedWidgets.Contains(x.Id)).ToList()" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
+                                <ItemTemplate Context="widget">
+                                    <span>@(widget.Name)</span>
+                                </ItemTemplate>
+                            </MatSelectValue>
+                        </div>
+                    }
+                    else
+                    {
+                        var dummy = string.Empty;
+                        <MatSelect Label="Select widget" @bind-Value="dummy">
+                        </MatSelect>
+                    }
+                    <MatSubtitle1>Position</MatSubtitle1>
+                    <div class="form-group d-flex">
+                        <MatTextField Class="mr-1" Label="X" @bind-Value="@EditedObject.Position.X" Outlined="true"></MatTextField>
+                        <MatTextField Class="ml-1" Label="Y" @bind-Value="@EditedObject.Position.Y" Outlined="true"></MatTextField>
                     </div>
-                    <div class="form-group">
-                        <MatSubtitle1>Position</MatSubtitle1>
-                        <MatTextField Label="X" @bind-Value="@EditedObject.Position.X" Outlined="true"></MatTextField>
-                        <MatTextField Label="Y" @bind-Value="@EditedObject.Position.Y" Outlined="true"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatSubtitle1>Size</MatSubtitle1>
-                        <MatTextField Label="Width" @bind-Value="@EditedObject.Size.Width" Outlined="true"></MatTextField>
-                        <MatTextField Label="Height" @bind-Value="@EditedObject.Size.Height" Outlined="true"></MatTextField>
+                    <MatSubtitle1>Size</MatSubtitle1>
+                    <div class="form-group d-flex">
+                        <MatTextField Class="mr-1" Label="Width" @bind-Value="@EditedObject.Size.Width" Outlined="true"></MatTextField>
+                        <MatTextField Class="ml-1" Label="Height" @bind-Value="@EditedObject.Size.Height" Outlined="true"></MatTextField>
                     </div>
                 </fieldset>
                 <MatDialogActions>
-                    <MatButton OnClick="Close">Cancel</MatButton>
+                    <MatButton Type="button" OnClick="Close">Cancel</MatButton>
                     <MatButton Type="submit" Raised="true">OK</MatButton>
                 </MatDialogActions>
             </EditForm>
@@ -51,6 +60,7 @@
 </MatDialog>
 
 @code {
+
     [Parameter]
     public bool IsOpen { get; set; }
 
@@ -70,6 +80,7 @@
 
     async Task Submit(EditContext context)
     {
+        Console.WriteLine("Submit {0}", context.Validate());
         await Close();
         Dispatcher.Dispatch(new UpsertDashboardWidgetResultAction(EditedObject, true, Operation == CRUDOperation.Create));
     }
@@ -82,6 +93,7 @@
 
     async Task Close()
     {
+        Console.WriteLine("Close");
         IsOpen = false;
         await IsOpenChanged.InvokeAsync(false);
     }
