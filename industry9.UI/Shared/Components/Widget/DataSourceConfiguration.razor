@@ -35,10 +35,10 @@
     }
 </MatAccordion>
 
-<MatIconButton Class="expansion-add-btn" OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Add_circle_outline" />
+<MatIconButton Class="expansion-add-btn" Disabled="@(!AvailableDataSources.Any())" OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Add_circle_outline" />
 <MatMenu @ref="@_menu">
     <MatList>
-        @foreach (var definition in DataSourceState.Value.Definitions)
+        @foreach (var definition in AvailableDataSources)
         {
             <MatListItem @key="definition" OnClick="@(e => AddDefinition(definition.Id))">@definition.Name</MatListItem>
         }
@@ -57,7 +57,12 @@
     [Parameter]
     public List<ColumnMappingData> ColumnMappings { get; set; }
 
+
+    private IReadOnlyCollection<string> UsedDataSources { get; set; }
+
     private IList<DataSourceInfo> DataSources { get; set; }
+
+    private IList<IDataSourceDefinitionLite> AvailableDataSources { get; set; }
 
     protected override void OnInitialized()
     {
@@ -79,6 +84,8 @@
                 (columnGroup, dataSource) =>
                     new DataSourceInfo(dataSource, columnGroup.ToList()))
             .ToList();
+
+        UpdateAvailableDataSources();
     }
 
     private async Task OnMenuOpen(MouseEventArgs e)
@@ -92,6 +99,8 @@
         var mappings = _originalMappings.Where(x => x.DataSourceId == id).ToList();
         DataSources.Add(new DataSourceInfo(definition, mappings));
         ColumnMappings.AddRange(mappings);
+
+        UpdateAvailableDataSources();
     }
 
     private void RemoveDefinition(int index)
@@ -99,6 +108,8 @@
         var dataSource = DataSources.ElementAt(index);
         DataSources.Remove(dataSource);
         ColumnMappings.RemoveAll(x => dataSource.AvailableColumns.Any(y => y.Enabled && y.Mapping.Equals(x)));
+
+        UpdateAvailableDataSources();
     }
 
     private void AddColumnMapping(AvailableColumnInfo column)
@@ -124,8 +135,15 @@
         }
     }
 
+    private void UpdateAvailableDataSources()
+    {
+        UsedDataSources = DataSources.Select(x => x.Id).ToList();
+        AvailableDataSources = DataSourceState.Value.Definitions.Where(x => !UsedDataSources.Contains(x.Id)).ToList();
+    }
+
     private class DataSourceInfo
     {
+        public string Id { get; }
         public string Name { get; }
         public DataSourceType Type { get; }
 
@@ -133,6 +151,7 @@
 
         public DataSourceInfo(IDataSourceDefinitionLite dataSource, IList<ColumnMappingData> columns)
         {
+            Id = dataSource.Id;
             Name = dataSource.Name;
             Type = dataSource.Type;
             AvailableColumns = dataSource.Columns.Select(x => MapColumn(x, columns, dataSource.Id)).ToList();
