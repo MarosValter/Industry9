@@ -7,16 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo;
-using Fluxor;
 using HotChocolate;
 using HotChocolate.AspNetCore;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using industry9.Common.Enums;
-using industry9.Common.GraphQL;
 using industry9.Common.Structs;
 using industry9.DataModel.UI.Data;
 using industry9.DataModel.UI.Documents;
@@ -30,7 +27,9 @@ using industry9.GraphQL.UI.Dashboard;
 using industry9.GraphQL.UI.Data;
 using industry9.GraphQL.UI.DataSourceDefinition;
 using industry9.GraphQL.UI.DataSourceDefinition.Properties;
+using industry9.GraphQL.UI.Position;
 using industry9.GraphQL.UI.Scalars;
+using industry9.GraphQL.UI.Size;
 using industry9.GraphQL.UI.Widget;
 using industry9.Server.Data;
 using industry9.Server.Identity;
@@ -45,6 +44,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using PositionType = industry9.GraphQL.UI.Position.PositionType;
+using SizeType = industry9.GraphQL.UI.Size.SizeType;
 using WidgetType = industry9.GraphQL.UI.Widget.WidgetType;
 
 namespace industry9.Server
@@ -102,8 +103,8 @@ namespace industry9.Server
                 var builder = SchemaBuilder.New()
                     .AddServices(sp)
                     .BindClrType<Color, ColorType>()
-                    .BindClrType<Position, PositionType>()
-                    .BindClrType<Size, SizeType>()
+                    //.BindClrType<Position, PositionType>()
+                    //.BindClrType<Size, SizeType>()
                     .BindClrType<DateTime, DateTimeType>()
                     .AddQueryType(d => d.Name("Query"))
                     .AddType<DashboardQueries>()
@@ -122,6 +123,8 @@ namespace industry9.Server
                     .AddType<DashboardType>()
                     .AddType<WidgetType>()
                     .AddType<DataSourceDefinitionType>()
+                    .AddType<SizeType>()
+                    .AddType<PositionType>()
                     //.AddType<IDataSourceProperties>()
                     .AddType<LabelData>()
                     .AddType<SensorData>()
@@ -134,13 +137,15 @@ namespace industry9.Server
 
                     // Input types
                     .AddType<DashboardInputType>()
+                    .AddType<DashboardWidgetInputType>()
                     .AddType<WidgetInputType>()
                     .AddType<DataSourceDefinitionInputType>()
+                    .AddType<SizeInputType>()
+                    .AddType<PositionInputType>()
                     //.AddInputObjectType<IDataSourceProperties>()
                     .AddInputObjectType<LabelData>()
                     .AddInputObjectType<ColumnMappingData>()
                     .AddInputObjectType<ExportedColumnData>()
-                    .AddInputObjectType<DashboardWidgetData>()
                     //.AddInputObjectType<TimeSettings>()
                     //.AddInputObjectType<RelativeTimeSettings>()
                     //.AddInputObjectType<AbsoluteTimeSettings>()

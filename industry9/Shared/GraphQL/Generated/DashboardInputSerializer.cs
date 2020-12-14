@@ -12,7 +12,7 @@ namespace industry9.Shared
         private bool _needsInitialization = true;
         private IValueSerializer _stringSerializer;
         private IValueSerializer _labelDataInputSerializer;
-        private IValueSerializer _dashboardWidgetDataInputSerializer;
+        private IValueSerializer _dashboardWidgetInputSerializer;
 
         public string Name { get; } = "DashboardInput";
 
@@ -30,7 +30,7 @@ namespace industry9.Shared
             }
             _stringSerializer = serializerResolver.Get("String");
             _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
-            _dashboardWidgetDataInputSerializer = serializerResolver.Get("DashboardWidgetDataInput");
+            _dashboardWidgetInputSerializer = serializerResolver.Get("DashboardWidgetInput");
             _needsInitialization = false;
         }
 
@@ -67,7 +67,7 @@ namespace industry9.Shared
 
             if (input.Widgets.HasValue)
             {
-                map.Add("widgets", SerializeNullableListOfNullableDashboardWidgetDataInput(input.Widgets.Value));
+                map.Add("widgets", SerializeNullableListOfNullableDashboardWidgetInput(input.Widgets.Value));
             }
 
             return map;
@@ -110,7 +110,7 @@ namespace industry9.Shared
             }
             return result;
         }
-        private object SerializeNullableDashboardWidgetDataInput(object value)
+        private object SerializeNullableDashboardWidgetInput(object value)
         {
             if (value is null)
             {
@@ -118,10 +118,10 @@ namespace industry9.Shared
             }
 
 
-            return _dashboardWidgetDataInputSerializer.Serialize(value);
+            return _dashboardWidgetInputSerializer.Serialize(value);
         }
 
-        private object SerializeNullableListOfNullableDashboardWidgetDataInput(object value)
+        private object SerializeNullableListOfNullableDashboardWidgetInput(object value)
         {
             if (value is null)
             {
@@ -133,7 +133,7 @@ namespace industry9.Shared
             object[] result = new object[source.Count];
             for(int i = 0; i < source.Count; i++)
             {
-                result[i] = SerializeNullableDashboardWidgetDataInput(source[i]);
+                result[i] = SerializeNullableDashboardWidgetInput(source[i]);
             }
             return result;
         }

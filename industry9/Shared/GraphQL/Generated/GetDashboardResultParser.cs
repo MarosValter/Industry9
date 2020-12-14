@@ -16,8 +16,8 @@ namespace industry9.Shared
     {
         private readonly IValueSerializer _stringSerializer;
         private readonly IValueSerializer _dateTimeSerializer;
-        private readonly IValueSerializer _sizeSerializer;
-        private readonly IValueSerializer _positionSerializer;
+        private readonly IValueSerializer _intSerializer;
+        private readonly IValueSerializer _widgetTypeSerializer;
 
         public GetDashboardResultParser(IValueSerializerCollection serializerResolver)
         {
@@ -27,8 +27,8 @@ namespace industry9.Shared
             }
             _stringSerializer = serializerResolver.Get("String");
             _dateTimeSerializer = serializerResolver.Get("DateTime");
-            _sizeSerializer = serializerResolver.Get("Size");
-            _positionSerializer = serializerResolver.Get("Position");
+            _intSerializer = serializerResolver.Get("Int");
+            _widgetTypeSerializer = serializerResolver.Get("WidgetType");
         }
 
         protected override IGetDashboard ParserData(JsonElement data)
@@ -117,8 +117,8 @@ namespace industry9.Shared
                 (
                     DeserializeNullableString(element, "widgetId"),
                     ParseGetDashboardDashboardWidgetsWidget(element, "widget"),
-                    DeserializeSize(element, "size"),
-                    DeserializePosition(element, "position")
+                    ParseGetDashboardDashboardWidgetsSize(element, "size"),
+                    ParseGetDashboardDashboardWidgetsPosition(element, "position")
                 );
 
             }
@@ -126,7 +126,33 @@ namespace industry9.Shared
             return list;
         }
 
-        private global::industry9.Shared.IWidgetId ParseGetDashboardDashboardWidgetsWidget(
+        private global::industry9.Shared.IPosition ParseGetDashboardDashboardWidgetsPosition(
+            JsonElement parent,
+            string field)
+        {
+            JsonElement obj = parent.GetProperty(field);
+
+            return new Position
+            (
+                DeserializeInt(obj, "x"),
+                DeserializeInt(obj, "y")
+            );
+        }
+
+        private global::industry9.Shared.ISize ParseGetDashboardDashboardWidgetsSize(
+            JsonElement parent,
+            string field)
+        {
+            JsonElement obj = parent.GetProperty(field);
+
+            return new Size
+            (
+                DeserializeInt(obj, "width"),
+                DeserializeInt(obj, "height")
+            );
+        }
+
+        private global::industry9.Shared.IWidgetDetail ParseGetDashboardDashboardWidgetsWidget(
             JsonElement parent,
             string field)
         {
@@ -140,10 +166,76 @@ namespace industry9.Shared
                 return null;
             }
 
-            return new WidgetId
+            return new WidgetDetail
             (
-                DeserializeString(obj, "id")
+                DeserializeString(obj, "id"),
+                DeserializeNullableString(obj, "name"),
+                DeserializeDateTime(obj, "created"),
+                DeserializeWidgetType(obj, "type"),
+                ParseGetDashboardDashboardWidgetsWidgetLabels(obj, "labels"),
+                ParseGetDashboardDashboardWidgetsWidgetColumnMappings(obj, "columnMappings")
             );
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.IColumnMapping> ParseGetDashboardDashboardWidgetsWidgetColumnMappings(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::industry9.Shared.IColumnMapping[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new ColumnMapping
+                (
+                    DeserializeNullableString(element, "name"),
+                    DeserializeNullableString(element, "format"),
+                    DeserializeNullableString(element, "dataSourceId"),
+                    DeserializeNullableString(element, "sourceColumn")
+                );
+
+            }
+
+            return list;
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> ParseGetDashboardDashboardWidgetsWidgetLabels(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::industry9.Shared.ILabel[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new Label
+                (
+                    DeserializeNullableString(element, "name")
+                );
+
+            }
+
+            return list;
         }
 
         private string DeserializeString(JsonElement obj, string fieldName)
@@ -172,16 +264,15 @@ namespace industry9.Shared
             JsonElement value = obj.GetProperty(fieldName);
             return (System.DateTimeOffset)_dateTimeSerializer.Deserialize(value.GetString());
         }
-        private string DeserializeSize(JsonElement obj, string fieldName)
+        private int DeserializeInt(JsonElement obj, string fieldName)
         {
             JsonElement value = obj.GetProperty(fieldName);
-            return (string)_sizeSerializer.Deserialize(value.GetString());
+            return (int)_intSerializer.Deserialize(value.GetInt32());
         }
-
-        private string DeserializePosition(JsonElement obj, string fieldName)
+        private WidgetType DeserializeWidgetType(JsonElement obj, string fieldName)
         {
             JsonElement value = obj.GetProperty(fieldName);
-            return (string)_positionSerializer.Deserialize(value.GetString());
+            return (WidgetType)_widgetTypeSerializer.Deserialize(value.GetString());
         }
     }
 }

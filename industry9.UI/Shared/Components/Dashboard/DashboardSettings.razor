@@ -1,4 +1,11 @@
-﻿@if (EditMode)
+﻿@using industry9.Shared.Dto.Dashboard
+@using industry9.Shared.Dto.DashboardWidget
+@using industry9.Common.Enums
+@using industry9.Shared.Store.Features.Widget.Actions
+
+@inject IDispatcher Dispatcher
+
+@if (EditMode)
 {
     <MatH5>Settings</MatH5>
     <MatTabGroup Class="tab-panel">
@@ -10,16 +17,7 @@
                             <MatH6>Name</MatH6>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-                            <MatTextField @bind-Value="@DashboardName" FullWidth="true" Required="true"></MatTextField>
-                        </div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-                            <MatH6>Layout</MatH6>
-                        </div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2 cell-label-centered">
-                            <label>Column count: </label><strong>@ColumnCount</strong>
-                        </div>
-                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
-                            <MatSlider @bind-Value="@ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="4"></MatSlider>
+                            <MatTextField @bind-Value="@Dashboard.Name" FullWidth="true" Required="true"></MatTextField>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
                             <MatH6>Labels</MatH6>
@@ -69,53 +67,111 @@
         </MatTab>
         <MatTab Label="Widgets">
             <MatAccordion Class="card-panel sticky-panel">
-                <MatExpansionPanel>
+                <MatExpansionPanel Expanded="true">
                     <MatExpansionPanelSummary>
-                        <MatExpansionPanelHeader>Collapse</MatExpansionPanelHeader>
+                        <MatExpansionPanelHeader>Layout</MatExpansionPanelHeader>
                     </MatExpansionPanelSummary>
                     <MatExpansionPanelDetails>
                         <div class="mat-layout-grid">
                             <div class="mat-layout-grid-inner">
-                                @foreach (var widget in AvailableWidgets ?? Enumerable.Empty<IWidgetLite>())
-                                {
-                                    <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
-                                        <div class="mat-elevation-z2 card-panel">
-                                            <div class="card-panel-content">
-                                                <MatBody1>@widget.Id</MatBody1>
-                                                <MatOverline> Author John</MatOverline>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2 cell-label-centered">
+                                    <label>Column count: </label><strong>@ColumnCount</strong>
+                                </div>
+                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
+                                    <MatSlider @bind-Value="@ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="6"></MatSlider>
+                                </div>
                             </div>
                         </div>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
+
+            <div class="mat-layout-grid px-0">
+                <div class="mat-layout-grid-inner">
+                    @foreach (var (widget, i) in _widgets.Select((x, i) => (x, i)))
+                    {
+                        if (i == 0)
+                        {
+                            for (var j = 0; j < (widget.Position.Y - 1) * ColumnCount + widget.Position.X - 1; ++j)
+                            {
+                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                                    <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
+                                </div>
+                            }
+                        }
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount*widget.Size.Width)">
+                            <DashboardWidgetCard @key="widget" Widget="@widget.Widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
+                        </div>
+                        for (var j = 0; j < ColumnCount - widget.Position.X - widget.Size.Width + 1 - (_widgets.Count - 1 > i && _widgets[i + 1].Position.Y == widget.Position.Y ? ColumnCount - _widgets[i + 1].Position.X + 1 : 0); ++j)
+                        {
+                            <div class="TEST mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                                <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
+                            </div>
+                        }
+                    }
+                    @for (var i = 0; i < ColumnCount * Math.Max(1, 3 - Dashboard.Widgets.Select(x => x.Position.Y + x.Size.Height - 1).OrderBy(x => x).FirstOrDefault()); ++i)
+                    {
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-@(12/ColumnCount)">
+                            <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
+                        </div>
+                    }
+                </div>
+            </div>
         </MatTab>
     </MatTabGroup>
+
+    <DashboardWidgetDialog EditedObject="@_editedObject" UsedWidgets="@Dashboard.Widgets.Select(x => x.WidgetId).ToList()" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardWidgetDialog>
 }
 
 @code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
+    DashboardWidgetData _editedObject = new DashboardWidgetData();
+    IList<DashboardWidgetData> _widgets;
+
     [Parameter]
     public bool EditMode { get; set; }
 
     [Parameter]
-    public IDashboardDetail Dashboard { get; set; }
-
-    public string DashboardName { get; set; }
+    public DashboardData Dashboard { get; set; } = new DashboardData();
 
     public bool Public { get; set; }
 
-    public int ColumnCount { get; set; }
+    public int ColumnCount { get; set; } = 4;
 
-    IWidgetLite[] AvailableWidgets { get; } = {
-        new WidgetLite("Widget1", "Widget 1", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
-        new WidgetLite("Widget2", "Widget 2", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
-        new WidgetLite("Widget3", "Widget 3", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
-        new WidgetLite("Widget4", "Widget 4", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
-        new WidgetLite("Widget5", "Widget 5", DateTimeOffset.Now, WidgetType.Barchart, Enumerable.Empty<ILabel>().ToList()),
-    };
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _widgets = Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList();
+    }
+
+    void AddWidget()
+    {
+        Dispatcher.Dispatch(new FetchWidgetsAction());
+
+        _operation = CRUDOperation.Create;
+        _editedObject = new DashboardWidgetData
+        {
+            DashboardId = Dashboard.Id
+        };
+        _isDialogOpen = true;
+    }
+
+    void EditWidget(string id)
+    {
+        Dispatcher.Dispatch(new FetchWidgetsAction());
+
+        _operation = CRUDOperation.Update;
+        _editedObject = Dashboard.Widgets.FirstOrDefault(x => x.WidgetId == id);
+        _isDialogOpen = true;
+    }
+
+    void DeleteWidget(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        _editedObject = Dashboard.Widgets.FirstOrDefault(x => x.WidgetId == id);
+        _isDialogOpen = true;
+    }
 
     Permission[] AllowPermissions { get; } = {
         new Permission(),
@@ -129,17 +185,17 @@
 
     }
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        DashboardName = Dashboard?.Name;
-    }
+    //protected override void OnInitialized()
+    //{
+    //    base.OnInitialized();
+    //    DashboardName = Dashboard?.Name;
+    //}
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        DashboardName = Dashboard?.Name;
-    }
+    //protected override void OnParametersSet()
+    //{
+    //    base.OnParametersSet();
+    //    DashboardName = Dashboard?.Name;
+    //}
 
     private RenderFragment RenderPermissionList(IEnumerable<Permission> permissions) =>
     @<MatList>
@@ -157,7 +213,7 @@
         </MatListItem>
     </MatList>;
 
-private RenderFragment RenderPermissionItem(Permission permission) =>
-@<p>TODO</p>;
+          private RenderFragment RenderPermissionItem(Permission permission) =>
+        @<p>TODO</p>;
 
 }

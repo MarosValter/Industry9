@@ -847,3 +847,11 @@ ul.breadcrumb {
 .expansion-add-btn {
     margin-left: 24px;
 }
+
+.dsd-card.empty {
+    min-height: 250px;
+    box-shadow: none;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #6995ff;
+}

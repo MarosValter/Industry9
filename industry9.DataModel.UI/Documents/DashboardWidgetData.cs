@@ -10,6 +10,9 @@ namespace industry9.DataModel.UI.Documents
         [BsonRepresentation(BsonType.ObjectId)]
         public string WidgetId { get; set; }
 
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string DashboardId { get; set; }
+
         [BsonIgnore]
         public WidgetDocument Widget { get; set; }
 

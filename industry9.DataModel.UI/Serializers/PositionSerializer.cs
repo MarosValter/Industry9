@@ -29,8 +29,8 @@ namespace industry9.DataModel.UI.Serializers
 
             return new Position
             {
-                X = Convert.ToByte(x),
-                Y = Convert.ToByte(y)
+                X = Convert.ToInt32(x),
+                Y = Convert.ToInt32(y)
             };
         }
     }

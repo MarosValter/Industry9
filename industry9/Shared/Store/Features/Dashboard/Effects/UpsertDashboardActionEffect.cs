@@ -41,12 +41,13 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 Id = dashboard.Id,
                 Name = dashboard.Name,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
-                Widgets = dashboard.Widgets.Select(x => new DashboardWidgetDataInput
-                {
-                    WidgetId = x.WidgetId,
-                    Position = x.Position,
-                    Size = x.Size
-                }).ToList()
+                //Widgets = dashboard.Widgets.Select(x => new DashboardWidgetInput
+                //{
+                //    DashboardId = dashboard.Id,
+                //    WidgetId = x.WidgetId,
+                //    Position = x.Position,
+                //    Size = x.Size
+                //}).ToList()
             };
 
             return input;

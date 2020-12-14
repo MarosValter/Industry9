@@ -67,6 +67,14 @@ mutation deleteWidget($id: String!) {
   deleteWidget(id: $id)
 }
 
+mutation addWidgetToDashboard($dashboardWidget: DashboardWidgetInput!) {
+	addWidgetToDashboard(widget: $dashboardWidget)
+}
+
+mutation removeWidgetFromDashboard($dashboardId: String!, $widgetId: String!) {
+	removeWidgetFromDashboard(dashboardId: $dashboardId, widgetId: $widgetId)
+}
+
 mutation upsertDataSourceDefinition($definition: DataSourceDefinitionInput!) {
   upsertDataSourceDefinition(dataSourceDefinition: $definition)
 }
@@ -122,10 +130,12 @@ fragment DashboardDetail on Dashboard {
 	}
 }
 
+"""
 
 fragment WidgetId on Widget {
 	id
 }
+"""
 
 fragment WidgetLite on Widget {
 	id,
@@ -178,6 +188,15 @@ fragment DataSourceDefinitionDetail on DataSourceDefinition {
 	}
 }
 
+fragment Position on Position {
+	x,
+	y
+}
+
+fragment Size on Size {
+	width,
+	height
+}
 
 fragment Label on LabelData {
 	name
@@ -198,8 +217,12 @@ fragment ExportedColumn on ExportedColumnData {
 fragment DashboardWidget on DashboardWidgetData {
 	widgetId,
 	widget {
-		...WidgetId
+		...WidgetDetail
 	},
-	size,
-	position
+	size {
+		...Size
+	},
+	position {
+		...Position
+	}
 }

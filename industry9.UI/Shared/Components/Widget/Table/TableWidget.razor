@@ -1,4 +1,5 @@
-﻿
+﻿@using industry9.Shared.Dto.Widget
+
 <MatTable Items="@Rows">
     <MatTableHeader>
         @foreach (var column in ColumnMappings)
@@ -22,7 +23,7 @@
     public IReadOnlyCollection<ISensorData> Data { get; set; } = new List<ISensorData>();
 
     [Parameter]
-    public IReadOnlyCollection<IColumnMapping> ColumnMappings { get; set; } = new List<IColumnMapping>();
+    public IReadOnlyCollection<ColumnMappingData> ColumnMappings { get; set; } = new List<ColumnMappingData>();
 
     IReadOnlyCollection<RowData> Rows => Data.GroupBy(x => x.Timestamp.Second).Select(x => new RowData(x.First().Timestamp.LocalDateTime, x.ToList())).ToList();
 

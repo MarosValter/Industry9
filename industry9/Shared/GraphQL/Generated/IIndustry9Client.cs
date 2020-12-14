@@ -103,6 +103,23 @@ namespace industry9.Shared
             DeleteWidgetOperation operation,
             CancellationToken cancellationToken = default);
 
+        Task<IOperationResult<global::industry9.Shared.IAddWidgetToDashboard>> AddWidgetToDashboardAsync(
+            Optional<global::industry9.Shared.DashboardWidgetInput> dashboardWidget = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IAddWidgetToDashboard>> AddWidgetToDashboardAsync(
+            AddWidgetToDashboardOperation operation,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IRemoveWidgetFromDashboard>> RemoveWidgetFromDashboardAsync(
+            Optional<string> dashboardId = default,
+            Optional<string> widgetId = default,
+            CancellationToken cancellationToken = default);
+
+        Task<IOperationResult<global::industry9.Shared.IRemoveWidgetFromDashboard>> RemoveWidgetFromDashboardAsync(
+            RemoveWidgetFromDashboardOperation operation,
+            CancellationToken cancellationToken = default);
+
         Task<IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             Optional<global::industry9.Shared.DataSourceDefinitionInput> definition = default,
             CancellationToken cancellationToken = default);

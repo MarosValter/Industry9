@@ -1,6 +1,7 @@
 ﻿@using industry9.Shared.Store.States
 @using industry9.UI.Shared.Components.Widget.Table
 @using industry9.Shared.Store.Features.WidgetSource.Actions
+@using industry9.Shared.Dto.Widget
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -8,26 +9,26 @@
 @inject IState<WidgetSourceState> WidgetState
 
 <MatCard class="dsd-card">
-    <div class="mat-card-header dsd-header" style="background-color: @GetColor(WidgetState.Value.Widget.Type)">
+    <div class="mat-card-header dsd-header" style="background-color: @GetColor(Widget.Type)">
         <MatCardActions>
-            <MatH6>@WidgetState.Value.Widget.Name</MatH6>
+            <MatH6>@Widget.Name</MatH6>
             <MatCardActionIcons>
-                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(WidgetState.Value.Widget.Id))"></MatIconButton>
-                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(WidgetState.Value.Widget.Id))"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(Widget.Id))"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(Widget.Id))"></MatIconButton>
             </MatCardActionIcons>
         </MatCardActions>
     </div>
     <MatCardContent>
-        <TableWidget Data="@WidgetState.Value.Data" ColumnMappings="@WidgetState.Value.Widget.ColumnMappings"></TableWidget>
+        <TableWidget Data="@WidgetState.Value.WidgetData[Widget.Id].ToList()" ColumnMappings="@Widget.ColumnMappings"></TableWidget>
     </MatCardContent>
     <div class="mat-card-footer dsd-footer">
-        <MatOverline>Created: @WidgetState.Value.Widget.Created.ToString("dd. MM. yyyy")</MatOverline>
+        <MatOverline>Created: @Widget.Created.ToString("dd. MM. yyyy")</MatOverline>
     </div>
 </MatCard>
 
 @code {
     [Parameter]
-    public IWidgetLite Widget { get; set; }
+    public WidgetData Widget { get; set; }
 
     [Parameter]
     public EventCallback<string> OnConfigure { get; set; }

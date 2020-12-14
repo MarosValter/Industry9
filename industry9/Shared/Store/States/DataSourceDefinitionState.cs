@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using industry9.Shared.Dto.DataSourceDefinition.Properties;
 using industry9.Shared.Store.Base;
 
@@ -15,7 +16,7 @@ namespace industry9.Shared.Store.States
             IDataSourceDefinitionDetail editedObject,
             IDataSourcePropertiesData editedProperties)
         {
-            Definitions = definitions;
+            Definitions = definitions ?? Enumerable.Empty<IDataSourceDefinitionLite>();
             EditedObject = editedObject;
             EditedProperties = editedProperties;
         }

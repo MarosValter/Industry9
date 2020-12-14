@@ -8,13 +8,26 @@ namespace industry9.Shared.Store.Features.WidgetSource.Reducers
     public static class WidgetSourceReducer
     {
         [ReducerMethod]
-        public static WidgetSourceState ReduceWidgetSourceResultAction(
-            WidgetSourceState state, WidgetSourceResultAction action)
-            => new WidgetSourceState(action.Widget ?? state.Widget, action.Data ?? state.Data);
-
-        [ReducerMethod]
         public static WidgetSourceState ReduceDataReceivedResultAction(
             WidgetSourceState state, DataReceivedResultAction action)
-            => new WidgetSourceState(state.Widget, state.Data.Concat(new[] {action.NewData}).ToList());
+        {
+            var widgetData = action.Data;
+            if (state.WidgetData.Contains(action.WidgetId))
+            {
+                widgetData = state.WidgetData[action.WidgetId].Concat(widgetData).OrderBy(x => x.Timestamp).ToList();
+            }
+
+            var data = state.WidgetData.Where(x => x.Key != action.WidgetId);
+
+            return new WidgetSourceState(
+                data.Concat(
+                    widgetData.GroupBy(x => action.WidgetId))
+                    .SelectMany(x => 
+                        x.Select(y => 
+                            new { widgetId = x.Key, data = y }))
+                    .ToLookup(
+                        k => k.widgetId, 
+                        v => v.data));
+        }
     }
 }

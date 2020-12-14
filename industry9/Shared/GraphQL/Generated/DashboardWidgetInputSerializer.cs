@@ -6,20 +6,19 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class DashboardWidgetDataInputSerializer
+    public partial class DashboardWidgetInputSerializer
         : IInputSerializer
     {
         private bool _needsInitialization = true;
-        private IValueSerializer _positionSerializer;
-        private IValueSerializer _sizeSerializer;
-        private IValueSerializer _widgetInputSerializer;
         private IValueSerializer _stringSerializer;
+        private IValueSerializer _positionInputSerializer;
+        private IValueSerializer _sizeInputSerializer;
 
-        public string Name { get; } = "DashboardWidgetDataInput";
+        public string Name { get; } = "DashboardWidgetInput";
 
         public ValueKind Kind { get; } = ValueKind.InputObject;
 
-        public Type ClrType => typeof(DashboardWidgetDataInput);
+        public Type ClrType => typeof(DashboardWidgetInput);
 
         public Type SerializationType => typeof(IReadOnlyDictionary<string, object>);
 
@@ -29,10 +28,9 @@ namespace industry9.Shared
             {
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
-            _positionSerializer = serializerResolver.Get("Position");
-            _sizeSerializer = serializerResolver.Get("Size");
-            _widgetInputSerializer = serializerResolver.Get("WidgetInput");
             _stringSerializer = serializerResolver.Get("String");
+            _positionInputSerializer = serializerResolver.Get("PositionInput");
+            _sizeInputSerializer = serializerResolver.Get("SizeInput");
             _needsInitialization = false;
         }
 
@@ -49,22 +47,22 @@ namespace industry9.Shared
                 return null;
             }
 
-            var input = (DashboardWidgetDataInput)value;
+            var input = (DashboardWidgetInput)value;
             var map = new Dictionary<string, object>();
+
+            if (input.DashboardId.HasValue)
+            {
+                map.Add("dashboardId", SerializeNullableString(input.DashboardId.Value));
+            }
 
             if (input.Position.HasValue)
             {
-                map.Add("position", SerializeNullablePosition(input.Position.Value));
+                map.Add("position", SerializeNullablePositionInput(input.Position.Value));
             }
 
             if (input.Size.HasValue)
             {
-                map.Add("size", SerializeNullableSize(input.Size.Value));
-            }
-
-            if (input.Widget.HasValue)
-            {
-                map.Add("widget", SerializeNullableWidgetInput(input.Widget.Value));
+                map.Add("size", SerializeNullableSizeInput(input.Size.Value));
             }
 
             if (input.WidgetId.HasValue)
@@ -75,33 +73,17 @@ namespace industry9.Shared
             return map;
         }
 
-        private object SerializeNullablePosition(object value)
-        {
-            return _positionSerializer.Serialize(value);
-        }
-        private object SerializeNullableSize(object value)
-        {
-            return _sizeSerializer.Serialize(value);
-        }
-        private object SerializeNullableWidgetInput(object value)
-        {
-            if (value is null)
-            {
-                return null;
-            }
-
-
-            return _widgetInputSerializer.Serialize(value);
-        }
         private object SerializeNullableString(object value)
         {
-            if (value is null)
-            {
-                return null;
-            }
-
-
             return _stringSerializer.Serialize(value);
+        }
+        private object SerializeNullablePositionInput(object value)
+        {
+            return _positionInputSerializer.Serialize(value);
+        }
+        private object SerializeNullableSizeInput(object value)
+        {
+            return _sizeInputSerializer.Serialize(value);
         }
 
         public object Deserialize(object value)

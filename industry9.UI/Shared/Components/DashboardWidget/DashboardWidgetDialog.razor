@@ -1,10 +1,54 @@
 ﻿@using industry9.Common.Enums
-@using industry9.Shared.Dto.Widget
-@using industry9.Shared.Store.Features.Widget.Actions
-@using WidgetType = industry9.Shared.WidgetType
+@using industry9.Shared.Store.Features.Dashboard.Actions
+@using industry9.Shared.Store.States
+@using industry9.Shared.Dto.DashboardWidget
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
+@inject IState<WidgetState> State
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <MatDialogTitle>@Title</MatDialogTitle>
+    <MatDialogContent>
+        @if (Operation == CRUDOperation.Create || Operation == CRUDOperation.Update)
+        {
+            <EditForm Model="@EditedObject" OnValidSubmit="@Submit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        <MatSelectValue Label="Select widget" @bind-Value="@EditedObject.WidgetId" ValueSelector="@(w => w.Id)" Items="@State.Value.Widgets.Where(x => !UsedWidgets.Contains(x.Id)).ToList()" Disabled="@(Operation == CRUDOperation.Update)" Outlined="true">
+                            <ItemTemplate Context="widget">
+                                <span>@(widget.Name)</span>
+                            </ItemTemplate>
+                        </MatSelectValue>
+                    </div>
+                    <div class="form-group">
+                        <MatSubtitle1>Position</MatSubtitle1>
+                        <MatTextField Label="X" @bind-Value="@EditedObject.Position.X" Outlined="true"></MatTextField>
+                        <MatTextField Label="Y" @bind-Value="@EditedObject.Position.Y" Outlined="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatSubtitle1>Size</MatSubtitle1>
+                        <MatTextField Label="Width" @bind-Value="@EditedObject.Size.Width" Outlined="true"></MatTextField>
+                        <MatTextField Label="Height" @bind-Value="@EditedObject.Size.Height" Outlined="true"></MatTextField>
+                    </div>
+                </fieldset>
+                <MatDialogActions>
+                    <MatButton OnClick="Close">Cancel</MatButton>
+                    <MatButton Type="submit" Raised="true">OK</MatButton>
+                </MatDialogActions>
+            </EditForm>
+        }
+        else
+        {
+            <MatDialogActions>
+                <MatButton OnClick="Close">Cancel</MatButton>
+                <MatButton OnClick="Delete" Raised="true">OK</MatButton>
+            </MatDialogActions>
+        }
+    </MatDialogContent>
+</MatDialog>
 
 @code {
     [Parameter]
@@ -17,26 +61,23 @@
     public CRUDOperation Operation { get; set; }
 
     [Parameter]
-    public WidgetData EditedObject { get; set; }
+    public DashboardWidgetData EditedObject { get; set; }
 
-    string Title => $"{Operation} Widget{(Operation == CRUDOperation.Delete ? " ?" : "")}";
+    [Parameter]
+    public IReadOnlyCollection<string> UsedWidgets { get; set; }
 
-    static readonly WidgetType[] Types =
-        Enum.GetValues(typeof(WidgetType))
-            .Cast<WidgetType>()
-    //.Where(x => x != WidgetType.)
-            .ToArray();
+    string Title => $"{(Operation == CRUDOperation.Create ? "Add" : Operation.ToString())} Widget{(Operation == CRUDOperation.Delete ? " ?" : "")}";
 
     async Task Submit(EditContext context)
     {
         await Close();
-        Dispatcher.Dispatch(new UpsertWidgetResultAction(EditedObject, true));
+        Dispatcher.Dispatch(new UpsertDashboardWidgetResultAction(EditedObject, true, Operation == CRUDOperation.Create));
     }
 
     async Task Delete()
     {
         await Close();
-        Dispatcher.Dispatch(new DeleteWidgetAction(EditedObject.Id));
+        Dispatcher.Dispatch(new DeleteDashboardWidgetAction(EditedObject.DashboardId, EditedObject.WidgetId));
     }
 
     async Task Close()

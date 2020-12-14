@@ -1,14 +1,16 @@
-﻿namespace industry9.Shared.Store.Features.WidgetSource.Actions
+﻿using System.Collections.Generic;
+
+namespace industry9.Shared.Store.Features.WidgetSource.Actions
 {
     public class DataReceivedResultAction
     {
-        public string Id { get; }
-        public ISensorData NewData { get; }
+        public string WidgetId { get; }
+        public IReadOnlyCollection<ISensorData> Data { get; }
 
-        public DataReceivedResultAction(string id, ISensorData newData)
+        public DataReceivedResultAction(string widgetId, IReadOnlyCollection<ISensorData> newData)
         {
-            Id = id;
-            NewData = newData;
+            WidgetId = widgetId;
+            Data = newData;
         }
     }
 }

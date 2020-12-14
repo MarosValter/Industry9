@@ -4,7 +4,6 @@ using HotChocolate.Types;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Widget;
 using industry9.GraphQL.UI.Base;
-using industry9.GraphQL.UI.Widget;
 
 namespace industry9.GraphQL.UI.Dashboard
 {
@@ -26,6 +25,8 @@ namespace industry9.GraphQL.UI.Dashboard
                     var widgets = await dataLoader.LoadAsync(dashboardWidgetIds, ctx.RequestAborted);
                     foreach (var dashboardWidget in dashboardWidgets)
                     {
+                        dashboardWidget.DashboardId = ctx.Parent<DashboardDocument>().Id;
+
                         var widget = widgets.FirstOrDefault(x => x.Id == dashboardWidget.WidgetId);
                         if (widget != null)
                         {

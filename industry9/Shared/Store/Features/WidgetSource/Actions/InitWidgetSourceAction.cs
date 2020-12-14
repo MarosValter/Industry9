@@ -2,12 +2,12 @@
 {
     public class InitWidgetSourceAction
     {
-        public string Id { get; }
+        public string WidgetId { get; }
         public bool Subscribe { get; }
 
-        public InitWidgetSourceAction(string id, bool subscribe)
+        public InitWidgetSourceAction(string widgetId, bool subscribe)
         {
-            Id = id;
+            WidgetId = widgetId;
             Subscribe = subscribe;
         }
     }

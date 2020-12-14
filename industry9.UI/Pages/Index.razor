@@ -3,6 +3,7 @@
 @using industry9.Shared.Store.Base.Actions
 @using industry9.Shared.Store.Features.Dashboard.Actions
 @using industry9.Shared.Store.States
+@using industry9.Shared.Dto.DashboardWidget
 
 @*@attribute [Authorize]*@
 
@@ -12,37 +13,30 @@
 <DashboardSettings Dashboard="@DashboardState.Value.Dashboard" EditMode="@DashboardState.Value.EditMode"></DashboardSettings>
 @if (!DashboardState.Value.EditMode)
 {
-<LabelBar Labels="@DashboardState.Value.Dashboard?.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
-@*@_labelBar*@
+    <LabelBar Labels="@DashboardState.Value.Dashboard.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
+    @*@_labelBar*@
 }
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
-        @foreach (var widget in DashboardState.Value.Dashboard?.Widgets ?? Enumerable.Empty<IDashboardWidget>())
+        @foreach (var widget in DashboardState.Value.Dashboard.Widgets)
         {
-        <div class="mat-layout-grid-cell">
+            <div class="mat-layout-grid-cell">
 
-        </div>
+            </div>
         }
     </div>
 </div>
 
-@if (DashboardState.Value.IsLoading)
-{
-<div class="loading-container">
-
-</div>
-}
-
 @if (DashboardState.Value.EditMode)
 {
-<MatFAB Icon="@MatIconNames.Undo" Class="btn-edit-ternary" OnClick="@(e => Undo())"></MatFAB>
-<MatFAB Icon="@MatIconNames.Done" Class="btn-edit-secondary" OnClick="@(e => ToggleEditMode(false, true))"></MatFAB>
-<MatFAB Icon="@MatIconNames.Clear" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(false, false))"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Undo" Class="btn-edit-ternary" OnClick="@(e => Undo())"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Done" Class="btn-edit-secondary" OnClick="@(e => ToggleEditMode(false, true))"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Clear" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(false, false))"></MatFAB>
 }
-else
+else if (!string.IsNullOrEmpty(DashboardState.Value.Dashboard.Id))
 {
-<MatFAB Icon="@MatIconNames.Edit" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(true, false))"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Edit" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(true, false))"></MatFAB>
 }
 
 @code {
@@ -65,8 +59,8 @@ else
     }
 
     // TODO argument should be IWidgetLite probably, to be able to access size & position
-    private string GetWidgetCellSpan(IWidgetId widget)
-    {
-        return "";
-    }
+    //private string GetWidgetCellSpan(IWidgetId widget)
+    //{
+    //    return "";
+    //}
 }

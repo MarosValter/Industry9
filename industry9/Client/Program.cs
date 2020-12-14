@@ -66,8 +66,8 @@ namespace industry9.Client
             services.Addindustry9Client();
             services.AddSingleton<industry9NavigationManager>();
 
-            services.AddSingleton<IValueSerializer, ColorSerializer>();
-            services.AddSingleton<IValueSerializer, PositionValueSerializer>();
+            //services.AddSingleton<IValueSerializer, ColorSerializer>();
+            //services.AddSingleton<IValueSerializer, PositionValueSerializer>();
 
             services.AddFluxor(opt =>
             {

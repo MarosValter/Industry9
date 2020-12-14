@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
-using industry9.Shared.GraphQL.Serializers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StrawberryShake;
@@ -52,17 +51,15 @@ namespace industry9.Shared
                 .AddValueSerializer(() => new ColumnValueTypeValueSerializer())
                 .AddValueSerializer(() => new DashboardInputSerializer())
                 .AddValueSerializer(() => new LabelDataInputSerializer())
-                .AddValueSerializer(() => new DashboardWidgetDataInputSerializer())
+                .AddValueSerializer(() => new DashboardWidgetInputSerializer())
+                .AddValueSerializer(() => new PositionInputSerializer())
+                .AddValueSerializer(() => new SizeInputSerializer())
                 .AddValueSerializer(() => new WidgetInputSerializer())
                 .AddValueSerializer(() => new ColumnMappingDataInputSerializer())
                 .AddValueSerializer(() => new DataSourceDefinitionInputSerializer())
                 .AddValueSerializer(() => new ExportedColumnDataInputSerializer())
                 .AddValueSerializer(() => new RandomDataSourcePropertiesInputSerializer())
                 .AddValueSerializer(() => new DataQueryDataSourcePropertiesInputSerializer())
-
-                .AddValueSerializer(() => new PositionValueSerializer())
-                .AddValueSerializer(() => new SizeValueSerializer())
-
                 .AddResultParser(serializers => new GetDashboardsResultParser(serializers))
                 .AddResultParser(serializers => new GetDashboardResultParser(serializers))
                 .AddResultParser(serializers => new GetWidgetsResultParser(serializers))
@@ -75,6 +72,8 @@ namespace industry9.Shared
                 .AddResultParser(serializers => new DeleteDashboardResultParser(serializers))
                 .AddResultParser(serializers => new UpsertWidgetResultParser(serializers))
                 .AddResultParser(serializers => new DeleteWidgetResultParser(serializers))
+                .AddResultParser(serializers => new AddWidgetToDashboardResultParser(serializers))
+                .AddResultParser(serializers => new RemoveWidgetFromDashboardResultParser(serializers))
                 .AddResultParser(serializers => new UpsertDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new DeleteDataSourceDefinitionResultParser(serializers))
                 .AddResultParser(serializers => new AssignRandomDataSourcePropertiesResultParser(serializers))

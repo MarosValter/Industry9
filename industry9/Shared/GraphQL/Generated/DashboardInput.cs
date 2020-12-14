@@ -14,6 +14,6 @@ namespace industry9.Shared
 
         public Optional<string> Name { get; set; }
 
-        public Optional<global::System.Collections.Generic.List<global::industry9.Shared.DashboardWidgetDataInput>> Widgets { get; set; }
+        public Optional<global::System.Collections.Generic.List<global::industry9.Shared.DashboardWidgetInput>> Widgets { get; set; }
     }
 }

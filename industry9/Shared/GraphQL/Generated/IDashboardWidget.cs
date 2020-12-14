@@ -10,10 +10,10 @@ namespace industry9.Shared
     {
         string WidgetId { get; }
 
-        global::industry9.Shared.IWidgetId Widget { get; }
+        global::industry9.Shared.IWidgetDetail Widget { get; }
 
-        string Size { get; }
+        global::industry9.Shared.ISize Size { get; }
 
-        string Position { get; }
+        global::industry9.Shared.IPosition Position { get; }
     }
 }

@@ -18,8 +18,6 @@ namespace industry9.DataModel.UI.Documents
 
         public WidgetType Type { get; set; }
 
-        //public Position Position { get; set; }
-        //public Size Size { get; set; }
         //public TimeSettings TimeSettings { get; set; }
 
         public IReadOnlyList<LabelData> Labels { get; set; }

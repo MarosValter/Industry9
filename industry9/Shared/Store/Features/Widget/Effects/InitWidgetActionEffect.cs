@@ -27,7 +27,7 @@ namespace industry9.Shared.Store.Features.Widget.Effects
             var result = await _client.GetWidgetAsync(action.Id);
             if (!result.HasErrors && result.Data != null)
             {
-                var widget = Map(result.Data.Widget);
+                var widget = MapWidget(result.Data.Widget);
                 var resultAction = new UpsertWidgetResultAction(widget);
                 dispatcher.Dispatch(resultAction);
             }
@@ -38,7 +38,7 @@ namespace industry9.Shared.Store.Features.Widget.Effects
         }
 
         //TODO automapper
-        private static WidgetData Map(IWidgetDetail definition)
+        public static WidgetData MapWidget(IWidgetDetail definition)
         {
             return new WidgetData
             {
@@ -52,7 +52,7 @@ namespace industry9.Shared.Store.Features.Widget.Effects
         }
 
         //TODO automapper
-        private static ColumnMappingData MapColumn(IColumnMapping column)
+        public static ColumnMappingData MapColumn(IColumnMapping column)
         {
             return new ColumnMappingData
             {

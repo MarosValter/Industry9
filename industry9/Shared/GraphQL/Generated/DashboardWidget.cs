@@ -11,9 +11,9 @@ namespace industry9.Shared
     {
         public DashboardWidget(
             string widgetId, 
-            global::industry9.Shared.IWidgetId widget, 
-            string size, 
-            string position)
+            global::industry9.Shared.IWidgetDetail widget, 
+            global::industry9.Shared.ISize size, 
+            global::industry9.Shared.IPosition position)
         {
             WidgetId = widgetId;
             Widget = widget;
@@ -23,10 +23,10 @@ namespace industry9.Shared
 
         public string WidgetId { get; }
 
-        public global::industry9.Shared.IWidgetId Widget { get; }
+        public global::industry9.Shared.IWidgetDetail Widget { get; }
 
-        public string Size { get; }
+        public global::industry9.Shared.ISize Size { get; }
 
-        public string Position { get; }
+        public global::industry9.Shared.IPosition Position { get; }
     }
 }

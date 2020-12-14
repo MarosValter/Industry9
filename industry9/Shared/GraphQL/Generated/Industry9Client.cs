@@ -319,6 +319,68 @@ namespace industry9.Shared
             return _executor.ExecuteAsync(operation, cancellationToken);
         }
 
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAddWidgetToDashboard>> AddWidgetToDashboardAsync(
+            global::StrawberryShake.Optional<global::industry9.Shared.DashboardWidgetInput> dashboardWidget = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (dashboardWidget.HasValue && dashboardWidget.Value is null)
+            {
+                throw new ArgumentNullException(nameof(dashboardWidget));
+            }
+
+            return _executor.ExecuteAsync(
+                new AddWidgetToDashboardOperation { DashboardWidget = dashboardWidget },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IAddWidgetToDashboard>> AddWidgetToDashboardAsync(
+            AddWidgetToDashboardOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IRemoveWidgetFromDashboard>> RemoveWidgetFromDashboardAsync(
+            global::StrawberryShake.Optional<string> dashboardId = default,
+            global::StrawberryShake.Optional<string> widgetId = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (dashboardId.HasValue && dashboardId.Value is null)
+            {
+                throw new ArgumentNullException(nameof(dashboardId));
+            }
+
+            if (widgetId.HasValue && widgetId.Value is null)
+            {
+                throw new ArgumentNullException(nameof(widgetId));
+            }
+
+            return _executor.ExecuteAsync(
+                new RemoveWidgetFromDashboardOperation
+                {
+                    DashboardId = dashboardId, 
+                    WidgetId = widgetId
+                },
+                cancellationToken);
+        }
+
+        public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IRemoveWidgetFromDashboard>> RemoveWidgetFromDashboardAsync(
+            RemoveWidgetFromDashboardOperation operation,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            if (operation is null)
+            {
+                throw new ArgumentNullException(nameof(operation));
+            }
+
+            return _executor.ExecuteAsync(operation, cancellationToken);
+        }
+
         public global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<global::industry9.Shared.IUpsertDataSourceDefinition>> UpsertDataSourceDefinitionAsync(
             global::StrawberryShake.Optional<global::industry9.Shared.DataSourceDefinitionInput> definition = default,
             global::System.Threading.CancellationToken cancellationToken = default)

@@ -2,7 +2,6 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @using industry9.Shared.Store.States
 @using industry9.Common.Enums
-@using industry9.Shared.Dto.Widget
 @using industry9.Shared.Store.Features.Widget.Actions
 
 @inject IDispatcher Dispatcher
@@ -13,21 +12,19 @@
         @foreach (var widget in State.Value.Widgets)
         {
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-            <WidgetCard @key="@widget" Widget="@widget" OnConfigure="@EditDefinition" OnDelete="@DeleteDefinition"></WidgetCard>
+            <WidgetCard @key="@widget" Widget="@widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></WidgetCard>
         </div>
         }
     </div>
 </div>
 
-<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddDefinition"></MatFAB>
+<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddWidget"></MatFAB>
 
-<WidgetDialog EditedObject="@EditedObject" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></WidgetDialog>
+<WidgetDialog EditedObject="@State.Value.EditedObject" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></WidgetDialog>
 
 @code {
     bool _isDialogOpen;
     CRUDOperation _operation;
-
-    public WidgetData EditedObject => Map(State.Value.EditedObject);
 
     protected override void OnInitialized()
     {
@@ -35,53 +32,24 @@
         Dispatcher.Dispatch(new FetchWidgetsAction());
     }
 
-    void AddDefinition()
+    void AddWidget()
     {
         _operation = CRUDOperation.Create;
         Dispatcher.Dispatch(new InitWidgetAction(null));
         _isDialogOpen = true;
     }
 
-    void EditDefinition(string id)
+    void EditWidget(string id)
     {
         _operation = CRUDOperation.Update;
         Dispatcher.Dispatch(new InitWidgetAction(id));
         _isDialogOpen = true;
     }
 
-    void DeleteDefinition(string id)
+    void DeleteWidget(string id)
     {
         _operation = CRUDOperation.Delete;
         Dispatcher.Dispatch(new InitWidgetAction(id));
         _isDialogOpen = true;
-    }
-
-    //TODO automapper
-    static WidgetData Map(IWidgetDetail detail)
-    {
-        var result = new WidgetData();
-
-        if (detail != null)
-        {
-            result.Id = detail.Id;
-            result.Name = detail.Name;
-            result.Type = detail.Type;
-            result.Labels = detail.Labels.ToList();
-            result.ColumnMappings = detail.ColumnMappings.Select(MapColumn).ToList();
-        }
-
-        return result;
-    }
-
-    //TODO automapper
-    static ColumnMappingData MapColumn(IColumnMapping column)
-    {
-        return new ColumnMappingData
-        {
-            Name = column.Name,
-            Format = column.Format,
-            DataSourceId = column.DataSourceId,
-            SourceColumn = column.SourceColumn
-        };
     }
 }

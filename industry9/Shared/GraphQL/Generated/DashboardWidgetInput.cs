@@ -6,13 +6,13 @@ using StrawberryShake;
 namespace industry9.Shared
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class DashboardWidgetDataInput
+    public partial class DashboardWidgetInput
     {
-        public Optional<string> Position { get; set; }
+        public Optional<string> DashboardId { get; set; }
 
-        public Optional<string> Size { get; set; }
+        public Optional<global::industry9.Shared.PositionInput> Position { get; set; }
 
-        public Optional<global::industry9.Shared.WidgetInput> Widget { get; set; }
+        public Optional<global::industry9.Shared.SizeInput> Size { get; set; }
 
         public Optional<string> WidgetId { get; set; }
     }

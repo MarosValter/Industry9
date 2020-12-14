@@ -22,20 +22,20 @@ namespace industry9.Shared.Store.Features.WidgetSource.Effects
 
         protected override async Task HandleAsync(InitWidgetSourceAction action, IDispatcher dispatcher)
         {
-            var widgetResult = await _client.GetWidgetAsync(action.Id);
+            var widgetResult = await _client.GetWidgetAsync(action.WidgetId);
 
             if (widgetResult.HasErrors || widgetResult.Data == null)
             {
-                widgetResult.DispatchToast(dispatcher, null, $"Unable to fetch Widget {action.Id}");
+                widgetResult.DispatchToast(dispatcher, null, $"Unable to fetch Widget {action.WidgetId}");
                 return;
             }
 
             // TODO fetch sensor data
-            dispatcher.Dispatch(new WidgetSourceResultAction(widgetResult.Data.Widget, new List<ISensorData>()));
+            dispatcher.Dispatch(new DataReceivedResultAction(action.WidgetId, new List<ISensorData>()));
 
             if (action.Subscribe)
             {
-                _logger.LogInformation("Subscribing widget {0}", action.Id);
+                _logger.LogInformation("Subscribing widget {0}", action.WidgetId);
                 var tasks = widgetResult.Data.Widget.ColumnMappings.Select(c => c.DataSourceId)
                                         .Distinct()
                                         .Select(dataSourceId => Task.Run(async () =>
@@ -54,7 +54,7 @@ namespace industry9.Shared.Store.Features.WidgetSource.Effects
                                                     if (columnMapping != null)
                                                     {
                                                         _logger.LogInformation("Data dispatched for dataSource {0}", dataSourceId);
-                                                        dispatcher.Dispatch(new DataReceivedResultAction(action.Id, dataResult.Data.OnDataReceived));
+                                                        dispatcher.Dispatch(new DataReceivedResultAction(action.WidgetId, new List<ISensorData>{ dataResult.Data.OnDataReceived }));
                                                     }
                                                 }
                                             }

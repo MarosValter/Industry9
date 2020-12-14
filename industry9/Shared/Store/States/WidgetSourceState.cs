@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace industry9.Shared.Store.States
 {
     public class WidgetSourceState
     {
-        public WidgetSourceState(IWidgetDetail widget, IReadOnlyCollection<ISensorData> data)
+        public WidgetSourceState(ILookup<string, ISensorData> widgetData)
         {
-            Widget = widget;
-            Data = data;
+            WidgetData = widgetData;
         }
 
-        public IWidgetDetail Widget { get; }
-        public IReadOnlyCollection<ISensorData> Data { get; }
+        public ILookup<string, ISensorData> WidgetData { get; }
     }
 }

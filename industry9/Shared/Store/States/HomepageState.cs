@@ -1,4 +1,5 @@
-﻿using industry9.Shared.Store.Base;
+﻿using industry9.Shared.Dto.Dashboard;
+using industry9.Shared.Store.Base;
 
 namespace industry9.Shared.Store.States
 {
@@ -6,11 +7,11 @@ namespace industry9.Shared.Store.States
     {
         public bool IsLoading { get; }
         public bool EditMode { get; }
-        public IDashboardDetail Dashboard { get; }
+        public DashboardData Dashboard { get; }
 
         public bool CanUndo { get; }
 
-        public HomepageState(bool isLoading, bool editMode, IDashboardDetail dashboard, bool canUndo = false)
+        public HomepageState(bool isLoading, bool editMode, DashboardData dashboard, bool canUndo = false)
         {
             IsLoading = isLoading;
             EditMode = editMode;

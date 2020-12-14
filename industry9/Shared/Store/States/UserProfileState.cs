@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace industry9.Shared.Store.States
 {
@@ -11,7 +12,7 @@ namespace industry9.Shared.Store.States
         public UserProfileState(bool isLoading, IEnumerable<IDashboardLite> dashboards, IDashboardLite selectedDashboard)
         {
             IsLoading = isLoading;
-            Dashboards = dashboards;
+            Dashboards = dashboards ?? Enumerable.Empty<IDashboardLite>();
             SelectedDashboard = selectedDashboard;
         }
     }

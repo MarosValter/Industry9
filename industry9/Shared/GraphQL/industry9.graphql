@@ -16,12 +16,13 @@ type Query {
 }
 
 type Mutation {
-  addWidgetsToDashboard(dashboardId: String widgets: [DashboardWidgetDataInput]): Boolean!
+  addWidgetToDashboard(widget: DashboardWidgetInput): Boolean!
   assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
   assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
   deleteDashboard(id: String): Boolean!
   deleteDataSourceDefinition(id: String): Boolean!
   deleteWidget(id: String): Boolean!
+  removeWidgetFromDashboard(dashboardId: String widgetId: String): Boolean!
   upsertDashboard(dashboard: DashboardInput): String
   upsertDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): String
   upsertWidget(widget: WidgetInput): String
@@ -47,13 +48,6 @@ input ExportedColumnDataInput {
   valueType: ColumnValueType!
 }
 
-input DashboardWidgetDataInput {
-  position: Position!
-  size: Size!
-  widget: WidgetInput
-  widgetId: String
-}
-
 enum RelativeTimeMode {
   LIVE
   TODAY
@@ -74,10 +68,6 @@ input RandomDataSourcePropertiesInput {
 }
 
 scalar Color
-
-scalar Position
-
-scalar Size
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime
@@ -110,11 +100,28 @@ type DataSourceDefinition {
   type: DataSourceType!
 }
 
+type Size {
+  height: Int!
+  width: Int!
+}
+
+type Position {
+  x: Int!
+  y: Int!
+}
+
 input DashboardInput {
   id: String
   labels: [LabelDataInput] = [  ]
   name: String!
-  widgets: [DashboardWidgetDataInput] = [  ]
+  widgets: [DashboardWidgetInput] = [  ]
+}
+
+input DashboardWidgetInput {
+  dashboardId: String!
+  position: PositionInput!
+  size: SizeInput!
+  widgetId: String!
 }
 
 input WidgetInput {
@@ -133,6 +140,16 @@ input DataSourceDefinitionInput {
   type: DataSourceType!
 }
 
+input SizeInput {
+  height: Int!
+  width: Int!
+}
+
+input PositionInput {
+  x: Int!
+  y: Int!
+}
+
 type SensorData {
   dataSourceId: String
   name: String
@@ -141,6 +158,7 @@ type SensorData {
 }
 
 type DashboardWidgetData {
+  dashboardId: String
   position: Position!
   size: Size!
   widget: Widget
@@ -154,15 +172,15 @@ enum ColumnValueType {
   BOOLEAN
 }
 
-type LabelData {
-  name: String
-}
-
 enum WidgetType {
   LINECHART
   BARCHART
   PIECHART
   TABLE
+}
+
+type LabelData {
+  name: String
 }
 
 type ColumnMappingData {

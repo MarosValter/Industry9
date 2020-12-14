@@ -5,8 +5,14 @@ namespace industry9.Common.Structs
 {
     public struct Position
     {
-        public byte X { get; set; }
-        public byte Y { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public Position(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
 
         public override string ToString()
         {
@@ -23,8 +29,8 @@ namespace industry9.Common.Structs
 
             return new Position
             {
-                X = Convert.ToByte(parts[0]),
-                Y = Convert.ToByte(parts[1]),
+                X = Convert.ToInt32(parts[0]),
+                Y = Convert.ToInt32(parts[1]),
             };
         }
     }
