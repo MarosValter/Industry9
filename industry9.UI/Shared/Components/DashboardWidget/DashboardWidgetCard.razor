@@ -22,7 +22,7 @@
         <TableWidget Data="@WidgetState.Value.WidgetData[Widget.Id].ToList()" ColumnMappings="@Widget.ColumnMappings"></TableWidget>
     </MatCardContent>
     <div class="mat-card-footer dsd-footer">
-        <MatOverline>Created: @Widget.Created.ToString("dd. MM. yyyy")</MatOverline>
+        <LabelBar Labels="@Widget.Labels"></LabelBar>
     </div>
 </MatCard>
 
