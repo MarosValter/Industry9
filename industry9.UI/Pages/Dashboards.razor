@@ -1,4 +1,6 @@
 ﻿@page "/dashboards"
+@page "/dashboards/{editedDashboardId}"
+
 @using industry9.Shared.Store.States
 @using industry9.Common.Enums
 @using industry9.Shared.Store.Base.Actions
@@ -6,6 +8,7 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
 @inject IState<DashboardState> State
 
 @if (EditMode)
@@ -39,12 +42,21 @@ else
     bool _isDialogOpen;
     CRUDOperation _operation;
 
+    [Parameter]
+    public string EditedDashboardId { get; set; }
+
     public bool EditMode => State.Value.EditedDashboard.Id != null;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         Dispatcher.Dispatch(new FetchDashboardsAction());
+
+        if (!string.IsNullOrEmpty(EditedDashboardId))
+        {
+            Dispatcher.Dispatch(new InitDashboardAction(EditedDashboardId));
+            Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+        }
     }
 
     void AddWidget()
@@ -58,6 +70,7 @@ else
     {
         Dispatcher.Dispatch(new InitDashboardAction(id));
         Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+        NavigationManager.NavigateTo($"/dashboards/{id}");
     }
 
     void DeleteWidget(string id)
@@ -70,6 +83,7 @@ else
     private void CloseEditMode(bool saveChanges)
     {
         Dispatcher.Dispatch(new ToggleEditModeAction(false, saveChanges));
+        NavigationManager.NavigateTo("/dashboards");
     }
 
     private void Undo()

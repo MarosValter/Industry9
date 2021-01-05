@@ -1,4 +1,5 @@
 ﻿@using industry9.Shared.Store.States
+@using industry9.Shared.Navigation
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
@@ -8,12 +9,9 @@
 @inject IJSRuntime JSRuntime
 
 <MatAppBar Fixed="true">
-    <MatAppBarRow Style="@GetAppBarColorStyle()">
+    <MatAppBarRow>
         <MatAppBarSection>
-            @if (IsHome())
-            {
             <DashboardSelector></DashboardSelector>
-            }
             <MatAppBarTitle>
                 @GetTitle()
             </MatAppBarTitle>
@@ -39,10 +37,10 @@
         return new Uri(NavigationManager.Uri).AbsolutePath == "/";
     }
 
-    private string GetAppBarColorStyle()
-    {
-        return string.IsNullOrEmpty(AppBarState.Value.Color) ? string.Empty : $"background-color: {AppBarState.Value.Color}";
-    }
+    //private string GetAppBarColorStyle()
+    //{
+    //    return string.IsNullOrEmpty(AppBarState.Value.Color) ? string.Empty : $"background-color: {AppBarState.Value.Color}";
+    //}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -86,9 +84,9 @@
 
     private async Task SetTitle(string location)
     {
-        /*var pageTitle = PageTitleGenerator.Create(location);
+        var pageTitle = PageTitleGenerator.Create(location);
         _currentLocation = pageTitle.Name;
         await JSRuntime.InvokeVoidAsync("JsFunctions.setDocumentTitle", pageTitle.Title);
-        StateHasChanged();*/
+        StateHasChanged();
     }
 }

@@ -1,6 +1,5 @@
 ﻿@page "/"
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-@using industry9.Shared.Store.Features.Dashboard.Actions
 @using industry9.Shared.Store.States
 @using industry9.Shared.Dto.DashboardWidget
 
@@ -15,7 +14,7 @@
 {
     <LabelBar Labels="@DashboardState.Value.Dashboard.Labels"></LabelBar>
 
-    <DashboardLayoutComponent Class="px-0" ColumnCount="4" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
+    <DashboardLayoutComponent Class="px-0" ColumnCount="@DashboardState.Value.Dashboard.ColumnCount" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
         <ItemTemplate>
             <DashboardWidgetCard @key="@context" Widget="@context.Widget"></DashboardWidgetCard>
         </ItemTemplate>
@@ -29,8 +28,6 @@
 
     private void EditDashboard()
     {
-        Dispatcher.Dispatch(new InitDashboardAction(DashboardState.Value.Dashboard.Id));
-        Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
-        NavigationManager.NavigateTo("/dashboards");
+        NavigationManager.NavigateTo($"/dashboards/{DashboardState.Value.Dashboard.Id}");
     }
 }

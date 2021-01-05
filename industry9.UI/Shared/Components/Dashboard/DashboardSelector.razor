@@ -5,7 +5,7 @@
 @inject IState<UserProfileState> UserProfileState
 @inject IDispatcher Dispatcher
 
-<MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Donut_large" />
+<MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Favorite" />
 <MatMenu @ref="@_menu">
     <MatList>
         @foreach (var dashboard in UserProfileState.Value.Dashboards)

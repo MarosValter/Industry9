@@ -9,21 +9,21 @@ namespace industry9.Shared.Store.Features.Dashboard.Reducers
     public class LabelReducer
     {
         [ReducerMethod]
-        public static HomepageState ReduceAddLabelAction(HomepageState state, AddLabelAction action)
-            => new HomepageState(state.IsLoading, state.EditMode,
-                new DashboardData(state.Dashboard.Id, state.Dashboard.Name,
-                    state.Dashboard.ColumnCount, state.Dashboard.Private,
-                    state.Dashboard.AuthorId, state.Dashboard.Created,
-                    state.Dashboard.Labels.Concat(new[] { action.Label }).ToList(),
-                    state.Dashboard.Widgets));
+        public static DashboardState ReduceAddLabelAction(DashboardState state, AddLabelAction action)
+            => new DashboardState(state.Dashboards, new DashboardData(
+                state.EditedDashboard.Id, state.EditedDashboard.Name,
+                state.EditedDashboard.ColumnCount, state.EditedDashboard.Private,
+                state.EditedDashboard.AuthorId, state.EditedDashboard.Created,
+                state.EditedDashboard.Labels.Concat(new[] {action.Label}).ToList(),
+                state.EditedDashboard.Widgets));
 
         [ReducerMethod]
-        public static HomepageState ReduceRemoveLabelAction(HomepageState state, RemoveLabelAction action)
-            => new HomepageState(state.IsLoading, state.EditMode,
-                new DashboardData(state.Dashboard.Id, state.Dashboard.Name,
-                    state.Dashboard.ColumnCount, state.Dashboard.Private,
-                    state.Dashboard.AuthorId, state.Dashboard.Created,
-                    state.Dashboard.Labels.Where(l => l.Name != action.LabelName).ToList(),
-                    state.Dashboard.Widgets));
+        public static DashboardState ReduceRemoveLabelAction(DashboardState state, RemoveLabelAction action)
+            => new DashboardState(state.Dashboards, new DashboardData(
+                state.EditedDashboard.Id, state.EditedDashboard.Name,
+                state.EditedDashboard.ColumnCount, state.EditedDashboard.Private,
+                state.EditedDashboard.AuthorId, state.EditedDashboard.Created,
+                state.EditedDashboard.Labels.Where(l => l.Name != action.LabelName).ToList(),
+                state.EditedDashboard.Widgets));
     }
 }
