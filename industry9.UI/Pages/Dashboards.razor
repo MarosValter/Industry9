@@ -50,9 +50,12 @@ else
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Dispatcher.Dispatch(new FetchDashboardsAction());
 
-        if (!string.IsNullOrEmpty(EditedDashboardId))
+        if (string.IsNullOrEmpty(EditedDashboardId))
+        {
+            Dispatcher.Dispatch(new FetchDashboardsAction());
+        }
+        else
         {
             Dispatcher.Dispatch(new InitDashboardAction(EditedDashboardId));
             Dispatcher.Dispatch(new ToggleEditModeAction(true));

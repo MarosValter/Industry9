@@ -5,6 +5,7 @@ using industry9.Common.Enums;
 using industry9.Shared.Dto.Dashboard;
 using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.Dashboard.Actions;
+using industry9.Shared.Store.Features.UserProfile.Actions;
 
 namespace industry9.Shared.Store.Features.Dashboard.Effects
 {
@@ -31,6 +32,8 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
             if (!result.HasErrors)
             {
                 dispatcher.Dispatch(new FetchDashboardsAction());
+                dispatcher.Dispatch(new FetchFavoriteDashboardsAction());
+                
                 if (operation == CRUDOperation.Create)
                 {
                     dispatcher.Dispatch(new InitDashboardAction(action.Dashboard.Id));
@@ -51,6 +54,7 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 ColumnCount = dashboard.ColumnCount,
                 Private = dashboard.Private,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
+                Widgets = dashboard.Widgets.Select(x => UpsertDashboardWidgetActionEffect.MapDashboardWidgetInput(dashboard.Id, x)).ToList()
             };
 
             return input;

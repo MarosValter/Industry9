@@ -12,10 +12,13 @@
     <div class="mat-card-header dsd-header" style="background-color: @GetColor(Widget.Type)">
         <MatCardActions>
             <MatH6>@Widget.Name</MatH6>
-            <MatCardActionIcons>
-                <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(Widget.Id))"></MatIconButton>
-                <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(Widget.Id))"></MatIconButton>
-            </MatCardActionIcons>
+            @if (Editable)
+            {
+                <MatCardActionIcons>
+                    <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(Widget.Id))"></MatIconButton>
+                    <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(Widget.Id))"></MatIconButton>
+                </MatCardActionIcons>
+            }
         </MatCardActions>
     </div>
     <MatCardContent>
@@ -35,6 +38,9 @@
 
     [Parameter]
     public EventCallback<string> OnDelete { get; set; }
+
+    [Parameter]
+    public bool Editable { get; set; }
 
     protected override void OnInitialized()
     {

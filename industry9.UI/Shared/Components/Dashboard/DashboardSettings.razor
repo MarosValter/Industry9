@@ -87,7 +87,7 @@
             </MatAccordion>
             <DashboardLayoutComponent Class="px-0" ColumnCount="@Dashboard.ColumnCount" Items="@_widgets" TValue="DashboardWidgetData">
                 <ItemTemplate>
-                    <DashboardWidgetCard @key="@context" Widget="@context.Widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
+                    <DashboardWidgetCard @key="@context" Widget="@context.Widget" Editable="true" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
                 </ItemTemplate>
                 <EmptyItemTemplate>
                     <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
