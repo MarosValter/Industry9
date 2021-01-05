@@ -12,6 +12,10 @@ namespace industry9.Shared
 
         string Name { get; }
 
+        bool Private { get; }
+
+        int ColumnCount { get; }
+
         string AuthorId { get; }
 
         System.DateTimeOffset Created { get; }

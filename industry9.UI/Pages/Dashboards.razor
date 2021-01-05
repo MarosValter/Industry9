@@ -1,7 +1,55 @@
 ﻿@page "/dashboards"
+@using industry9.Shared.Store.States
+@using industry9.Common.Enums
+@using industry9.Shared.Store.Features.Dashboard.Actions
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
+@inject IDispatcher Dispatcher
+@inject IState<DashboardState> State
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        @foreach (var dashboard in State.Value.Dashboards)
+        {
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                <DashboardCard @key="@dashboard" Dashboard="@dashboard" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardCard>
+            </div>
+        }
+    </div>
+</div>
+
+<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddWidget"></MatFAB>
+
+<DashboardDialog EditedObject="@State.Value.EditedDashboard" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardDialog>
 
 @code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchDashboardsAction());
+    }
+
+    void AddWidget()
+    {
+        _operation = CRUDOperation.Create;
+        Dispatcher.Dispatch(new InitDashboardAction(null));
+        _isDialogOpen = true;
+    }
+
+    void EditWidget(string id)
+    {
+        //_operation = CRUDOperation.Update;
+        //Dispatcher.Dispatch(new InitDashboardAction(id));
+        //_isDialogOpen = true;
+    }
+
+    void DeleteWidget(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        Dispatcher.Dispatch(new InitDashboardAction(id));
+        _isDialogOpen = true;
+    }
 }

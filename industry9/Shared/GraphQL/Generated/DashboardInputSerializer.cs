@@ -10,8 +10,10 @@ namespace industry9.Shared
         : IInputSerializer
     {
         private bool _needsInitialization = true;
+        private IValueSerializer _intSerializer;
         private IValueSerializer _stringSerializer;
         private IValueSerializer _labelDataInputSerializer;
+        private IValueSerializer _booleanSerializer;
         private IValueSerializer _dashboardWidgetInputSerializer;
 
         public string Name { get; } = "DashboardInput";
@@ -28,8 +30,10 @@ namespace industry9.Shared
             {
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
+            _intSerializer = serializerResolver.Get("Int");
             _stringSerializer = serializerResolver.Get("String");
             _labelDataInputSerializer = serializerResolver.Get("LabelDataInput");
+            _booleanSerializer = serializerResolver.Get("Boolean");
             _dashboardWidgetInputSerializer = serializerResolver.Get("DashboardWidgetInput");
             _needsInitialization = false;
         }
@@ -50,6 +54,11 @@ namespace industry9.Shared
             var input = (DashboardInput)value;
             var map = new Dictionary<string, object>();
 
+            if (input.ColumnCount.HasValue)
+            {
+                map.Add("columnCount", SerializeNullableInt(input.ColumnCount.Value));
+            }
+
             if (input.Id.HasValue)
             {
                 map.Add("id", SerializeNullableString(input.Id.Value));
@@ -65,6 +74,11 @@ namespace industry9.Shared
                 map.Add("name", SerializeNullableString(input.Name.Value));
             }
 
+            if (input.Private.HasValue)
+            {
+                map.Add("private", SerializeNullableBoolean(input.Private.Value));
+            }
+
             if (input.Widgets.HasValue)
             {
                 map.Add("widgets", SerializeNullableListOfNullableDashboardWidgetInput(input.Widgets.Value));
@@ -73,6 +87,10 @@ namespace industry9.Shared
             return map;
         }
 
+        private object SerializeNullableInt(object value)
+        {
+            return _intSerializer.Serialize(value);
+        }
         private object SerializeNullableString(object value)
         {
             if (value is null)
@@ -109,6 +127,10 @@ namespace industry9.Shared
                 result[i] = SerializeNullableLabelDataInput(source[i]);
             }
             return result;
+        }
+        private object SerializeNullableBoolean(object value)
+        {
+            return _booleanSerializer.Serialize(value);
         }
         private object SerializeNullableDashboardWidgetInput(object value)
         {

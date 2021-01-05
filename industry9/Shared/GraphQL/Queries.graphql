@@ -110,6 +110,7 @@ fragment DashboardId on Dashboard {
 fragment DashboardLite on Dashboard {
 	id,
 	name,
+	private,
 	authorId,
 	created,
 	labels {
@@ -120,6 +121,8 @@ fragment DashboardLite on Dashboard {
 fragment DashboardDetail on Dashboard {
 	id,
 	name,
+	private,
+	columnCount,
 	authorId,
 	created,
 	labels {

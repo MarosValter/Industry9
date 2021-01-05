@@ -23,7 +23,7 @@
                             <MatH6>Labels</MatH6>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
-                            <LabelBar Labels="@Dashboard?.Labels" EditMode="@EditMode"></LabelBar>
+                            <LabelBar Labels="@Dashboard.Labels" EditMode="@EditMode"></LabelBar>
                         </div>
                     </div>
                 </div>
@@ -37,10 +37,10 @@
                             <MatH6>Sharing</MatH6>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
-                            <label style="color: @(Public ? "green" : "red")">@(Public ? "Public" : "Private")</label>
+                            <label style="color: @(Dashboard.Private ? "red" : "green")">@(Dashboard.Private ? "Private" : "Public")</label>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
-                            <MatSlideToggle @bind-Value="@Public"></MatSlideToggle>
+                            <MatSlideToggle @bind-Value="@Dashboard.Private"></MatSlideToggle>
                         </div>
                         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
                             <label>Author:</label>
@@ -75,17 +75,17 @@
                         <div class="mat-layout-grid">
                             <div class="mat-layout-grid-inner">
                                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2 cell-label-centered">
-                                    <label>Column count: </label><strong>@ColumnCount</strong>
+                                    <label>Column count: </label><strong>@Dashboard.ColumnCount</strong>
                                 </div>
                                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
-                                    <MatSlider @bind-Value="@ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="6"></MatSlider>
+                                    <MatSlider @bind-Value="@Dashboard.ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="6"></MatSlider>
                                 </div>
                             </div>
                         </div>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
-            <DashboardLayoutComponent Class="px-0" ColumnCount="@ColumnCount" Items="@_widgets" TValue="DashboardWidgetData">
+            <DashboardLayoutComponent Class="px-0" ColumnCount="@Dashboard.ColumnCount" Items="@_widgets" TValue="DashboardWidgetData">
                 <ItemTemplate>
                     <DashboardWidgetCard @key="@context" Widget="@context.Widget" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
                 </ItemTemplate>
@@ -104,35 +104,13 @@
     CRUDOperation _operation;
     DashboardWidgetData _editedObject = new DashboardWidgetData();
     IList<DashboardWidgetData> _widgets;
-    private int _columnCount = 4;
+    
 
     [Parameter]
     public bool EditMode { get; set; }
 
     [Parameter]
     public DashboardData Dashboard { get; set; } = new DashboardData();
-
-    public bool Public { get; set; }
-
-    public int ColumnCount
-    {
-        get => _columnCount;
-        set
-        {
-            if (value == 5)
-            {
-                if (_columnCount < 5)
-                {
-                    ++value;
-                }
-                else if (_columnCount > 5)
-                {
-                    --value;
-                }
-            }
-            _columnCount = value;
-        }
-    }
 
     protected override void OnParametersSet()
     {

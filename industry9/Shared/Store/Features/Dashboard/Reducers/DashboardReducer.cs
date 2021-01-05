@@ -18,12 +18,13 @@ namespace industry9.Shared.Store.Features.Dashboard.Reducers
         [ReducerMethod]
         public static DashboardState ReduceUpsertDashboardsResultAction(
             DashboardState state, UpsertDashboardResultAction action)
-            => new DashboardState(state.Dashboards, MapDashboard(action.Dashboard));
+            => new DashboardState(state.Dashboards, action.Dashboard);
 
         //TODO automapper
         public static DashboardData MapDashboard(IDashboardDetail dashboard)
         {
-            return new DashboardData(dashboard.Id, dashboard.Name, dashboard.AuthorId, dashboard.Created.DateTime,
+            return new DashboardData(dashboard.Id, dashboard.Name, dashboard.ColumnCount,
+                dashboard.Private, dashboard.AuthorId, dashboard.Created.DateTime,
                 dashboard.Labels.ToList(), dashboard.Widgets.Select(x => MapDashboardWidget(dashboard.Id, x)).ToList());
         }
 

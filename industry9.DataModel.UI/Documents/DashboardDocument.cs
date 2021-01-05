@@ -14,6 +14,10 @@ namespace industry9.DataModel.UI.Documents
 
         public string Name { get; set; }
 
+        public bool Private { get; set; }
+
+        public int ColumnCount { get; set; }
+
         [BsonRepresentation(BsonType.ObjectId)]
         public string AuthorId { get; set; }
 

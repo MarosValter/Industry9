@@ -1,10 +1,12 @@
-﻿namespace industry9.Shared.Store.Features.Homepage.Actions
+﻿using industry9.Shared.Dto.Dashboard;
+
+namespace industry9.Shared.Store.Features.Homepage.Actions
 {
     public class FetchDashboardResultAction
     {
-        public IDashboardDetail Dashboard { get; }
+        public DashboardData Dashboard { get; }
 
-        public FetchDashboardResultAction(IDashboardDetail dashboard)
+        public FetchDashboardResultAction(DashboardData dashboard)
         {
             Dashboard = dashboard;
         }

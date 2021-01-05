@@ -15,8 +15,9 @@ namespace industry9.Shared
         : JsonResultParserBase<IGetDashboard>
     {
         private readonly IValueSerializer _stringSerializer;
-        private readonly IValueSerializer _dateTimeSerializer;
+        private readonly IValueSerializer _booleanSerializer;
         private readonly IValueSerializer _intSerializer;
+        private readonly IValueSerializer _dateTimeSerializer;
         private readonly IValueSerializer _widgetTypeSerializer;
 
         public GetDashboardResultParser(IValueSerializerCollection serializerResolver)
@@ -26,8 +27,9 @@ namespace industry9.Shared
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
             _stringSerializer = serializerResolver.Get("String");
-            _dateTimeSerializer = serializerResolver.Get("DateTime");
+            _booleanSerializer = serializerResolver.Get("Boolean");
             _intSerializer = serializerResolver.Get("Int");
+            _dateTimeSerializer = serializerResolver.Get("DateTime");
             _widgetTypeSerializer = serializerResolver.Get("WidgetType");
         }
 
@@ -58,6 +60,8 @@ namespace industry9.Shared
             (
                 DeserializeString(obj, "id"),
                 DeserializeNullableString(obj, "name"),
+                DeserializeBoolean(obj, "private"),
+                DeserializeInt(obj, "columnCount"),
                 DeserializeNullableString(obj, "authorId"),
                 DeserializeDateTime(obj, "created"),
                 ParseGetDashboardDashboardLabels(obj, "labels"),
@@ -259,15 +263,22 @@ namespace industry9.Shared
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
 
-        private System.DateTimeOffset DeserializeDateTime(JsonElement obj, string fieldName)
+        private bool DeserializeBoolean(JsonElement obj, string fieldName)
         {
             JsonElement value = obj.GetProperty(fieldName);
-            return (System.DateTimeOffset)_dateTimeSerializer.Deserialize(value.GetString());
+            return (bool)_booleanSerializer.Deserialize(value.GetBoolean());
         }
+
         private int DeserializeInt(JsonElement obj, string fieldName)
         {
             JsonElement value = obj.GetProperty(fieldName);
             return (int)_intSerializer.Deserialize(value.GetInt32());
+        }
+
+        private System.DateTimeOffset DeserializeDateTime(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (System.DateTimeOffset)_dateTimeSerializer.Deserialize(value.GetString());
         }
         private WidgetType DeserializeWidgetType(JsonElement obj, string fieldName)
         {

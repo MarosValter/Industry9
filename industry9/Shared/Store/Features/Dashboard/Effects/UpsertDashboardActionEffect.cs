@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Common.Enums;
+using industry9.Shared.Dto.Dashboard;
 using industry9.Shared.Store.Extensions;
 using industry9.Shared.Store.Features.Dashboard.Actions;
 
@@ -34,12 +35,15 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
             result.DispatchToast(dispatcher, "Dashboard", string.IsNullOrEmpty(action.Dashboard.Id) ? CRUDOperation.Create : CRUDOperation.Update);
         }
 
-        private DashboardInput CreateInput(IDashboardDetail dashboard)
+        //TODO automapper
+        private DashboardInput CreateInput(DashboardData dashboard)
         {
             var input = new DashboardInput
             {
                 Id = dashboard.Id,
                 Name = dashboard.Name,
+                ColumnCount = dashboard.ColumnCount,
+                Private = dashboard.Private,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
                 //Widgets = dashboard.Widgets.Select(x => new DashboardWidgetInput
                 //{

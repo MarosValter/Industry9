@@ -1,6 +1,5 @@
 ﻿using Fluxor;
 using industry9.Shared.Store.Features.Dashboard.Actions;
-using industry9.Shared.Store.Features.Dashboard.Reducers;
 using industry9.Shared.Store.Features.Homepage.Actions;
 using industry9.Shared.Store.Features.UserProfile.Actions;
 using industry9.Shared.Store.States;
@@ -19,10 +18,10 @@ namespace industry9.Shared.Store.Features.Homepage.Reducers
 
         [ReducerMethod]
         public static HomepageState ReduceFetchDashboardResultAction(HomepageState state, FetchDashboardResultAction action)
-            => new HomepageState(false, state.EditMode, DashboardReducer.MapDashboard(action.Dashboard));
+            => new HomepageState(false, state.EditMode, action.Dashboard);
 
         [ReducerMethod]
         public static HomepageState ReduceUpsertDashboardWidgetResultAction(HomepageState state, UpsertDashboardResultAction action)
-            => new HomepageState(false, state.EditMode, DashboardReducer.MapDashboard(action.Dashboard));
+            => new HomepageState(false, state.EditMode, action.Dashboard);
     }
 }

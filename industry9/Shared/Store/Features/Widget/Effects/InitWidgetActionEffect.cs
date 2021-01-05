@@ -38,16 +38,16 @@ namespace industry9.Shared.Store.Features.Widget.Effects
         }
 
         //TODO automapper
-        public static WidgetData MapWidget(IWidgetDetail definition)
+        public static WidgetData MapWidget(IWidgetDetail widget)
         {
             return new WidgetData
             {
-                Id = definition.Id,
-                Created = definition.Created.DateTime,
-                Name = definition.Name,
-                Type = definition.Type,
-                Labels = definition.Labels.ToList(),
-                ColumnMappings = definition.ColumnMappings.Select(MapColumn).ToList()
+                Id = widget.Id,
+                Created = widget.Created.DateTime,
+                Name = widget.Name,
+                Type = widget.Type,
+                Labels = widget.Labels.ToList(),
+                ColumnMappings = widget.ColumnMappings.Select(MapColumn).ToList()
             };
         }
 

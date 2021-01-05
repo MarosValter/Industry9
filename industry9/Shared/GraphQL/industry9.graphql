@@ -74,10 +74,12 @@ scalar DateTime
 
 type Dashboard {
   authorId: String
+  columnCount: Int!
   created: DateTime!
   id: String!
   labels: [LabelData]
   name: String
+  private: Boolean!
   widgets: [DashboardWidgetData]
 }
 
@@ -111,9 +113,11 @@ type Position {
 }
 
 input DashboardInput {
+  columnCount: Int!
   id: String
   labels: [LabelDataInput] = [  ]
   name: String!
+  private: Boolean!
   widgets: [DashboardWidgetInput] = [  ]
 }
 

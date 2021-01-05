@@ -12,6 +12,8 @@ namespace industry9.Shared
         public DashboardDetail(
             string id, 
             string name, 
+            bool @private, 
+            int columnCount, 
             string authorId, 
             System.DateTimeOffset created, 
             global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> labels, 
@@ -19,6 +21,8 @@ namespace industry9.Shared
         {
             Id = id;
             Name = name;
+            Private = @private;
+            ColumnCount = columnCount;
             AuthorId = authorId;
             Created = created;
             Labels = labels;
@@ -28,6 +32,10 @@ namespace industry9.Shared
         public string Id { get; }
 
         public string Name { get; }
+
+        public bool Private { get; }
+
+        public int ColumnCount { get; }
 
         public string AuthorId { get; }
 

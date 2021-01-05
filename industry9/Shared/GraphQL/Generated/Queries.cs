@@ -21,38 +21,38 @@ namespace industry9.Shared
         };
         private readonly byte[] _hash = new byte[]
         {
+            99,
+            50,
+            55,
+            50,
+            52,
+            100,
+            56,
+            48,
+            57,
+            97,
+            54,
+            101,
+            97,
+            100,
+            98,
+            56,
+            49,
+            55,
+            56,
+            102,
+            55,
             52,
             49,
-            55,
-            98,
-            97,
             50,
             100,
-            49,
-            48,
-            55,
-            55,
-            99,
-            49,
-            56,
-            98,
-            97,
-            48,
+            54,
+            101,
             101,
             97,
-            101,
-            51,
-            51,
             53,
-            54,
             51,
-            100,
-            49,
-            100,
-            53,
-            54,
-            100,
-            50
+            48
         };
         private readonly byte[] _content = new byte[]
         {
@@ -2289,6 +2289,14 @@ namespace industry9.Shared
             109,
             101,
             32,
+            112,
+            114,
+            105,
+            118,
+            97,
+            116,
+            101,
+            32,
             97,
             117,
             116,
@@ -2398,6 +2406,26 @@ namespace industry9.Shared
             97,
             109,
             101,
+            32,
+            112,
+            114,
+            105,
+            118,
+            97,
+            116,
+            101,
+            32,
+            99,
+            111,
+            108,
+            117,
+            109,
+            110,
+            67,
+            111,
+            117,
+            110,
+            116,
             32,
             97,
             117,
@@ -3628,6 +3656,7 @@ namespace industry9.Shared
             fragment DashboardLite on Dashboard {
               id
               name
+              private
               authorId
               created
               labels {
@@ -3638,6 +3667,8 @@ namespace industry9.Shared
             fragment DashboardDetail on Dashboard {
               id
               name
+              private
+              columnCount
               authorId
               created
               labels {

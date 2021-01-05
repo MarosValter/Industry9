@@ -1,11 +1,13 @@
-﻿namespace industry9.Shared.Store.Features.Dashboard.Actions
+﻿using industry9.Shared.Dto.Dashboard;
+
+namespace industry9.Shared.Store.Features.Dashboard.Actions
 {
     public class UpsertDashboardResultAction
     {
         public bool SaveChanges { get; }
-        public IDashboardDetail Dashboard { get; }
+        public DashboardData Dashboard { get; }
 
-        public UpsertDashboardResultAction(IDashboardDetail dashboard, bool saveChanges = false)
+        public UpsertDashboardResultAction(DashboardData dashboard, bool saveChanges = false)
         {
             Dashboard = dashboard;
             SaveChanges = saveChanges;

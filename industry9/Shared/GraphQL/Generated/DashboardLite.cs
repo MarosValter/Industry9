@@ -12,12 +12,14 @@ namespace industry9.Shared
         public DashboardLite(
             string id, 
             string name, 
+            bool @private, 
             string authorId, 
             System.DateTimeOffset created, 
             global::System.Collections.Generic.IReadOnlyList<global::industry9.Shared.ILabel> labels)
         {
             Id = id;
             Name = name;
+            Private = @private;
             AuthorId = authorId;
             Created = created;
             Labels = labels;
@@ -26,6 +28,8 @@ namespace industry9.Shared
         public string Id { get; }
 
         public string Name { get; }
+
+        public bool Private { get; }
 
         public string AuthorId { get; }
 

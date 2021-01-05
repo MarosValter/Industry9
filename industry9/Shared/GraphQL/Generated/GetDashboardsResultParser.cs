@@ -15,6 +15,7 @@ namespace industry9.Shared
         : JsonResultParserBase<IGetDashboards>
     {
         private readonly IValueSerializer _stringSerializer;
+        private readonly IValueSerializer _booleanSerializer;
         private readonly IValueSerializer _dateTimeSerializer;
 
         public GetDashboardsResultParser(IValueSerializerCollection serializerResolver)
@@ -24,6 +25,7 @@ namespace industry9.Shared
                 throw new ArgumentNullException(nameof(serializerResolver));
             }
             _stringSerializer = serializerResolver.Get("String");
+            _booleanSerializer = serializerResolver.Get("Boolean");
             _dateTimeSerializer = serializerResolver.Get("DateTime");
         }
 
@@ -59,6 +61,7 @@ namespace industry9.Shared
                 (
                     DeserializeString(element, "id"),
                     DeserializeNullableString(element, "name"),
+                    DeserializeBoolean(element, "private"),
                     DeserializeNullableString(element, "authorId"),
                     DeserializeDateTime(element, "created"),
                     ParseGetDashboardsDashboardsLabels(element, "labels")
@@ -117,6 +120,12 @@ namespace industry9.Shared
             }
 
             return (string)_stringSerializer.Deserialize(value.GetString());
+        }
+
+        private bool DeserializeBoolean(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
+            return (bool)_booleanSerializer.Deserialize(value.GetBoolean());
         }
 
         private System.DateTimeOffset DeserializeDateTime(JsonElement obj, string fieldName)
