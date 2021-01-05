@@ -1,4 +1,5 @@
-﻿using industry9.Shared.Store.Base;
+﻿using System.Collections.Generic;
+using industry9.Shared.Store.Base;
 
 namespace industry9.Shared.Store.Features.Dashboard.Actions
 {
@@ -10,10 +11,18 @@ namespace industry9.Shared.Store.Features.Dashboard.Actions
 
         public string[] Features { get; } = {"Dashboard"};
 
-        public ToggleEditModeAction(bool enabled, bool saveChanges)
+        public IDictionary<string, object> PersistActions { get; }
+
+        public ToggleEditModeAction(bool enabled, bool saveChanges = false)
         {
             Enabled = enabled;
             SaveChanges = saveChanges;
+            PersistActions = new Dictionary<string, object>();
+        }
+
+        public ToggleEditModeAction(object persistAction) : this(false, true)
+        {
+            PersistActions["Dashboard"] = persistAction;
         }
     }
 }

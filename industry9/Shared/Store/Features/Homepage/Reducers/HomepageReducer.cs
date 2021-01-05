@@ -20,8 +20,8 @@ namespace industry9.Shared.Store.Features.Homepage.Reducers
         public static HomepageState ReduceFetchDashboardResultAction(HomepageState state, FetchDashboardResultAction action)
             => new HomepageState(false, action.Dashboard);
 
-        [ReducerMethod]
-        public static HomepageState ReduceUpsertDashboardWidgetResultAction(HomepageState state, UpsertDashboardResultAction action)
-            => new HomepageState(false, action.Dashboard);
+        //[ReducerMethod]
+        //public static HomepageState ReduceUpsertDashboardWidgetResultAction(HomepageState state, UpsertDashboardResultAction action)
+        //    => new HomepageState(false, action.Dashboard);
     }
 }

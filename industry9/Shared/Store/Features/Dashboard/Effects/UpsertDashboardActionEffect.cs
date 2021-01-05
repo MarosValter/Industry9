@@ -34,7 +34,7 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 if (operation == CRUDOperation.Create)
                 {
                     dispatcher.Dispatch(new InitDashboardAction(action.Dashboard.Id));
-                    dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+                    dispatcher.Dispatch(new ToggleEditModeAction(true));
                 }
             }
 

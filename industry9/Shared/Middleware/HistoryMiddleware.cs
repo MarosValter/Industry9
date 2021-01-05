@@ -46,7 +46,7 @@ namespace industry9.Shared.Middleware
             _stackEnabled = new HashSet<string>();
             _restoringState = new HashSet<string>();
 
-            _logger.LogDebug("History tracking enabled for following features: {0}", string.Join(',', _historyFeatures.Keys));
+            _logger.Log(Level, "History tracking enabled for following features: {0}", string.Join(',', _historyFeatures.Keys));
         }
 
         public override bool MayDispatchAction(object action)
@@ -132,9 +132,11 @@ namespace industry9.Shared.Middleware
                 features.Add(feature);
                 if (editAction.SaveChanges)
                 {
-                    // TODO persist changes via effect
-                    //var f = (IHistoryFeature) historyFeature;
-                    //f.PersistChanges();
+                    Console.WriteLine("PERSISTED");
+                    if (editAction.PersistActions.ContainsKey(feature))
+                    {
+                        _store.Dispatch(editAction.PersistActions[feature]);
+                    }
                 }
                 else
                 {

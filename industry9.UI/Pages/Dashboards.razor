@@ -55,7 +55,7 @@ else
         if (!string.IsNullOrEmpty(EditedDashboardId))
         {
             Dispatcher.Dispatch(new InitDashboardAction(EditedDashboardId));
-            Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+            Dispatcher.Dispatch(new ToggleEditModeAction(true));
         }
     }
 
@@ -69,7 +69,7 @@ else
     void EditWidget(string id)
     {
         Dispatcher.Dispatch(new InitDashboardAction(id));
-        Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+        Dispatcher.Dispatch(new ToggleEditModeAction(true));
         NavigationManager.NavigateTo($"/dashboards/{id}");
     }
 
@@ -82,7 +82,11 @@ else
 
     private void CloseEditMode(bool saveChanges)
     {
-        Dispatcher.Dispatch(new ToggleEditModeAction(false, saveChanges));
+        var action = saveChanges
+            ? new ToggleEditModeAction(new UpsertDashboardResultAction(State.Value.EditedDashboard, true))
+            : new ToggleEditModeAction(false);
+
+        Dispatcher.Dispatch(action);
         NavigationManager.NavigateTo("/dashboards");
     }
 

@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using Fluxor;
+using industry9.Shared.Store.Base;
 using industry9.Shared.Store.States;
 
 namespace industry9.Shared.Store.Features.Dashboard
 {
-    public class DashboardFeature : Feature<DashboardState>
+    public class DashboardFeature : Feature<DashboardState>, IHistoryFeature
     {
         public override string GetName() => "Dashboard";
 

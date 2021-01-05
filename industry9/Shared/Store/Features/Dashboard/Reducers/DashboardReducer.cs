@@ -18,7 +18,7 @@ namespace industry9.Shared.Store.Features.Dashboard.Reducers
         [ReducerMethod]
         public static DashboardState ReduceUpsertDashboardsResultAction(
             DashboardState state, UpsertDashboardResultAction action)
-            => new DashboardState(state.Dashboards, action.Dashboard);
+            => new DashboardState(state.Dashboards, action.SaveChanges ? null : action.Dashboard);
 
         [ReducerMethod]
         public static DashboardState ReduceToggleEditModeAction(
