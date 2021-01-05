@@ -32,7 +32,7 @@
 
     private void SelectDashboard(IDashboardLite dashboard)
     {
-        Dispatcher.Dispatch(new SelectDashboardAction(dashboard));
+        Dispatcher.Dispatch(new SelectDashboardAction(dashboard.Id));
     }
 
 }

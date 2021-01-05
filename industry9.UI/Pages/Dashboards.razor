@@ -1,30 +1,45 @@
 ﻿@page "/dashboards"
 @using industry9.Shared.Store.States
 @using industry9.Common.Enums
+@using industry9.Shared.Store.Base.Actions
 @using industry9.Shared.Store.Features.Dashboard.Actions
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
 @inject IState<DashboardState> State
 
-<div class="mat-layout-grid">
-    <div class="mat-layout-grid-inner">
-        @foreach (var dashboard in State.Value.Dashboards)
-        {
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                <DashboardCard @key="@dashboard" Dashboard="@dashboard" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardCard>
-            </div>
-        }
+@if (EditMode)
+{
+
+    <DashboardSettings Dashboard="@State.Value.EditedDashboard" EditMode="@EditMode"></DashboardSettings>
+
+    <MatFAB Icon="@MatIconNames.Undo" Class="btn-edit-ternary" OnClick="@(e => Undo())"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Done" Class="btn-edit-secondary" OnClick="@(e => CloseEditMode(true))"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Clear" Class="btn-edit-primary" OnClick="@(e => CloseEditMode(false))"></MatFAB>
+}
+else
+{
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+            @foreach (var dashboard in State.Value.Dashboards)
+            {
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                    <DashboardCard @key="@dashboard" Dashboard="@dashboard" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardCard>
+                </div>
+            }
+        </div>
     </div>
-</div>
 
-<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddWidget"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddWidget"></MatFAB>
 
-<DashboardDialog EditedObject="@State.Value.EditedDashboard" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardDialog>
+    <DashboardDialog EditedObject="@State.Value.EditedDashboard" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardDialog>
+}
 
 @code {
     bool _isDialogOpen;
     CRUDOperation _operation;
+
+    public bool EditMode => State.Value.EditedDashboard.Id != null;
 
     protected override void OnInitialized()
     {
@@ -41,9 +56,8 @@
 
     void EditWidget(string id)
     {
-        //_operation = CRUDOperation.Update;
-        //Dispatcher.Dispatch(new InitDashboardAction(id));
-        //_isDialogOpen = true;
+        Dispatcher.Dispatch(new InitDashboardAction(id));
+        Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
     }
 
     void DeleteWidget(string id)
@@ -51,5 +65,15 @@
         _operation = CRUDOperation.Delete;
         Dispatcher.Dispatch(new InitDashboardAction(id));
         _isDialogOpen = true;
+    }
+
+    private void CloseEditMode(bool saveChanges)
+    {
+        Dispatcher.Dispatch(new ToggleEditModeAction(false, saveChanges));
+    }
+
+    private void Undo()
+    {
+        Dispatcher.Dispatch(new UndoAction("Dashboard"));
     }
 }

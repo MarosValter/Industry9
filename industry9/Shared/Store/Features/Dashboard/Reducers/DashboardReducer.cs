@@ -20,6 +20,11 @@ namespace industry9.Shared.Store.Features.Dashboard.Reducers
             DashboardState state, UpsertDashboardResultAction action)
             => new DashboardState(state.Dashboards, action.Dashboard);
 
+        [ReducerMethod]
+        public static DashboardState ReduceToggleEditModeAction(
+            DashboardState state, ToggleEditModeAction action)
+        => new DashboardState(state.Dashboards, action.Enabled ? state.EditedDashboard : null);
+
         //TODO automapper
         public static DashboardData MapDashboard(IDashboardDetail dashboard)
         {

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Fluxor;
 using industry9.Shared.Store.Features.UserProfile.Actions;
 
@@ -16,8 +17,12 @@ namespace industry9.Shared.Store.Features.UserProfile.Effects
         protected override async Task HandleAsync(FetchFavoriteDashboardsAction action, IDispatcher dispatcher)
         {
             var result = await _client.GetDashboardsAsync();
-            // TODO fetch selected dashboard from user profile
-            dispatcher.Dispatch(new FetchFavoriteDashboardsResultAction(null, result.Data.Dashboards));
+            if (!result.HasErrors && result.Data != null)
+            {
+                // TODO fetch selected dashboard from user profile
+                dispatcher.Dispatch(new FetchFavoriteDashboardsResultAction(result.Data.Dashboards.FirstOrDefault()?.Id, result.Data.Dashboards));
+            }
+            
         }
     }
 }

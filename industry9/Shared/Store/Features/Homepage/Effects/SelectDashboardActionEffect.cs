@@ -21,7 +21,7 @@ namespace industry9.Shared.Store.Features.Homepage.Effects
 
         protected override async Task HandleAsync(SelectDashboardAction action, IDispatcher dispatcher)
         {
-            var result = await _client.GetDashboardAsync(action.Dashboard.Id);
+            var result = await _client.GetDashboardAsync(action.DashboardId);
 
             if (!result.HasErrors && result.Data != null)
             {

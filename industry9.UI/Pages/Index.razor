@@ -1,72 +1,36 @@
 ﻿@page "/"
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-@using industry9.Shared.Store.Base.Actions
 @using industry9.Shared.Store.Features.Dashboard.Actions
 @using industry9.Shared.Store.States
 @using industry9.Shared.Dto.DashboardWidget
-@using System.Text.Json
 
 @*@attribute [Authorize]*@
 
 @inject IState<HomepageState> DashboardState
 @inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
 
-<DashboardSettings Dashboard="@DashboardState.Value.Dashboard" EditMode="@DashboardState.Value.EditMode"></DashboardSettings>
-@if (!DashboardState.Value.EditMode)
-{
-    <LabelBar Labels="@DashboardState.Value.Dashboard.Labels" EditMode="@DashboardState.Value.EditMode"></LabelBar>
-}
 
-<DashboardLayoutComponent Class="px-0" ColumnCount="4" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
-    <ItemTemplate>
-        <DashboardWidgetCard @key="@context" Widget="@context.Widget"></DashboardWidgetCard>
-    </ItemTemplate>
-    <EmptyItemTemplate></EmptyItemTemplate>
-</DashboardLayoutComponent>
+@if (DashboardState.Value.Dashboard != null)
+{
+    <LabelBar Labels="@DashboardState.Value.Dashboard.Labels"></LabelBar>
 
-@if (DashboardState.Value.EditMode)
-{
-    <MatFAB Icon="@MatIconNames.Undo" Class="btn-edit-ternary" OnClick="@(e => Undo())"></MatFAB>
-    <MatFAB Icon="@MatIconNames.Done" Class="btn-edit-secondary" OnClick="@(e => ToggleEditMode(false, true))"></MatFAB>
-    <MatFAB Icon="@MatIconNames.Clear" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(false, false))"></MatFAB>
-}
-else if (!string.IsNullOrEmpty(DashboardState.Value.Dashboard.Id))
-{
-    <MatFAB Icon="@MatIconNames.Edit" Class="btn-edit-primary" OnClick="@(e => ToggleEditMode(true, false))"></MatFAB>
+    <DashboardLayoutComponent Class="px-0" ColumnCount="4" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
+        <ItemTemplate>
+            <DashboardWidgetCard @key="@context" Widget="@context.Widget"></DashboardWidgetCard>
+        </ItemTemplate>
+        <EmptyItemTemplate></EmptyItemTemplate>
+    </DashboardLayoutComponent>
+
+    <MatFAB Icon="@MatIconNames.Edit" Class="btn-edit-primary" OnClick="@EditDashboard"></MatFAB>
 }
 
 @code {
-    //IList<DashboardWidgetData> _widgets = new List<DashboardWidgetData>();
 
-    //protected override void OnInitialized()
-    //{
-    //    base.OnInitialized();
-    //    DashboardState.StateChanged += DashboardStateOnStateChanged;
-    //}
-
-
-    //protected override void Dispose(bool disposing)
-    //{
-    //    base.Dispose(disposing);
-    //    if (disposing)
-    //    {
-    //        DashboardState.StateChanged -= DashboardStateOnStateChanged;
-    //    }
-    //}
-
-    //private void DashboardStateOnStateChanged(object sender, HomepageState e)
-    //{
-    //    _widgets = DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList();
-    //    Console.WriteLine(JsonSerializer.Serialize(_widgets));
-    //}
-
-    private void ToggleEditMode(bool enabled, bool saveChanges)
+    private void EditDashboard()
     {
-        Dispatcher.Dispatch(new ToggleEditModeAction(enabled, saveChanges));
-    }
-
-    private void Undo()
-    {
-        Dispatcher.Dispatch(new UndoAction("Dashboard"));
+        Dispatcher.Dispatch(new InitDashboardAction(DashboardState.Value.Dashboard.Id));
+        Dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+        NavigationManager.NavigateTo("/dashboards");
     }
 }

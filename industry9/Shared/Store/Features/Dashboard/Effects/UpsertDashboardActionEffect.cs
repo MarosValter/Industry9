@@ -24,15 +24,21 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 return;
             }
 
+            var operation = string.IsNullOrEmpty(action.Dashboard.Id) ? CRUDOperation.Create : CRUDOperation.Update;
             var input = CreateInput(action.Dashboard);
             var result = await _client.UpsertDashboardAsync(input);
 
             if (!result.HasErrors)
             {
                 dispatcher.Dispatch(new FetchDashboardsAction());
+                if (operation == CRUDOperation.Create)
+                {
+                    dispatcher.Dispatch(new InitDashboardAction(action.Dashboard.Id));
+                    dispatcher.Dispatch(new ToggleEditModeAction(true, false));
+                }
             }
 
-            result.DispatchToast(dispatcher, "Dashboard", string.IsNullOrEmpty(action.Dashboard.Id) ? CRUDOperation.Create : CRUDOperation.Update);
+            result.DispatchToast(dispatcher, "Dashboard", operation);
         }
 
         //TODO automapper
@@ -45,13 +51,6 @@ namespace industry9.Shared.Store.Features.Dashboard.Effects
                 ColumnCount = dashboard.ColumnCount,
                 Private = dashboard.Private,
                 Labels = dashboard.Labels.Select(x => new LabelDataInput { Name = x.Name }).ToList(),
-                //Widgets = dashboard.Widgets.Select(x => new DashboardWidgetInput
-                //{
-                //    DashboardId = dashboard.Id,
-                //    WidgetId = x.WidgetId,
-                //    Position = x.Position,
-                //    Size = x.Size
-                //}).ToList()
             };
 
             return input;

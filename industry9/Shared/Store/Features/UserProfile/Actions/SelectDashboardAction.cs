@@ -2,11 +2,11 @@
 {
     public class SelectDashboardAction
     {
-        public SelectDashboardAction(IDashboardLite dashboard)
+        public SelectDashboardAction(string dashboardId)
         {
-            Dashboard = dashboard;
+            DashboardId = dashboardId;
         }
 
-        public IDashboardLite Dashboard { get; }
+        public string DashboardId { get; }
     }
 }
