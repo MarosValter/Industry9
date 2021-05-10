@@ -5,39 +5,27 @@ using HotChocolate.Types;
 
 namespace industry9.GraphQL.UI.Scalars
 {
-    public class ColorType : ScalarType<Color>
+    public class ColorType : ScalarType<Color, StringValueNode>
     {
         public ColorType() : base("Color")
         {
         }
 
-        public override bool IsInstanceOfType(IValueNode literal)
+        protected override Color ParseLiteral(StringValueNode valueSyntax)
         {
-            return literal is StringValueNode;
+            return Color.FromName(valueSyntax.Value);
         }
 
-        public override object ParseLiteral(IValueNode literal)
+        protected override StringValueNode ParseValue(Color runtimeValue)
         {
-            if (literal == null)
-            {
-                throw new ArgumentNullException(nameof(literal));
-            }
-
-            if (literal is StringValueNode stringLiteral)
-            {
-                return Color.FromName(stringLiteral.Value);
-            }
-
-            throw new ArgumentException(
-                "The Color type can only parse string literals.",
-                nameof(literal));
+            return new StringValueNode(runtimeValue.ToString());
         }
 
-        public override IValueNode ParseValue(object value)
+        public override IValueNode ParseResult(object? resultValue)
         {
-            if (value is Color color)
+            if (resultValue is Color color)
             {
-                return new StringValueNode(null, color.ToString(), false);
+                return ParseValue(color);
             }
 
             throw new ArgumentException("The specified value has to be a Color.");

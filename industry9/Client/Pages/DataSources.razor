@@ -1,0 +1,87 @@
+﻿@page "/data-sources"
+@using industry9.Common.Enums
+@using industry9.Client.Data.Dto.DataSourceDefinition
+@using industry9.Client.Data.Store.Features.DataSourceDefinition.Actions
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@inject IDispatcher Dispatcher
+@inject IState<DataSourceDefinitionState> State
+
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        @foreach (var definition in State.Value.Definitions)
+        {
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                <DataSourceDefinitionCard @key="@definition" DataSourceDefinition="@definition" OnConfigure="@EditDefinition" OnDelete="@DeleteDefinition"></DataSourceDefinitionCard>
+            </div>
+        }
+    </div>
+</div>
+
+<MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddDefinition"></MatFAB>
+
+<DataSourceDefinitionDialog EditedObject="@State.Value.EditedObject" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DataSourceDefinitionDialog>
+
+@code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
+
+    //public DataSourceDefinitionData EditedObject => Map(State.Value.EditedObject, State.Value.EditedProperties);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchDataSourceDefinitionsAction());
+    }
+
+    void AddDefinition()
+    {
+        _operation = CRUDOperation.Create;
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(null));
+        _isDialogOpen = true;
+    }
+
+    void EditDefinition(string id)
+    {
+        _operation = CRUDOperation.Update;
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(id));
+        _isDialogOpen = true;
+    }
+
+    void DeleteDefinition(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        Dispatcher.Dispatch(new InitDataSourceDefinitionAction(id));
+        _isDialogOpen = true;
+    }
+
+    //TODO automapper
+    //static DataSourceDefinitionData Map(
+    //    DataSourceDefinitionData detail,
+    //    IDataSourcePropertiesData properties)
+    //{
+    //    var result = new DataSourceDefinitionData();
+
+    //    if (detail != null)
+    //    {
+    //        result.Id = detail.Id;
+    //        result.Name = detail.Name;
+    //        result.Type = detail.Type;
+    //        result.Inputs = detail.Inputs.ToList();
+    //        result.Properties = properties;
+    //        result.Columns = detail.Columns.Select(MapColumn).ToList();
+    //    }
+
+    //    return result;
+    //}
+
+    ////TODO automapper
+    //static ExportedColumnData MapColumn(IExportedColumn column)
+    //{
+    //    return new ExportedColumnData
+    //    {
+    //        Name = column.Name,
+    //        ValueType = column.ValueType
+    //    };
+    //}
+}

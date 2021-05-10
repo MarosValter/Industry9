@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>industry9.Client.Data</AssemblyName>
+    <RootNamespace>industry9.Client.Data</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="GraphQL\berry.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="GraphQL\industry9.graphql" />
+    <None Remove="GraphQL\Queries.graphql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fluxor" Version="3.1.1" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.14" />
+    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="11.2.2" />
+    <PackageReference Include="StrawberryShake.Transport.Http" Version="11.2.2" />
+    <PackageReference Include="StrawberryShake.Transport.WebSockets" Version="11.2.2" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\industry9.Common\industry9.Common.csproj" />
+  </ItemGroup>
+
+</Project>

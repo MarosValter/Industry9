@@ -8,7 +8,7 @@ namespace industry9.GraphQL.UI.Base
     {
         protected override void Configure(IObjectTypeDescriptor<TDocument> descriptor)
         {
-            descriptor.Field(d => d.Id).Type<NonNullType<StringType>>();
+            descriptor.Field(d => d.Id).Type<NonNullType<IdType>>();
             descriptor.Field(d => d.Created).Type<NonNullType<DateTimeType>>();
         }
     }

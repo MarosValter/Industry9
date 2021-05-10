@@ -1,0 +1,57 @@
+query GetWidgets() {
+	widgets {
+		...WidgetLite
+	}
+}
+
+query GetWidget($id: String!) {
+    widget(id: $id) {
+		...WidgetDetail
+    }
+}
+
+mutation UpsertWidget($widget: WidgetInput!) {
+  upsertWidget(widget: $widget)
+}
+
+mutation DeleteWidget($id: String!) {
+  deleteWidget(id: $id)
+}
+
+mutation AddWidgetToDashboard($dashboardWidget: DashboardWidgetInput!) {
+	addWidgetToDashboard(widget: $dashboardWidget)
+}
+
+mutation RemoveWidgetFromDashboard($dashboardId: String!, $widgetId: String!) {
+	removeWidgetFromDashboard(dashboardId: $dashboardId, widgetId: $widgetId)
+}
+
+fragment ColumnMapping on ColumnMappingData {
+	name,
+	format,
+	dataSourceId,
+	sourceColumn
+}
+
+fragment WidgetLite on Widget {
+	id,
+	name,
+	created,
+	type,
+	labels {
+		...Label
+	}
+}
+
+fragment WidgetDetail on Widget {
+	id,
+	name,
+	created,
+	type,
+	labels {
+		...Label
+	},
+	columnMappings {
+		...ColumnMapping
+	}
+}

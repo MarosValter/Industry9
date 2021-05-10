@@ -1,0 +1,68 @@
+query GetDashboards() {
+	dashboards {
+		...DashboardLite
+	}
+}
+
+query GetDashboard($id: String!) {
+    dashboard(id: $id) {
+		...DashboardDetail
+    }
+}
+
+mutation UpsertDashboard($dashboard: DashboardInput!) {
+  upsertDashboard(dashboard: $dashboard)
+}
+
+mutation DeleteDashboard($id: String!) {
+  deleteDashboard(id: $id)
+}
+
+fragment Position on Position {
+	x,
+	y
+}
+
+fragment Size on Size {
+	width,
+	height
+}
+
+fragment DashboardLite on Dashboard {
+	id,
+	name,
+	private,
+	authorId,
+	created,
+	labels {
+		...Label
+	}
+}
+
+fragment DashboardDetail on Dashboard {
+	id,
+	name,
+	private,
+	columnCount,
+	authorId,
+	created,
+	labels {
+		...Label
+	},
+	widgets {
+		...DashboardWidget
+	}
+}
+
+fragment DashboardWidget on DashboardWidgetData {
+	widgetId,
+	widget {
+		...WidgetDetail
+	},
+	size {
+		...Size
+	},
+	position {
+		...Position
+	}
+}

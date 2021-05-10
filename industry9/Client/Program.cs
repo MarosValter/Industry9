@@ -2,21 +2,16 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.Navigation;
+using industry9.Client.Data.Store.States;
 using industry9.Shared;
 using industry9.Shared.Api;
 using industry9.Shared.Authorization;
 using industry9.Shared.Authorization.Implementation;
-using industry9.Shared.GraphQL.Serializers;
-using industry9.Shared.Middleware;
-using industry9.Shared.Navigation;
-using industry9.Shared.Store.States;
-using industry9.UI;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using StrawberryShake;
-using StrawberryShake.Transport.WebSockets;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace industry9.Client
@@ -61,9 +56,13 @@ namespace industry9.Client
                 config.VisibleStateDuration = 3000;
             });
 
-            services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"));
-            services.AddWebSocketClient("industry9Client", (sp, c) => c.Uri = new UriBuilder(new Uri(environment.BaseAddress)) { Scheme = "wss", Path = "graphql" }.Uri);
-            services.Addindustry9Client();
+            services.Addindustry9Client()
+                    .ConfigureHttpClient(c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"))
+                    .ConfigureWebSocketClient(c => c.Uri = new Uri(new Uri(environment.BaseAddress), "graphql"));
+
+            //services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"));
+            //services.AddWebSocketClient("industry9Client", (sp, c) => c.Uri = new UriBuilder(new Uri(environment.BaseAddress)) { Scheme = "wss", Path = "graphql" }.Uri);
+            //services.Addindustry9Client();
             services.AddSingleton<industry9NavigationManager>();
 
             //services.AddSingleton<IValueSerializer, ColorSerializer>();
@@ -72,7 +71,7 @@ namespace industry9.Client
             services.AddFluxor(opt =>
             {
                 opt.ScanAssemblies(typeof(UserProfileState).Assembly);
-                opt.AddMiddleware<HistoryMiddleware>();
+                //opt.AddMiddleware<HistoryMiddleware>();
             });
         }
     }

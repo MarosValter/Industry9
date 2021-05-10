@@ -1,0 +1,99 @@
+﻿@page "/dashboards"
+@page "/dashboards/{editedDashboardId}"
+
+@using industry9.Common.Enums
+@using industry9.Client.Data.Store.Features.Dashboard.Actions
+@using industry9.Client.Data.Store.Base.Actions
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
+@inject IState<DashboardState> State
+
+@if (EditMode)
+{
+
+    <DashboardSettings Dashboard="@State.Value.EditedDashboard" EditMode="@EditMode"></DashboardSettings>
+
+    <MatFAB Icon="@MatIconNames.Undo" Class="btn-edit-ternary" OnClick="@(e => Undo())"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Done" Class="btn-edit-secondary" OnClick="@(e => CloseEditMode(true))"></MatFAB>
+    <MatFAB Icon="@MatIconNames.Clear" Class="btn-edit-primary" OnClick="@(e => CloseEditMode(false))"></MatFAB>
+}
+else
+{
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+            @foreach (var dashboard in State.Value.Dashboards)
+            {
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                    <DashboardCard @key="@dashboard" Dashboard="@dashboard" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardCard>
+                </div>
+            }
+        </div>
+    </div>
+
+    <MatFAB Icon="@MatIconNames.Add" Class="btn-edit-primary" OnClick="@AddWidget"></MatFAB>
+
+    <DashboardDialog EditedObject="@State.Value.EditedDashboard" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardDialog>
+}
+
+@code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
+
+    [Parameter]
+    public string EditedDashboardId { get; set; }
+
+    public bool EditMode => State.Value.EditedDashboard.Id != null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (string.IsNullOrEmpty(EditedDashboardId))
+        {
+            Dispatcher.Dispatch(new FetchDashboardsAction());
+        }
+        else
+        {
+            Dispatcher.Dispatch(new InitDashboardAction(EditedDashboardId));
+            Dispatcher.Dispatch(new ToggleEditModeAction(true));
+        }
+    }
+
+    void AddWidget()
+    {
+        _operation = CRUDOperation.Create;
+        Dispatcher.Dispatch(new InitDashboardAction(null));
+        _isDialogOpen = true;
+    }
+
+    void EditWidget(string id)
+    {
+        Dispatcher.Dispatch(new InitDashboardAction(id));
+        Dispatcher.Dispatch(new ToggleEditModeAction(true));
+        NavigationManager.NavigateTo($"/dashboards/{id}");
+    }
+
+    void DeleteWidget(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        Dispatcher.Dispatch(new InitDashboardAction(id));
+        _isDialogOpen = true;
+    }
+
+    private void CloseEditMode(bool saveChanges)
+    {
+        var action = saveChanges
+            ? new ToggleEditModeAction(new UpsertDashboardResultAction(State.Value.EditedDashboard, true))
+            : new ToggleEditModeAction(false);
+
+        Dispatcher.Dispatch(action);
+        NavigationManager.NavigateTo("/dashboards");
+    }
+
+    private void Undo()
+    {
+        Dispatcher.Dispatch(new UndoAction("Dashboard"));
+    }
+}

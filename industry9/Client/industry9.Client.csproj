@@ -8,15 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MatBlazor" Version="2.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.14" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.14" />
+    <PackageReference Include="StrawberryShake.Transport.WebSockets" Version="11.2.2" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
+    <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\industry9.UI\industry9.UI.csproj" />
+    <ProjectReference Include="..\..\industry9.Client.Data\industry9.Client.Data.csproj" />
     <ProjectReference Include="..\Shared\industry9.Shared.csproj" />
   </ItemGroup>
 

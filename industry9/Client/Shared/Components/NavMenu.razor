@@ -1,0 +1,64 @@
+﻿@inject NavigationManager NavigationManager
+
+    <MatNavMenu Multi="true" Class="app-sidebar">
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri(" ").AbsoluteUri">
+            <MatIcon>@MatIconNames.Home</MatIcon> <span class="miniHover">Home</span>
+        </MatNavItem>
+
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("dashboards").AbsoluteUri">
+            <MatIcon>@MatIconNames.Apps</MatIcon> <span class="miniHover">Dashboards</span>
+        </MatNavItem>
+
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("widgets").AbsoluteUri">
+            <MatIcon>@MatIconNames.Pie_chart</MatIcon> <span class="miniHover">Widgets</span>
+        </MatNavItem>
+
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("data-sources").AbsoluteUri">
+            <MatIcon>@MatIconNames.Storage</MatIcon> <span class="miniHover">Data sources</span>
+        </MatNavItem>
+
+        <AuthorizeView Policy="@Policies.IsAdmin" Context="AuthorizeContext">
+            <Authorized>
+                <MatNavSubMenu>
+                    <MatNavSubMenuHeader>
+                        <MatNavItem AllowSelection="false">
+                            <MatIcon>@MatIconNames.Settings_applications</MatIcon> <span class="miniHover">Admin</span>
+                        </MatNavItem>
+                    </MatNavSubMenuHeader>
+                    <MatNavSubMenuList>
+                        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/users").AbsoluteUri">
+                            <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Users</span>
+                        </MatNavItem>
+                        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/roles").AbsoluteUri">
+                            <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Roles</span>
+                        </MatNavItem>
+                    </MatNavSubMenuList>
+                </MatNavSubMenu>
+            </Authorized>
+            <NotAuthorized>
+                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("admin/users").AbsoluteUri" Disabled="true">
+                    <MatIcon>@MatIconNames.Supervisor_account</MatIcon> <span class="miniHover">Admin</span>
+                </MatNavItem>
+            </NotAuthorized>
+        </AuthorizeView>
+    </MatNavMenu>
+
+@code {
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    bool _isLoggedIn;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = (await AuthenticationStateTask).User;
+        _isLoggedIn = user.Identity.IsAuthenticated;
+
+        //https://gist.github.com/SteveSandersonMS/175a08dcdccb384a52ba760122cd2eda Examples
+        //if (user.IsInRole("Admin"))
+        //{
+        // Perform some action only available to users in the 'admin' role
+        //}
+    }
+}

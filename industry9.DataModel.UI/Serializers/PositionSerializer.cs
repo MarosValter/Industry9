@@ -1,24 +1,24 @@
 ﻿using System;
-using industry9.Common.Structs;
+using System.Drawing;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
 namespace industry9.DataModel.UI.Serializers
 {
-    public class PositionSerializer : SerializerBase<Position>
+    public class PositionSerializer : SerializerBase<Point>
     {
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Position value)
+        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Point value)
         {
             context.Writer.WriteStartDocument();
-            context.Writer.WriteName(nameof(Position.X));
+            context.Writer.WriteName(nameof(Point.X));
             context.Writer.WriteInt32(value.X);
-            context.Writer.WriteName(nameof(Position.Y));
+            context.Writer.WriteName(nameof(Point.Y));
             context.Writer.WriteInt32(value.Y);
             context.Writer.WriteEndDocument();
         }
 
-        public override Position Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        public override Point Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
             context.Reader.ReadStartDocument();
             var heightName = context.Reader.ReadName(new Utf8NameDecoder());
@@ -27,7 +27,7 @@ namespace industry9.DataModel.UI.Serializers
             var y = context.Reader.ReadInt32();
             context.Reader.ReadEndDocument();
 
-            return new Position
+            return new Point
             {
                 X = Convert.ToInt32(x),
                 Y = Convert.ToInt32(y)

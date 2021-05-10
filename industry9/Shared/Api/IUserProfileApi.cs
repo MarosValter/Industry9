@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using industry9.Shared.Dto;
 using industry9.Shared.Dto.Account;
-using StrawberryShake;
 
 namespace industry9.Shared.Api
 {
@@ -9,7 +9,7 @@ namespace industry9.Shared.Api
     /// </summary>
     public interface IUserProfileApi
     {
-        Task<IOperationResult> Upsert(UserProfileData userProfile);
-        Task<IOperationResult> Get();
+        Task<ApiResponseData> Upsert(UserProfileData userProfile);
+        Task<ApiResponseData> Get();
     }
 }

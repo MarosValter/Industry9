@@ -9,12 +9,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo;
-using HotChocolate;
 using HotChocolate.AspNetCore;
-using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using industry9.Common.Enums;
-using industry9.Common.Structs;
 using industry9.DataModel.UI.Data;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.Dashboard;
@@ -23,14 +20,13 @@ using industry9.DataModel.UI.Repositories.Widget;
 using industry9.DataModel.UI.Serializers;
 using industry9.DataModel.UI.Services;
 using industry9.DataSource.PropertiesData;
-using industry9.GraphQL.UI.Dashboard;
-using industry9.GraphQL.UI.Data;
-using industry9.GraphQL.UI.DataSourceDefinition;
-using industry9.GraphQL.UI.DataSourceDefinition.Properties;
-using industry9.GraphQL.UI.Position;
+using industry9.GraphQL.UI.DataLoaders;
+using industry9.GraphQL.UI.InputTypes;
+using industry9.GraphQL.UI.Mutations;
+using industry9.GraphQL.UI.Queries;
 using industry9.GraphQL.UI.Scalars;
-using industry9.GraphQL.UI.Size;
-using industry9.GraphQL.UI.Widget;
+using industry9.GraphQL.UI.Subscriptions;
+using industry9.GraphQL.UI.Types;
 using industry9.Server.Data;
 using industry9.Server.Identity;
 using industry9.Server.Services;
@@ -44,9 +40,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using PositionType = industry9.GraphQL.UI.Position.PositionType;
-using SizeType = industry9.GraphQL.UI.Size.SizeType;
-using WidgetType = industry9.GraphQL.UI.Widget.WidgetType;
+using WidgetType = industry9.GraphQL.UI.Types.WidgetType;
 
 namespace industry9.Server
 {
@@ -91,83 +85,79 @@ namespace industry9.Server
             //services.AddTransient<ISchemaExtender, DataSourceSchemaExtender>();
             services.AddSingleton<IDataSourcePropertiesService, DataSourcePropertiesService>();
 
-            // this enables you to use DataLoader in your resolvers.
-            services.AddDataLoaderRegistry();
-            //services.AddGraphQLSubscriptions();
-            services.AddInMemorySubscriptionProvider();
+            var dsProperties = DataSourcePropertiesLoader.ScanForProperties(new[] { typeof(RandomDataSourceProperties).Assembly });
 
-            services.AddGraphQL(sp =>
-            {
-                var propService = sp.GetService<IDataSourcePropertiesService>();
-                propService.ScanForProperties(new [] {typeof(RandomDataSourceProperties).Assembly});
-                var builder = SchemaBuilder.New()
-                    .AddServices(sp)
-                    .BindClrType<Color, ColorType>()
-                    //.BindClrType<Position, PositionType>()
-                    //.BindClrType<Size, SizeType>()
-                    .BindClrType<DateTime, DateTimeType>()
-                    .AddQueryType(d => d.Name("Query"))
-                    .AddType<DashboardQueries>()
-                    .AddType<WidgetQueries>()
-                    .AddType<DataSourceDefinitionQueries>()
-                    .AddType<DataSourcePropertiesQueries>()
-                    .AddMutationType(d => d.Name("Mutation"))
-                    .AddType<DashboardMutations>()
-                    .AddType<WidgetMutations>()
-                    .AddType<DataSourceDefinitionMutations>()
-                    .AddType<DataSourcePropertiesMutations>()
-                    .AddSubscriptionType(d => d.Name("Subscription"))
-                    .AddType<DataSubscriptions>()
+            var builder = services.AddGraphQLServer()
+                                  .AddInMemorySubscriptions()
+                                  .EnableRelaySupport()
+                                  .AddMongoDbFiltering()
+                                  .AddMongoDbSorting()
+                                  // Bind Scalars
+                                  .BindRuntimeType<Color, ColorType>()
+                                  .BindRuntimeType<Point, PositionType>()
+                                  .BindRuntimeType<Size, SizeType>()
+                                  .BindRuntimeType<DateTime, DateTimeType>()
+                                  // Data loaders
+                                  .AddDataLoader<DashboardDataLoader>()
+                                  .AddDataLoader<WidgetDataLoader>()
+                                  .AddDataLoader<DataSourceDefinitionDataLoader>()
+                                  // Queries
+                                  .AddQueryType(d => d.Name("Query"))
+                                    .AddTypeExtension<DashboardQueries>()
+                                    .AddTypeExtension<WidgetQueries>()
+                                    .AddTypeExtension<DataSourceDefinitionQueries>()
+                                    .AddTypeExtension<DataSourcePropertiesQueries>()
+                                  // Mutations
+                                  .AddMutationType(d => d.Name("Mutation"))
+                                    .AddTypeExtension<DashboardMutations>()
+                                    .AddTypeExtension<WidgetMutations>()
+                                    .AddTypeExtension<DataSourceDefinitionMutations>()
+                                    .AddTypeExtension<DataSourcePropertiesMutations>()
+                                  // Subscriptions
+                                  .AddSubscriptionType(d => d.Name("Subscription"))
+                                    .AddTypeExtension<DataSubscriptions>()
+                                  // Types
+                                  .AddType<DashboardType>()
+                                  .AddType<WidgetType>()
+                                  .AddType<DashboardWidgetType>()
+                                  .AddType<DataSourceDefinitionType>()
+                                  .AddType<LabelData>()
+                                  .AddType<SensorData>()
+                                  .AddType<ColumnMappingType>()
+                                  .AddType<ExportedColumnData>()
+                                  //.AddType<TimeSettings>()
+                                  //.AddType<RelativeTimeSettings>()
+                                  //.AddType<AbsoluteTimeSettings>()
 
-                    // Types
-                    .AddType<DashboardType>()
-                    .AddType<WidgetType>()
-                    .AddType<DataSourceDefinitionType>()
-                    .AddType<SizeType>()
-                    .AddType<PositionType>()
-                    //.AddType<IDataSourceProperties>()
-                    .AddType<LabelData>()
-                    .AddType<SensorData>()
-                    .AddType<ColumnMappingData>()
-                    .AddType<ExportedColumnData>()
-                    .AddType<DashboardWidgetData>()
-                    //.AddType<TimeSettings>()
-                    //.AddType<RelativeTimeSettings>()
-                    //.AddType<AbsoluteTimeSettings>()
+                                  // Input types
+                                  .AddType<DashboardInputType>()
+                                  .AddType<DashboardWidgetInputType>()
+                                  .AddType<WidgetInputType>()
+                                  .AddType<DataSourceDefinitionInputType>()
+                                  //.AddInputObjectType<IDataSourceProperties>()
+                                  .AddInputObjectType<LabelData>()
+                                  .AddType<ColumnMappingInputType>()
+                                  .AddInputObjectType<ExportedColumnData>()
+                                  //.AddInputObjectType<TimeSettings>()
+                                  //.AddInputObjectType<RelativeTimeSettings>()
+                                  //.AddInputObjectType<AbsoluteTimeSettings>()
 
-                    // Input types
-                    .AddType<DashboardInputType>()
-                    .AddType<DashboardWidgetInputType>()
-                    .AddType<WidgetInputType>()
-                    .AddType<DataSourceDefinitionInputType>()
-                    .AddType<SizeInputType>()
-                    .AddType<PositionInputType>()
-                    //.AddInputObjectType<IDataSourceProperties>()
-                    .AddInputObjectType<LabelData>()
-                    .AddInputObjectType<ColumnMappingData>()
-                    .AddInputObjectType<ExportedColumnData>()
-                    //.AddInputObjectType<TimeSettings>()
-                    //.AddInputObjectType<RelativeTimeSettings>()
-                    //.AddInputObjectType<AbsoluteTimeSettings>()
-
-                    // Enums
-                    .AddEnumType<RelativeTimeMode>();
+                                  // Enums
+                                  .AddEnumType<RelativeTimeMode>();
 
                 //foreach (var extender in extenders)
                 //{
                 //    extender.Extend(builder);
                 //}
 
-                foreach (var type in propService.Types)
-                {
-                    builder.AddType(type);
+            foreach (var type in dsProperties)
+            {
+                builder.AddType(type);
 
-                    var t = typeof(InputObjectType<>).MakeGenericType(type);
-                    var o = Activator.CreateInstance(t);
-                    builder.AddType((INamedType)o);
-                }
-                return builder.Create();
-            });
+                var t = typeof(InputObjectType<>).MakeGenericType(type);
+                var o = Activator.CreateInstance(t);
+                builder.AddType(((INamedType)o)!);
+            }
 
             //Add Policies / Claims / Authorization - https://stormpath.com/blog/tutorial-policy-based-authorization-asp-net-core
             services.AddAuthorization(options =>
@@ -179,28 +169,28 @@ namespace industry9.Server
             });
 
             services.AddIdentityMongoDbProvider<ApplicationUser, ApplicationRole>(identity =>
+            {
+                // Password settings
+                identity.Password.RequireDigit = false;
+                identity.Password.RequireLowercase = false;
+                identity.Password.RequireNonAlphanumeric = false;
+                identity.Password.RequireUppercase = false;
+                identity.Password.RequiredLength = 1;
+                identity.Password.RequiredUniqueChars = 0;
+
+                // Lockout settings
+                //identity.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                //identity.Lockout.MaxFailedAccessAttempts = 10;
+                //identity.Lockout.AllowedForNewUsers = true;
+
+                // Require Confirmed Email User settings
+                if (Convert.ToBoolean(Configuration["industry9:RequireConfirmedEmail"] ?? "false"))
                 {
-                    // Password settings
-                    identity.Password.RequireDigit = false;
-                    identity.Password.RequireLowercase = false;
-                    identity.Password.RequireNonAlphanumeric = false;
-                    identity.Password.RequireUppercase = false;
-                    identity.Password.RequiredLength = 1;
-                    identity.Password.RequiredUniqueChars = 0;
-
-                    // Lockout settings
-                    //identity.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                    //identity.Lockout.MaxFailedAccessAttempts = 10;
-                    //identity.Lockout.AllowedForNewUsers = true;
-
-                    // Require Confirmed Email User settings
-                    if (Convert.ToBoolean(Configuration["industry9:RequireConfirmedEmail"] ?? "false"))
-                    {
-                        identity.User.RequireUniqueEmail = false;
-                        identity.SignIn.RequireConfirmedEmail = true;
-                    }
-                }, db => { db.ConnectionString = MongoConnectionString; })
-                .AddDefaultTokenProviders();
+                    identity.User.RequireUniqueEmail = false;
+                    identity.SignIn.RequireConfirmedEmail = true;
+                }
+            }, db => { db.ConnectionString = MongoConnectionString; })
+            .AddDefaultTokenProviders();
 
             var authBuilder = services.AddAuthentication(options =>
             {
@@ -279,7 +269,7 @@ namespace industry9.Server
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var databaseInitializer = serviceScope.ServiceProvider.GetService<IDatabaseInitializer>();
+                var databaseInitializer = serviceScope.ServiceProvider.GetRequiredService<IDatabaseInitializer>();
                 databaseInitializer.SeedAsync().Wait();
             }
 
@@ -297,13 +287,13 @@ namespace industry9.Server
                 app.UseHsts();
             }
 
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseWebSockets();
-            app.UseGraphQL("/graphql");
             app.UsePlayground("/graphql");
 
             app.UseSwagger();
@@ -315,9 +305,10 @@ namespace industry9.Server
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-            
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGraphQL();
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index_blazor.html");

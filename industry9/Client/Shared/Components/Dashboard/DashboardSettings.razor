@@ -1,0 +1,192 @@
+﻿@using industry9.Common.Enums
+@using industry9.Client.Data.Dto.DashboardWidget
+@using industry9.Client.Data.Store.Features.Widget.Actions
+@using industry9.Client.Data.Dto.Dashboard
+
+@inject IDispatcher Dispatcher
+
+@if (EditMode)
+{
+    <MatH5>Settings</MatH5>
+    <MatTabGroup Class="tab-panel">
+        <MatTab Label="General">
+            <div class="mat-elevation-z4 card-panel">
+                <div class="mat-layout-grid">
+                    <div class="mat-layout-grid-inner">
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Name</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatTextField @bind-Value="@Dashboard.Name" FullWidth="true" Required="true"></MatTextField>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Labels</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <LabelBar Labels="@Dashboard.Labels" EditMode="@EditMode"></LabelBar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MatTab>
+        <MatTab Label="Security">
+            <div class="mat-elevation-z4 card-panel">
+                <div class="mat-layout-grid">
+                    <div class="mat-layout-grid-inner">
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Sharing</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+                            <label style="color: @(Dashboard.Private ? "red" : "green")">@(Dashboard.Private ? "Private" : "Public")</label>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+                            <MatSlideToggle @bind-Value="@Dashboard.Private"></MatSlideToggle>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-1">
+                            <label>Author:</label>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-5">
+                            <MatOverline>Author John</MatOverline>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatH6>Permissions</MatH6>
+                        </div>
+                        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-12">
+                            <MatListGroup>
+                                <MatListGroupSubHeader Style="color: green">Allowed</MatListGroupSubHeader>
+                                <MatDivider></MatDivider>
+                                @RenderPermissionList(AllowPermissions)
+                                <MatListGroupSubHeader Style="color: red">Denied</MatListGroupSubHeader>
+                                <MatDivider></MatDivider>
+                                @RenderPermissionList(DenyPermissions)
+                            </MatListGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MatTab>
+        <MatTab Label="Widgets">
+            <MatAccordion Class="card-panel sticky-panel">
+                <MatExpansionPanel Expanded="true">
+                    <MatExpansionPanelSummary>
+                        <MatExpansionPanelHeader>Layout</MatExpansionPanelHeader>
+                    </MatExpansionPanelSummary>
+                    <MatExpansionPanelDetails>
+                        <div class="mat-layout-grid">
+                            <div class="mat-layout-grid-inner">
+                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2 cell-label-centered">
+                                    <label>Column count: </label><strong>@Dashboard.ColumnCount</strong>
+                                </div>
+                                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
+                                    <MatSlider @bind-Value="@Dashboard.ColumnCount" Step="1" EnableStep="true" ValueMin="2" ValueMax="6"></MatSlider>
+                                </div>
+                            </div>
+                        </div>
+                    </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+            </MatAccordion>
+            <DashboardLayoutComponent Class="px-0" ColumnCount="@Dashboard.ColumnCount" Items="@_widgets" TValue="DashboardWidgetData">
+                <ItemTemplate>
+                    <DashboardWidgetCard @key="@context" Widget="@context.Widget" Editable="true" OnConfigure="@EditWidget" OnDelete="@DeleteWidget"></DashboardWidgetCard>
+                </ItemTemplate>
+                <EmptyItemTemplate>
+                    <EmptyDashboardWidget OnAdd="@AddWidget"></EmptyDashboardWidget>
+                </EmptyItemTemplate>
+            </DashboardLayoutComponent>
+        </MatTab>
+    </MatTabGroup>
+
+    <DashboardWidgetDialog EditedObject="@_editedObject" UsedWidgets="@Dashboard.Widgets.Select(x => x.WidgetId).ToList()" @bind-IsOpen="@_isDialogOpen" Operation="@_operation"></DashboardWidgetDialog>
+}
+
+@code {
+    bool _isDialogOpen;
+    CRUDOperation _operation;
+    DashboardWidgetData _editedObject = new DashboardWidgetData();
+    IList<DashboardWidgetData> _widgets;
+    
+
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    [Parameter]
+    public DashboardData Dashboard { get; set; } = new DashboardData();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _widgets = Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList();
+    }
+
+    void AddWidget()
+    {
+        Dispatcher.Dispatch(new FetchWidgetsAction());
+
+        _operation = CRUDOperation.Create;
+        _editedObject = new DashboardWidgetData
+        {
+            DashboardId = Dashboard.Id
+        };
+        _isDialogOpen = true;
+    }
+
+    void EditWidget(string id)
+    {
+        Dispatcher.Dispatch(new FetchWidgetsAction());
+
+        _operation = CRUDOperation.Update;
+        _editedObject = Dashboard.Widgets.FirstOrDefault(x => x.WidgetId == id);
+        _isDialogOpen = true;
+    }
+
+    void DeleteWidget(string id)
+    {
+        _operation = CRUDOperation.Delete;
+        _editedObject = Dashboard.Widgets.FirstOrDefault(x => x.WidgetId == id);
+        _isDialogOpen = true;
+    }
+
+    Permission[] AllowPermissions { get; } = {
+        new Permission(),
+        new Permission(),
+    };
+
+    Permission[] DenyPermissions { get; }
+
+    private class Permission
+    {
+
+    }
+
+    //protected override void OnInitialized()
+    //{
+    //    base.OnInitialized();
+    //    DashboardName = Dashboard?.Name;
+    //}
+
+    //protected override void OnParametersSet()
+    //{
+    //    base.OnParametersSet();
+    //    DashboardName = Dashboard?.Name;
+    //}
+
+    private RenderFragment RenderPermissionList(IEnumerable<Permission> permissions) =>
+    @<MatList>
+        @foreach (var permission in permissions ?? Enumerable.Empty<Permission>())
+        {
+            <MatListItem>
+                @RenderPermissionItem(permission)
+            </MatListItem>
+        }
+        <MatListItem>
+            <MatListItemText>
+                <MatListItemPrimaryText>@( permissions?.Any() == true ? "Add" : "Empty")</MatListItemPrimaryText>
+                <MatListItemSecondaryText>Create new permission</MatListItemSecondaryText>
+            </MatListItemText>
+        </MatListItem>
+    </MatList>;
+
+          private RenderFragment RenderPermissionItem(Permission permission) =>
+        @<p>TODO</p>;
+
+}

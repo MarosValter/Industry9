@@ -1,0 +1,37 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using industry9.Client.Data.Store.Features.UserProfile.Actions
+
+@inject IState<UserProfileState> UserProfileState
+@inject IDispatcher Dispatcher
+
+<MatIconButton OnClick="@OnMenuOpen" @ref="@_button" Icon="@MatIconNames.Favorite" />
+<MatMenu @ref="@_menu">
+    <MatList>
+        @foreach (var dashboard in UserProfileState.Value.Dashboards)
+        {
+            <MatListItem @key="dashboard" OnClick="@(e => SelectDashboard(dashboard))">@dashboard.Name</MatListItem>
+        }
+    </MatList>
+</MatMenu>
+
+@code {
+    BaseMatIconButton _button;
+    BaseMatMenu _menu;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchFavoriteDashboardsAction());
+    }
+
+    private async Task OnMenuOpen(MouseEventArgs e)
+    {
+        await _menu.OpenAsync(_button.Ref);
+    }
+
+    private void SelectDashboard(IDashboardLite dashboard)
+    {
+        Dispatcher.Dispatch(new SelectDashboardAction(dashboard.Id));
+    }
+
+}

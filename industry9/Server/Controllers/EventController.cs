@@ -14,9 +14,9 @@ namespace industry9.Server.Controllers
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
-        private readonly IEventSender _eventSender;
+        private readonly ITopicEventSender _eventSender;
 
-        public EventController(ILogger<EventController> logger, IEventSender eventSender)
+        public EventController(ILogger<EventController> logger, ITopicEventSender eventSender)
         {
             _logger = logger;
             _eventSender = eventSender;
@@ -46,10 +46,10 @@ namespace industry9.Server.Controllers
         [Route("[action]")]
         public async Task Publish(EventData data, CancellationToken cancellationToken = default)
         {
-            var arguments = data.Arguments.Select(kv => new ArgumentNode(kv.Name, kv.Value));
-            var @event = new EventDescription(data.Name, arguments);
-            var message = new EventMessage(@event, data.Value);
-            await _eventSender.SendAsync(message, cancellationToken);
+            //var arguments = data.Arguments.Select(kv => new ArgumentNode(kv.Name, kv.Value));
+            //var @event = new EventDescription(data.Name, arguments);
+            //var message = new EventMessage(@event, data.Value);
+            await _eventSender.SendAsync("message", cancellationToken);
         }
 
         public class EventData

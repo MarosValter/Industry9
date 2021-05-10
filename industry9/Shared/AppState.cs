@@ -50,10 +50,10 @@ namespace industry9.Shared
 
             var apiResponse = await _userProfileApi.Get();
 
-            if (!apiResponse.HasErrors)
-            {
-                return JsonSerializer.Deserialize<UserProfileData>(apiResponse.Data.ToString());
-            }
+            //if (!apiResponse.HasErrors)
+            //{
+            //    return JsonSerializer.Deserialize<UserProfileData>(apiResponse.Data.ToString());
+            //}
 
             return new UserProfileData();
         }

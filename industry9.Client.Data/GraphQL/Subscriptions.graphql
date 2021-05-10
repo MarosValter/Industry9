@@ -1,0 +1,8 @@
+subscription OnDataReceived($dataSourceId: ID!) {
+	onDataReceived(dataSourceId: $dataSourceId) {
+		name,
+		value,
+		dataSourceId,
+		timestamp
+	}
+}

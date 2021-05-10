@@ -1,0 +1,85 @@
+﻿@using industry9.Client.Data.Dto.Widget
+@using industry9.Client.Data.Dto
+@using industry9.Client.Data.Dto.Message
+@using industry9.Client.Data.State
+@using industry9.Client.Data.Store.Features.WidgetSource.Actions
+@using StrawberryShake.Extensions
+@using System.Collections.Concurrent
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject Iindustry9Client Client
+@*@inject IState<WidgetSourceState> WidgetState*@
+
+<MatCard class="dsd-card">
+    <div class="mat-card-header dsd-header" style="background-color: @GetColor(Widget.Type)">
+        <MatCardActions>
+            <MatH6>@Widget.Name</MatH6>
+            @if (Editable)
+            {
+                <MatCardActionIcons>
+                    <MatIconButton Icon="@MatIconNames.Settings" OnClick="@(e => OnConfigure.InvokeAsync(Widget.Id))"></MatIconButton>
+                    <MatIconButton Icon="@MatIconNames.Delete" OnClick="@(e => OnDelete.InvokeAsync(Widget.Id))"></MatIconButton>
+                </MatCardActionIcons>
+            }
+        </MatCardActions>
+    </div>
+    <MatCardContent>
+        @*<TableWidget Data="@WidgetState.Value.WidgetData[Widget.Id].ToList()" ColumnMappings="@Widget.ColumnMappings"></TableWidget>*@
+    </MatCardContent>
+    <div class="mat-card-footer dsd-footer">
+        <LabelBar Labels="@Widget.Labels"></LabelBar>
+    </div>
+</MatCard>
+
+@code {
+    [Parameter]
+    public WidgetData Widget { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnConfigure { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDelete { get; set; }
+
+    [Parameter]
+    public bool Editable { get; set; }
+
+    private ConcurrentBag<MessageData> _data;
+    private IDisposable[] _subscriptions;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _data = new ConcurrentBag<MessageData>();
+        _subscriptions = Widget.ColumnMappings.Select(c => c.DataSourceId).Distinct().Select(
+        ds => Client.OnDataReceived.Watch(ds).Subscribe(data => _data.Add(MapData(data.Data?.OnDataReceived)))).ToArray();
+        Dispatcher.Dispatch(new InitWidgetSourceAction(Widget.Id, true));
+    }
+
+    static string GetColor(WidgetType type)
+    {
+        return "";
+    }
+
+    void ReloadData()
+    {
+        Dispatcher.Dispatch(new ReloadWidgetAction(Widget.Id));
+    }
+
+    private MessageData MapData(IOnDataReceived_OnDataReceived onDataReceivedOnDataReceived)
+    {
+        return new MessageData();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        foreach (var subscription in _subscriptions)
+        {
+            subscription.Dispose();
+        }
+    }
+
+}

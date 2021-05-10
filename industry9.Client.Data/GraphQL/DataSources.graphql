@@ -1,0 +1,67 @@
+query GetDataSourceDefinitions() {
+	dataSourceDefinitions {
+		...DataSourceDefinitionLite
+	}
+}
+
+query GetDataSourceDefinition($id: String!) {
+    dataSourceDefinition(id: $id) {
+		...DataSourceDefinitionDetail
+    }
+}
+
+
+query FetchRandomDataSourceProperties($id: String!) {
+	fetchRandomPropertiesFromDataSource(dataSourceId: $id) {
+		min,
+		max
+	}
+}
+
+query FetchQueryDataSourceProperties($id: String!) {
+	fetchDataQueryPropertiesFromDataSource(dataSourceId: $id) {
+		query
+	}
+}
+
+mutation UpsertDataSourceDefinition($definition: DataSourceDefinitionInput!) {
+  upsertDataSourceDefinition(dataSourceDefinition: $definition)
+}
+
+mutation DeleteDataSourceDefinition($id: String!) {
+  deleteDataSourceDefinition(id: $id)
+}
+
+mutation AssignRandomDataSourceProperties($definitionId: String!, $properties: RandomDataSourcePropertiesInput!) {
+	assignRandomPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
+}
+
+mutation AssignQueryDataSourceProperties($definitionId: String!, $properties: DataQueryDataSourcePropertiesInput!) {
+	assignDataQueryPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
+}
+
+fragment ExportedColumn on ExportedColumnData {
+	name,
+	valueType
+}
+
+fragment DataSourceDefinitionLite on DataSourceDefinition {
+	id,
+	name,
+	created,
+	type,
+	columns {
+		...ExportedColumn
+	}
+}
+
+fragment DataSourceDefinitionDetail on DataSourceDefinition {
+	id,
+	name,
+	created,
+	type,
+	inputs,
+	columns {
+		...ExportedColumn
+	}
+}

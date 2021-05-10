@@ -1,0 +1,55 @@
+﻿@using industry9.Client.Data.Store.Features.Dashboard.Actions
+@using System.Reflection.Emit
+@using industry9.Client.Data.Dto
+@inject IDispatcher Dispatcher
+
+@if (Labels?.Any() == true || EditMode)
+{
+    <MatChipSet>
+        @foreach (var label in Labels ?? Enumerable.Empty<LabelData>())
+        {
+            <MatChip @onclick="@(e => RemoveLabel(label.Name))" Label="@label.Name" TrailingIcon="@(EditMode ? "clear" : null)"></MatChip>
+        }
+        @if (EditMode)
+        {
+            <MatChip @onclick="@(e => { _isDialogOpen = true; })" Label="Add" LeadingIcon="add"></MatChip>
+        }
+    </MatChipSet>
+}
+
+<MatDialog @bind-IsOpen="@_isDialogOpen">
+    <MatDialogTitle>Add label</MatDialogTitle>
+    <MatDialogContent>
+        <p>Name</p>
+        <MatTextField @bind-Value="@NewLabelName"></MatTextField>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { _isDialogOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@OkClick">OK</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+@code {
+    bool _isDialogOpen;
+    string NewLabelName { get; set; } = string.Empty;
+
+    [Parameter]
+    public IReadOnlyList<LabelData> Labels { get; set; }
+
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    void RemoveLabel(string label)
+    {
+        Dispatcher.Dispatch(new RemoveLabelAction(label));
+    }
+
+    void OkClick()
+    {
+        _isDialogOpen = false;
+        if (!string.IsNullOrEmpty(NewLabelName))
+        {
+            Dispatcher.Dispatch(new AddLabelAction(new LabelData(NewLabelName)));
+        }
+    }
+}

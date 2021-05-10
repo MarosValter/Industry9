@@ -1,0 +1,32 @@
+﻿@page "/"
+@using industry9.Client.Data.Dto.DashboardWidget 
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@*@attribute [Authorize]*@
+
+@inject IState<HomepageState> DashboardState
+@inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
+
+
+@if (DashboardState.Value.Dashboard != null)
+{
+    <LabelBar Labels="@DashboardState.Value.Dashboard.Labels"></LabelBar>
+
+    <DashboardLayoutComponent Class="px-0" ColumnCount="@DashboardState.Value.Dashboard.ColumnCount" Items="@DashboardState.Value.Dashboard.Widgets.OrderBy(x => x.Position.Y).ThenBy(x => x.Position.X).ToList()" TValue="DashboardWidgetData">
+        <ItemTemplate>
+            <DashboardWidgetCard @key="@context" Widget="@context.Widget"></DashboardWidgetCard>
+        </ItemTemplate>
+        <EmptyItemTemplate></EmptyItemTemplate>
+    </DashboardLayoutComponent>
+
+    <MatFAB Icon="@MatIconNames.Edit" Class="btn-edit-primary" OnClick="@EditDashboard"></MatFAB>
+}
+
+@code {
+
+    private void EditDashboard()
+    {
+        NavigationManager.NavigateTo($"/dashboards/{DashboardState.Value.Dashboard.Id}");
+    }
+}
