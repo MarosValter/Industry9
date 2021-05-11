@@ -4,12 +4,12 @@
   "extensions": {
     "strawberryShake": {
       "name": "industry9Client",
-      "namespace": "industry9.Client.Data",
+      "namespace": "industry9.Client.Data.GraphQL.Generated",
       "url": "http://localhost:5000/graphql",
       "dependencyInjection": true,
       "strictSchemaValidation": true,
       "hashAlgorithm": "md5",
-      "useSingleFile": true,
+      "useSingleFile": false,
       "requestStrategy": "Default",
       "outputDirectoryName": "Generated",
       "noStore": false,

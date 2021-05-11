@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.Dashboard.Actions;
 using industry9.Common.Enums;

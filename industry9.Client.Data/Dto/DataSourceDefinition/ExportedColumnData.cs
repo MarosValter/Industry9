@@ -1,4 +1,6 @@
-﻿namespace industry9.Client.Data.Dto.DataSourceDefinition
+﻿using industry9.Client.Data.GraphQL.Generated;
+
+namespace industry9.Client.Data.Dto.DataSourceDefinition
 {
     public class ExportedColumnData
     {

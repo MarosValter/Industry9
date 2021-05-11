@@ -2,6 +2,7 @@
 using System.Linq;
 using industry9.Client.Data.Dto.DataSourceDefinition;
 using industry9.Client.Data.Dto.DataSourceDefinition.Properties;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Base;
 
 namespace industry9.Client.Data.Store.States

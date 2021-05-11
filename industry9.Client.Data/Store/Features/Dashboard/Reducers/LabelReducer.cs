@@ -2,6 +2,7 @@
 using Fluxor;
 using industry9.Client.Data.Dto;
 using industry9.Client.Data.Dto.Dashboard;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Features.Dashboard.Actions;
 using industry9.Client.Data.Store.States;
 

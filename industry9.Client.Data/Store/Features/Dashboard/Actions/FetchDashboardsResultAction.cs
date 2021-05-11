@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using industry9.Client.Data.GraphQL.Generated;
 
 namespace industry9.Client.Data.Store.Features.Dashboard.Actions
 {

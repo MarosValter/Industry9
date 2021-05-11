@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using industry9.Client.Data.GraphQL.Generated;
 
 namespace industry9.Client.Data.Dto.Widget
 {

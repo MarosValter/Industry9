@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Fluxor;
 using industry9.Client.Data.Dto.DashboardWidget;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.Dashboard.Actions;
 using industry9.Common.Enums;
@@ -42,8 +43,8 @@ namespace industry9.Client.Data.Store.Features.Dashboard.Effects
             {
                 DashboardId = dashboardId,
                 WidgetId = dashboardWidget.WidgetId,
-                Position = new PositionInput { X = dashboardWidget.Position.X, Y = dashboardWidget.Position.Y },
-                Size = new SizeInput { Width = dashboardWidget.Size.Width, Height = dashboardWidget.Size.Height }
+                //Position = new PositionInput { X = dashboardWidget.Position.X, Y = dashboardWidget.Position.Y },
+                //Size = new SizeInput { Width = dashboardWidget.Size.Width, Height = dashboardWidget.Size.Height }
             };
         }
     }

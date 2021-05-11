@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Features.UserProfile.Actions;
 using StrawberryShake;
 

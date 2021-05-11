@@ -4,7 +4,7 @@ query GetDashboards() {
 	}
 }
 
-query GetDashboard($id: String!) {
+query GetDashboard($id: ID!) {
     dashboard(id: $id) {
 		...DashboardDetail
     }
@@ -14,18 +14,8 @@ mutation UpsertDashboard($dashboard: DashboardInput!) {
   upsertDashboard(dashboard: $dashboard)
 }
 
-mutation DeleteDashboard($id: String!) {
+mutation DeleteDashboard($id: ID!) {
   deleteDashboard(id: $id)
-}
-
-fragment Position on Position {
-	x,
-	y
-}
-
-fragment Size on Size {
-	width,
-	height
 }
 
 fragment DashboardLite on Dashboard {
@@ -54,15 +44,10 @@ fragment DashboardDetail on Dashboard {
 	}
 }
 
-fragment DashboardWidget on DashboardWidgetData {
-	widgetId,
+fragment DashboardWidget on DashboardWidget {
 	widget {
 		...WidgetDetail
 	},
-	size {
-		...Size
-	},
-	position {
-		...Position
-	}
+	size,
+	position
 }

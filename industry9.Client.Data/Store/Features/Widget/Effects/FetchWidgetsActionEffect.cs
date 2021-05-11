@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.Widget.Actions;
 using StrawberryShake;
@@ -17,14 +19,21 @@ namespace industry9.Client.Data.Store.Features.Widget.Effects
 
         protected override async Task HandleAsync(FetchWidgetsAction action, IDispatcher dispatcher)
         {
-            var result = await _client.GetWidgets.ExecuteAsync();
-            if (result.IsSuccessResult() && result.Data != null)
+            try
             {
-                dispatcher.Dispatch(new FetchWidgetsResultAction(result.Data.Widgets));
+                var result = await _client.GetWidgets.ExecuteAsync();
+                if (result.IsSuccessResult() && result.Data != null)
+                {
+                    dispatcher.Dispatch(new FetchWidgetsResultAction(result.Data.Widgets));
+                }
+                else
+                {
+                    result.DispatchToast(dispatcher, null, "Unable to fetch Widgets");
+                }
             }
-            else
+            catch (Exception e)
             {
-                result.DispatchToast(dispatcher, null, "Unable to fetch Widgets");
+                Console.WriteLine(e);
             }
         }
     }

@@ -4,21 +4,21 @@ query GetDataSourceDefinitions() {
 	}
 }
 
-query GetDataSourceDefinition($id: String!) {
+query GetDataSourceDefinition($id: ID!) {
     dataSourceDefinition(id: $id) {
 		...DataSourceDefinitionDetail
     }
 }
 
 
-query FetchRandomDataSourceProperties($id: String!) {
+query FetchRandomDataSourceProperties($id: ID!) {
 	fetchRandomPropertiesFromDataSource(dataSourceId: $id) {
 		min,
 		max
 	}
 }
 
-query FetchQueryDataSourceProperties($id: String!) {
+query FetchQueryDataSourceProperties($id: ID!) {
 	fetchDataQueryPropertiesFromDataSource(dataSourceId: $id) {
 		query
 	}
@@ -28,15 +28,15 @@ mutation UpsertDataSourceDefinition($definition: DataSourceDefinitionInput!) {
   upsertDataSourceDefinition(dataSourceDefinition: $definition)
 }
 
-mutation DeleteDataSourceDefinition($id: String!) {
+mutation DeleteDataSourceDefinition($id: ID!) {
   deleteDataSourceDefinition(id: $id)
 }
 
-mutation AssignRandomDataSourceProperties($definitionId: String!, $properties: RandomDataSourcePropertiesInput!) {
+mutation AssignRandomDataSourceProperties($definitionId: ID!, $properties: RandomDataSourcePropertiesInput!) {
 	assignRandomPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
 }
 
-mutation AssignQueryDataSourceProperties($definitionId: String!, $properties: DataQueryDataSourcePropertiesInput!) {
+mutation AssignQueryDataSourceProperties($definitionId: ID!, $properties: DataQueryDataSourcePropertiesInput!) {
 	assignDataQueryPropertiesToDataSource(dataSourceId: $definitionId properties: $properties)
 }
 

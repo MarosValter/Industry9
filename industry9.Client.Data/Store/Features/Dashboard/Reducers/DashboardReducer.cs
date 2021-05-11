@@ -4,6 +4,7 @@ using Fluxor;
 using industry9.Client.Data.Dto;
 using industry9.Client.Data.Dto.Dashboard;
 using industry9.Client.Data.Dto.DashboardWidget;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Features.Dashboard.Actions;
 using industry9.Client.Data.Store.Features.Widget.Effects;
 using industry9.Client.Data.Store.States;
@@ -43,10 +44,10 @@ namespace industry9.Client.Data.Store.Features.Dashboard.Reducers
             return new DashboardWidgetData
             {
                 DashboardId = dashboardId,
-                WidgetId = widget.WidgetId,
+                WidgetId = widget.Widget.Id,
                 Widget = InitWidgetActionEffect.MapWidget(widget.Widget),
-                Position = new PositionData(widget.Position.X, widget.Position.Y),
-                Size = new SizeData(widget.Size.Width, widget.Size.Height)
+                //Position = new PositionData(widget.Position.X, widget.Position.Y),
+                //Size = new SizeData(widget.Size.Width, widget.Size.Height)
             };
         }
 

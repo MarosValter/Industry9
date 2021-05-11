@@ -5,42 +5,36 @@
 }
 
 type Query {
-  dashboards: [Dashboard]
-  dashboard(id: String): Dashboard
-  widgets: [Widget]
-  widget(id: String): Widget
-  dataSourceDefinitions: [DataSourceDefinition]
-  dataSourceDefinition(id: String): DataSourceDefinition
-  fetchRandomPropertiesFromDataSource(dataSourceId: String): RandomDataSourceProperties
-  fetchDataQueryPropertiesFromDataSource(dataSourceId: String): DataQueryDataSourceProperties
+  node(id: ID!): Node
+  dashboards: [Dashboard!]!
+  dashboard(id: ID!): Dashboard!
+  widgets: [Widget!]!
+  widget(id: ID!): Widget!
+  dataSourceDefinitions: [DataSourceDefinition!]!
+  dataSourceDefinition(id: ID!): DataSourceDefinition!
+  fetchRandomPropertiesFromDataSource(dataSourceId: ID!): RandomDataSourceProperties
+  fetchDataQueryPropertiesFromDataSource(dataSourceId: ID!): DataQueryDataSourceProperties
 }
 
 type Mutation {
-  upsertDashboard(dashboard: DashboardInput): String
-  deleteDashboard(id: String): Boolean!
-  addWidgetToDashboard(widget: DashboardWidgetInput): Boolean!
-  removeWidgetFromDashboard(dashboardId: String widgetId: String): Boolean!
-  upsertWidget(widget: WidgetInput): String
-  deleteWidget(id: String): Boolean!
-  upsertDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput): String
-  deleteDataSourceDefinition(id: String): Boolean!
-  assignRandomPropertiesToDataSource(dataSourceId: String properties: RandomDataSourcePropertiesInput): Boolean!
-  assignDataQueryPropertiesToDataSource(dataSourceId: String properties: DataQueryDataSourcePropertiesInput): Boolean!
+  upsertDashboard(dashboard: DashboardInput!): String!
+  deleteDashboard(id: ID!): Boolean!
+  addWidgetToDashboard(widget: DashboardWidgetInput!): Boolean!
+  removeWidgetFromDashboard(dashboardId: ID! widgetId: ID!): Boolean!
+  upsertWidget(widget: WidgetInput!): String!
+  deleteWidget(id: ID!): Boolean!
+  upsertDataSourceDefinition(dataSourceDefinition: DataSourceDefinitionInput!): String!
+  deleteDataSourceDefinition(id: ID!): Boolean!
+  assignRandomPropertiesToDataSource(dataSourceId: ID! properties: RandomDataSourcePropertiesInput!): Boolean!
+  assignDataQueryPropertiesToDataSource(dataSourceId: ID! properties: DataQueryDataSourcePropertiesInput!): Boolean!
 }
 
 type Subscription {
-  onDataReceived(dataSourceId: ID): SensorData
+  onDataReceived(dataSourceId: ID!): SensorData!
 }
 
 input LabelDataInput {
   name: String
-}
-
-input ColumnMappingDataInput {
-  name: String
-  format: String
-  dataSourceId: String
-  sourceColumn: String
 }
 
 input ExportedColumnDataInput {
@@ -69,32 +63,46 @@ input RandomDataSourcePropertiesInput {
 
 scalar Color
 
+scalar Position
+
+scalar Size
+
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime
 
-type Dashboard {
-  id: String!
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+type Dashboard implements Node {
+  id: ID!
   created: DateTime!
-  widgets: [DashboardWidgetData]
   name: String
   private: Boolean!
   columnCount: Int!
   authorId: String
   labels: [LabelData]
+  widgets: [DashboardWidget]
 }
 
-type Widget {
-  id: String!
+type Widget implements Node {
+  id: ID!
   created: DateTime!
-  dataSources: [DataSourceDefinition]
   name: String
   type: WidgetType!
   labels: [LabelData]
-  columnMappings: [ColumnMappingData]
+  columnMappings: [ColumnMapping]
 }
 
-type DataSourceDefinition {
-  id: String!
+type DashboardWidget {
+  size: Size!
+  position: Position!
+  widget: Widget
+}
+
+type DataSourceDefinition implements Node {
+  id: ID!
   created: DateTime!
   name: String
   type: DataSourceType!
@@ -102,18 +110,15 @@ type DataSourceDefinition {
   columns: [ExportedColumnData]
 }
 
-type Size {
-  width: Int!
-  height: Int!
-}
-
-type Position {
-  x: Int!
-  y: Int!
+type ColumnMapping {
+  dataSourceId: ID!
+  name: String
+  format: String
+  sourceColumn: String
 }
 
 input DashboardInput {
-  id: String
+  id: ID
   name: String!
   private: Boolean!
   columnCount: Int!
@@ -122,62 +127,33 @@ input DashboardInput {
 }
 
 input DashboardWidgetInput {
-  dashboardId: String!
-  widgetId: String!
-  size: SizeInput!
-  position: PositionInput!
+  dashboardId: ID!
+  widgetId: ID!
+  size: Size!
+  position: Position!
 }
 
 input WidgetInput {
-  id: String
+  id: ID
   name: String!
   type: WidgetType!
   labels: [LabelDataInput] = [  ]
-  columnMappings: [ColumnMappingDataInput] = [  ]
+  columnMappings: [ColumnMappingInput] = [  ]
 }
 
 input DataSourceDefinitionInput {
-  id: String
+  id: ID
   name: String!
   type: DataSourceType!
   inputs: [String] = [  ]
   columns: [ExportedColumnDataInput] = [  ]
 }
 
-input SizeInput {
-  width: Int!
-  height: Int!
-}
-
-input PositionInput {
-  x: Int!
-  y: Int!
-}
-
-type SensorData {
+input ColumnMappingInput {
+  dataSourceId: ID!
   name: String
-  value: Float!
-  dataSourceId: String
-  timestamp: DateTime!
-}
-
-type DashboardWidgetData {
-  widgetId: String
-  dashboardId: String
-  widget: Widget
-  size: Size!
-  position: Position!
-}
-
-enum ColumnValueType {
-  STRING
-  NUMBER
-  DATE_TIME
-  BOOLEAN
-}
-
-type LabelData {
-  name: String
+  format: String
+  sourceColumn: String
 }
 
 enum WidgetType {
@@ -187,16 +163,27 @@ enum WidgetType {
   TABLE
 }
 
-type ColumnMappingData {
-  name: String
-  format: String
-  dataSourceId: String
-  sourceColumn: String
-}
-
 enum DataSourceType {
   RANDOM
   DATA_QUERY
+}
+
+type SensorData {
+  name: String
+  value: Float!
+  dataSourceId: String
+  timestamp: DateTime!
+}
+
+type LabelData {
+  name: String
+}
+
+enum ColumnValueType {
+  STRING
+  NUMBER
+  DATE_TIME
+  BOOLEAN
 }
 
 type ExportedColumnData {

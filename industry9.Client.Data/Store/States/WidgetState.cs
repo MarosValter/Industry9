@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using industry9.Client.Data.Dto.Widget;
+using industry9.Client.Data.GraphQL.Generated;
 
 namespace industry9.Client.Data.Store.States
 {

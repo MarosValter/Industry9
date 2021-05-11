@@ -15,6 +15,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.14" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.14" />
+    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="11.2.2" />
+    <PackageReference Include="StrawberryShake.Transport.Http" Version="11.2.2" />
     <PackageReference Include="StrawberryShake.Transport.WebSockets" Version="11.2.2" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="12.1.0" />

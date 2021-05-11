@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Fluxor;
 using industry9.Client.Data.Dto.Message;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.WidgetSource.Actions;
 using Microsoft.Extensions.Logging;

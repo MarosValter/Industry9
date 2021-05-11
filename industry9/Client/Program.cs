@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.Middleware;
 using industry9.Client.Data.Navigation;
 using industry9.Client.Data.Store.States;
 using industry9.Shared;
@@ -11,6 +12,7 @@ using industry9.Shared.Authorization.Implementation;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -22,7 +24,7 @@ namespace industry9.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-            ConfigureServices(builder.Services, builder.HostEnvironment);
+            ConfigureServices(builder.Services, builder.Configuration, builder.HostEnvironment);
 
             var host = builder.Build();
             host.UseLoadingBar();
@@ -30,7 +32,10 @@ namespace industry9.Client
             await host.RunAsync();
         }
 
-        private static void ConfigureServices(IServiceCollection services, IWebAssemblyHostEnvironment environment)
+        private static void ConfigureServices(
+            IServiceCollection services,
+            IConfiguration configuration,
+            IWebAssemblyHostEnvironment environment)
         {
             services.AddSingleton(new HttpClient { BaseAddress = new Uri(environment.BaseAddress) });
             services.AddAuthorizationCore(config =>
@@ -57,16 +62,11 @@ namespace industry9.Client
             });
 
             services.Addindustry9Client()
-                    .ConfigureHttpClient(c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"))
-                    .ConfigureWebSocketClient(c => c.Uri = new Uri(new Uri(environment.BaseAddress), "graphql"));
+                    .ConfigureHttpClient(c => c.BaseAddress = new Uri(new Uri(configuration["Server:HttpsUrl"]), "graphql"))
+                    .ConfigureWebSocketClient(c => c.Uri = new Uri(new Uri(configuration["Server:WsUrl"]), "graphql"));
 
-            //services.AddHttpClient("industry9Client", c => c.BaseAddress = new Uri(new Uri(environment.BaseAddress), "graphql"));
-            //services.AddWebSocketClient("industry9Client", (sp, c) => c.Uri = new UriBuilder(new Uri(environment.BaseAddress)) { Scheme = "wss", Path = "graphql" }.Uri);
-            //services.Addindustry9Client();
             services.AddSingleton<industry9NavigationManager>();
 
-            //services.AddSingleton<IValueSerializer, ColorSerializer>();
-            //services.AddSingleton<IValueSerializer, PositionValueSerializer>();
 
             services.AddFluxor(opt =>
             {

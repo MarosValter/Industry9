@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -12,6 +13,7 @@ namespace industry9.DataModel.UI.Documents
             Widgets = new List<DashboardWidgetData>();
         }
 
+        [Required]
         public string Name { get; set; }
 
         public bool Private { get; set; }

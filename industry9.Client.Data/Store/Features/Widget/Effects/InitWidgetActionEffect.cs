@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fluxor;
 using industry9.Client.Data.Dto;
 using industry9.Client.Data.Dto.Widget;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.Dashboard.Reducers;
 using industry9.Client.Data.Store.Features.Widget.Actions;

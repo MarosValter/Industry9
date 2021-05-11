@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Fluxor;
 using industry9.Client.Data.Dto.DataSourceDefinition;
 using industry9.Client.Data.Dto.DataSourceDefinition.Properties;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.DataSourceDefinition.Actions;
 using StrawberryShake;
@@ -43,17 +44,15 @@ namespace industry9.Client.Data.Store.Features.DataSourceDefinition.Effects
 
         private async Task<IDataSourcePropertiesData> FetchProperties(string id, DataSourceType type)
         {
-            switch (type)
+            return type switch
             {
-                case DataSourceType.Random:
-                    return MapProperties((await _client.FetchRandomDataSourceProperties.ExecuteAsync(id))
-                        .Data?.FetchRandomPropertiesFromDataSource);
-                case DataSourceType.DataQuery:
-                    return MapProperties((await _client.FetchQueryDataSourceProperties.ExecuteAsync(id))
-                        .Data?.FetchDataQueryPropertiesFromDataSource);
-                default:
-                    return null;
-            }
+                DataSourceType.Random => MapProperties((await _client.FetchRandomDataSourceProperties.ExecuteAsync(id))
+                                                       .Data?.FetchRandomPropertiesFromDataSource),
+                DataSourceType.DataQuery => MapProperties(
+                    (await _client.FetchQueryDataSourceProperties.ExecuteAsync(id)).Data
+                    ?.FetchDataQueryPropertiesFromDataSource),
+                _ => null
+            };
         }
 
         //TODO automapper

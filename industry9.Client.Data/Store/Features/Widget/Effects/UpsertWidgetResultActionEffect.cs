@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Fluxor;
 using industry9.Client.Data.Dto;
 using industry9.Client.Data.Dto.Widget;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Store.Extensions;
 using industry9.Client.Data.Store.Features.Widget.Actions;
 using industry9.Common.Enums;
@@ -62,9 +63,9 @@ namespace industry9.Client.Data.Store.Features.Widget.Effects
         }
 
         //TODO automapper
-        private static ColumnMappingDataInput MapColumn(ColumnMappingData column)
+        private static ColumnMappingInput MapColumn(ColumnMappingData column)
         {
-            return new ColumnMappingDataInput
+            return new ColumnMappingInput
             {
                 Name = column.Name,
                 Format = column.Format,

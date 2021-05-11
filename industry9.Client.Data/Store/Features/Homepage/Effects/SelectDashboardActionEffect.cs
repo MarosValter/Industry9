@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Fluxor;
+using industry9.Client.Data.GraphQL.Generated;
 using industry9.Client.Data.Navigation;
 using industry9.Client.Data.Store.Features.Dashboard.Reducers;
 using industry9.Client.Data.Store.Features.Homepage.Actions;

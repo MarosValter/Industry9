@@ -4,7 +4,7 @@ query GetWidgets() {
 	}
 }
 
-query GetWidget($id: String!) {
+query GetWidget($id: ID!) {
     widget(id: $id) {
 		...WidgetDetail
     }
@@ -14,7 +14,7 @@ mutation UpsertWidget($widget: WidgetInput!) {
   upsertWidget(widget: $widget)
 }
 
-mutation DeleteWidget($id: String!) {
+mutation DeleteWidget($id: ID!) {
   deleteWidget(id: $id)
 }
 
@@ -22,11 +22,11 @@ mutation AddWidgetToDashboard($dashboardWidget: DashboardWidgetInput!) {
 	addWidgetToDashboard(widget: $dashboardWidget)
 }
 
-mutation RemoveWidgetFromDashboard($dashboardId: String!, $widgetId: String!) {
+mutation RemoveWidgetFromDashboard($dashboardId: ID!, $widgetId: ID!) {
 	removeWidgetFromDashboard(dashboardId: $dashboardId, widgetId: $widgetId)
 }
 
-fragment ColumnMapping on ColumnMappingData {
+fragment ColumnMapping on ColumnMapping {
 	name,
 	format,
 	dataSourceId,

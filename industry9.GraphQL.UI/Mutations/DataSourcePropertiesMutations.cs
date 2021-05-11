@@ -2,6 +2,7 @@
 using HotChocolate;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 using industry9.DataModel.UI.Documents;
 using industry9.DataModel.UI.Repositories.DataSourceDefinition;
 using industry9.DataSource.PropertiesData;
@@ -11,12 +12,18 @@ namespace industry9.GraphQL.UI.Mutations
     [ExtendObjectType("Mutation")]
     public class DataSourcePropertiesMutations
     {
-        public Task<bool> AssignRandomPropertiesToDataSource(string dataSourceId, RandomDataSourceProperties properties,
-            [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository, IResolverContext ctx)
+        public Task<bool> AssignRandomPropertiesToDataSource(
+            [ID(nameof(DataSourceDefinitionDocument))] string dataSourceId,
+            RandomDataSourceProperties properties,
+            [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository,
+            IResolverContext ctx)
             => AssignPropertiesToDataSourceInternal(dataSourceId, properties, dataSourceDefinitionRepository, ctx);
 
-        public Task<bool> AssignDataQueryPropertiesToDataSource(string dataSourceId, DataQueryDataSourceProperties properties,
-            [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository, IResolverContext ctx)
+        public Task<bool> AssignDataQueryPropertiesToDataSource(
+            [ID(nameof(DataSourceDefinitionDocument))] string dataSourceId,
+            DataQueryDataSourceProperties properties, 
+            [Service] IDataSourceDefinitionRepository dataSourceDefinitionRepository,
+            IResolverContext ctx)
             => AssignPropertiesToDataSourceInternal(dataSourceId, properties, dataSourceDefinitionRepository, ctx);
 
         private static async Task<bool> AssignPropertiesToDataSourceInternal(string dataSourceId, IDataSourceProperties properties,
